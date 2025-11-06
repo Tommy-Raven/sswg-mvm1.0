@@ -1,6 +1,11 @@
+Grimoire v4.7.0 
+now has a reflexive recursion mechanism —the ability to:
+Observe differences, Interpret their significance,Decide whether regeneration is needed, and Evolve its own workflows accordingly.
+This effectively transforms Grimoire into a self-editing knowledge system — an engine that iteratively refines its outputs over time, in response to internal or human feedback.
+
 This release finalizes the structural normalization of the AI Instructions Workflow repository.
 It resolves previous nested-directory conflicts, standardizes documentation hierarchy, and ensures full compatibility with continuous integration pipelines and recursive workflow generation modules.
-[v1.2.0] – 2025-11-05
+[v4.2.0] – 2025-11-05
 
 Summary: Repository structure reorganization, meta-educational AI system stabilization, and Git alignment.
 

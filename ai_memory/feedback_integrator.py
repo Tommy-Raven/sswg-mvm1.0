@@ -2,10 +2,8 @@
 """
 ai_memory/feedback_integrator.py
 Grimoire v4.8 — Feedback Integration & Long-Term Memory Engine
-
 This module aggregates historical feedback, regeneration outcomes,
 and evaluation metrics into a persistent knowledge base.
-
 It allows Grimoire to learn over multiple diff cycles, detect recurring
 weaknesses or strengths, and adjust regeneration thresholds adaptively.
 """
@@ -130,3 +128,4 @@ if __name__ == "__main__":
 
     print("\n📚 Feedback Summary")
     print(summary)
+

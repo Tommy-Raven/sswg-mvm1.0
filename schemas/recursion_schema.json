@@ -1,1 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recursion Schema",
+  "description": "Defines recursive regeneration and self-evolution parameters for workflows.",
+  "type": "object",
+  "required": ["depth_limit", "trigger_condition"],
+  "properties": {
+    "depth_limit": { "type": "integer", "minimum": 1 },
+    "trigger_condition": { "type": "string" },
+    "regeneration_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+    "feedback_source": { "type": "string" },
+    "evaluation_schema": { "$ref": "evaluation_schema.json" },
+    "history_log": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
 

@@ -1,0 +1,102 @@
+{
+    // ===========================================================
+    // AI_INSTRUCTIONS_WORKFLOW - Updated for debugpy
+    // Supports debugging, linting, structure validation, and tests
+    // ===========================================================
+    "version": "0.2.0",
+    "configurations": [
+
+        // =======================================================
+        //  1. Run Orchestrator (Full Pipeline)
+        // =======================================================
+        {
+            "name": "Run Orchestrator (Full Pipeline)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai_core/orchestrator.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--purpose", "educational",
+                "--audience", "beginner",
+                "--recursive"
+            ],
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
+        },
+
+        // =======================================================
+        //  2. Run Workflow Generator (CLI)
+        // =======================================================
+        {
+            "name": "Run Workflow Generator (CLI)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "generator.main",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "--purpose", "AI Workflow Testing",
+                "--audience", "developer",
+                "--style", "technical",
+                "--pretty"
+            ],
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}"
+        },
+
+        // =======================================================
+        //  3. Lint + Structure Check
+        // =======================================================
+        {
+            "name": "Lint & Structure Check",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/run_linting.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
+
+        // =======================================================
+        //  4. Validate Architecture Graph
+        // =======================================================
+        {
+            "name": "Validate Architecture Graph",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/ai_graph/dependency_mapper.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": ["--validate"]
+        },
+
+        // =======================================================
+        //  5. Unit Tests (pytest)
+        // =======================================================
+        {
+            "name": "Run Pytest Suite",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "args": [
+                "-v",
+                "--maxfail=1",
+                "--disable-warnings",
+                "${workspaceFolder}/tests"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

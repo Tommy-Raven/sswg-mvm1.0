@@ -1,3 +1,57 @@
+### repo map
+%%----------------------------------------
+%%  Recursive AI Instructional Workflow Generator
+%%  Repository Structure Diagram
+%%  Color Legend:
+%%    🔵 Blue   = Root
+%%    🟩 Green  = Package / Directory
+%%    🟧 Orange = Module (.py)
+%%    🟨 Yellow = Config / Metadata
+%%    🟪 Purple = Tests
+%%    🟥 Red    = Documentation / Diagrams
+%%    🟦 Cyan   = CLI / Interface Layer
+%%----------------------------------------
+
+graph TD
+    %% ROOT
+    R[🔵 /AI_instructions_workflow]:::root
+
+    %% PRIMARY DIRECTORIES
+    R --> C1[🟩 ai_core/]:::package
+    R --> C2[🟩 tests/]:::package
+    R --> C3[🟩 docs/]:::package
+    R --> F1[🟨 setup.py]:::config
+    R --> F2[🟨 requirements.txt]:::config
+    R --> F3[🟨 .gitignore]:::config
+    R --> F4[🟦 cli.py]:::cli
+
+    %% AI_CORE MODULES
+    C1 --> M1[🟧 workflow_engine.py]:::module
+    C1 --> M2[🟧 recursion_manager.py]:::module
+    C1 --> M3[🟧 graph_engine.py]:::module
+    C1 --> M4[🟧 evaluation_engine.py]:::module
+    C1 --> M5[🟧 io_manager.py]:::module
+    C1 --> M6[🟧 visualizer.py]:::module
+
+    %% TESTS
+    C2 --> T1[🟪 test_workflow_engine.py]:::test
+    C2 --> T2[🟪 test_graph_engine.py]:::test
+    C2 --> T3[🟪 conftest.py]:::test
+
+    %% DOCS
+    C3 --> D1[🟥 architecture.md]:::docs
+    C3 --> D2[🟥 diagrams/]:::docs
+    C3 --> D3[🟥 usage_guide.md]:::docs
+
+    %% STYLING
+    classDef root fill:#0096FF,stroke:#003366,color:white;
+    classDef package fill:#00C957,stroke:#006400,color:white;
+    classDef module fill:#FFB347,stroke:#CC7000,color:black;
+    classDef config fill:#FFD700,stroke:#CCAC00,color:black;
+    classDef test fill:#A020F0,stroke:#5D007A,color:white;
+    classDef docs fill:#FF6B6B,stroke:#B22222,color:white;
+    classDef cli fill:#00CED1,stroke:#007C80,color:black;
+
 ai-instructional-workflow-generator/
 │
 ├── generator/                      # Legacy interface layer (CLI entry point)
@@ -75,3 +129,4 @@ ai-instructional-workflow-generator/
     ├── METRICS_SYSTEM.md
     ├── EVOLUTION_LOGGING.md
     └── CONTRIBUTOR_GUIDE.md
+

@@ -1,0 +1,34 @@
+name: Sync Repo & Project Description
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "DESCRIPTION.txt"
+
+permissions:
+  contents: read
+  metadata: write
+
+jobs:
+  update_description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🔑 Authenticate with GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: gh auth setup-git
+
+      - name: 🪶 Update repository About section
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          DESC=$(cat DESCRIPTION.txt)
+          gh repo edit ${{ github.repository }} --description "$(head -n 1 DESCRIPTION.txt)" --homepage "https://github.com/users/Tommy-Raven/projects/1"
+
+      - name: 🧾 Update GitHub Project description
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          gh project edit 1 --owner Tommy-Raven --body "$(cat DESCRIPTION.txt)"

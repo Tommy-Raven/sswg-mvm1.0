@@ -1,33 +1,51 @@
 #!/usr/bin/env python3
 """
-ai_recursive/version_diff_engine.py
-Grimoire v4.7 — Diff-Based Regeneration System
+ai_recursive/version_diff_engine.py — Diff-based workflow comparison (SSWG MVM)
 
-Compares two versions of a workflow (JSON or re-imported Markdown) and
-detects semantic and structural differences. When differences exceed
-a configurable threshold, a regeneration cycle can be triggered automatically.
+Compares two workflow versions (as dicts or JSON files) and produces a
+structured diff summary. Optionally, a caller-provided regeneration
+function can be invoked if the diff exceeds a threshold.
 
-"""
-"""Usage: python:
-> from ai_recursive.version_diff_engine import compare_workflows
-> compare_workflows(
-    "./data/workflows/workflow_original.json",
-    "./data/workflows/workflow_modified.json",
-    auto_regen=True
-)
+This module is now focused on:
+- Computing a structured diff summary.
+- Deciding whether regeneration is recommended.
+- Recording feedback via ai_memory + ai_evaluation (if available).
 
+It deliberately NO LONGER calls ai_core.Orchestrator directly.
 """
-"""
-"""
+
+from __future__ import annotations
+
 import json
 import os
-from difflib import unified_diff
 from datetime import datetime
-from ai_core.orchestrator import Orchestrator
-from ai_monitoring.structured_logger import get_logger, log_event
+from difflib import unified_diff
+from typing import Any, Callable, Dict, Optional
+
+from ai_monitoring.structured_logger import log_event
+
+# Soft imports for feedback + evaluation
+try:
+    from ai_memory.feedback_integrator import FeedbackIntegrator  # type: ignore
+except Exception:  # pragma: no cover
+
+    class FeedbackIntegrator:  # type: ignore[no-redef]
+        def record_cycle(self, diff_summary, eval_metrics, regenerated: bool) -> None:
+            pass
 
 
-def load_workflow(path: str) -> dict:
+try:
+    from ai_evaluation.quality_metrics import evaluate_clarity  # type: ignore
+except Exception:  # pragma: no cover
+
+    def evaluate_clarity(wf: Dict[str, Any]) -> Dict[str, float]:  # type: ignore[no-redef]
+        return {"clarity_score": 0.0}
+
+
+# --------------------------------------------------------------------------- #
+# Low-level helpers
+# --------------------------------------------------------------------------- #
+def load_workflow(path: str) -> Dict[str, Any]:
     """Safely load a JSON workflow file."""
     if not os.path.exists(path):
         raise FileNotFoundError(f"Workflow not found: {path}")
@@ -42,31 +60,58 @@ def diff_strings(str1: str, str2: str) -> str:
         str2.splitlines(),
         fromfile="original",
         tofile="modified",
-        lineterm=""
+        lineterm="",
     )
     return "\n".join(diff)
 
 
-def compute_diff_summary(wf_old: dict, wf_new: dict) -> dict:
-    """Compute a structured summary of differences between two workflows."""
+# --------------------------------------------------------------------------- #
+# Core diff logic
+# --------------------------------------------------------------------------- #
+def compute_diff_summary(
+    wf_old: Dict[str, Any], wf_new: Dict[str, Any]
+) -> Dict[str, Any]:
+    """
+    Compute a structured summary of differences between two workflows.
+
+    Heuristics:
+    - metadata changes (key-level)
+    - added/removed phases by title
+    - modified phases by task list diff
+
+    Returns:
+        {
+          "changed_fields": [(section, key, old, new), ...],
+          "added_phases": [title, ...],
+          "removed_phases": [title, ...],
+          "modified_phases": [{"title": ..., "diff": ...}, ...],
+          "diff_size": int,
+          "regeneration_recommended": bool
+        }
+    """
     summary = {
         "changed_fields": [],
         "added_phases": [],
         "removed_phases": [],
         "modified_phases": [],
         "diff_size": 0,
-        "regeneration_recommended": False
+        "regeneration_recommended": False,
     }
 
     # Compare metadata
-    for key, value in wf_new.get("metadata", {}).items():
-        old_value = wf_old.get("metadata", {}).get(key)
+    old_meta = wf_old.get("metadata", {}) or {}
+    new_meta = wf_new.get("metadata", {}) or {}
+    for key, value in new_meta.items():
+        old_value = old_meta.get(key)
         if old_value != value:
             summary["changed_fields"].append(("metadata", key, old_value, value))
 
     # Compare phase titles
-    old_titles = [p["title"] for p in wf_old.get("phases", [])]
-    new_titles = [p["title"] for p in wf_new.get("phases", [])]
+    old_phases = [p for p in wf_old.get("phases", []) or [] if isinstance(p, dict)]
+    new_phases = [p for p in wf_new.get("phases", []) or [] if isinstance(p, dict)]
+
+    old_titles = [p.get("title") for p in old_phases if p.get("title")]
+    new_titles = [p.get("title") for p in new_phases if p.get("title")]
 
     for title in new_titles:
         if title not in old_titles:
@@ -75,18 +120,25 @@ def compute_diff_summary(wf_old: dict, wf_new: dict) -> dict:
         if title not in new_titles:
             summary["removed_phases"].append(title)
 
-    # Compare internal logic of shared phases
-    for phase_new in wf_new.get("phases", []):
-        for phase_old in wf_old.get("phases", []):
-            if phase_new["title"] == phase_old["title"]:
-                old_text = "\n".join(phase_old.get("tasks", []))
-                new_text = "\n".join(phase_new.get("tasks", []))
+    # Compare internal logic of shared phases (by title)
+    for phase_new in new_phases:
+        title_new = phase_new.get("title")
+        if not title_new:
+            continue
+        for phase_old in old_phases:
+            if phase_old.get("title") == title_new:
+                old_tasks = phase_old.get("tasks", []) or []
+                new_tasks = phase_new.get("tasks", []) or []
+                old_text = "\n".join(old_tasks)
+                new_text = "\n".join(new_tasks)
                 if old_text != new_text:
                     diff = diff_strings(old_text, new_text)
-                    summary["modified_phases"].append({
-                        "title": phase_new["title"],
-                        "diff": diff
-                    })
+                    summary["modified_phases"].append(
+                        {
+                            "title": title_new,
+                            "diff": diff,
+                        }
+                    )
 
     # Compute diff size heuristic
     summary["diff_size"] = (
@@ -96,65 +148,128 @@ def compute_diff_summary(wf_old: dict, wf_new: dict) -> dict:
         + len(summary["modified_phases"])
     )
 
-    # Trigger regeneration threshold
+    # Regeneration recommendation (heuristic)
     summary["regeneration_recommended"] = summary["diff_size"] >= 2
     return summary
 
 
-def regenerate_if_needed(wf_old: dict, wf_new: dict, threshold: int = 2) -> dict:
+def diff_workflows(wf_old: Dict[str, Any], wf_new: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Public alias for compute_diff_summary, used by ai_recursive.__init__.
+    """
+    return compute_diff_summary(wf_old, wf_new)
+
+
+# --------------------------------------------------------------------------- #
+# Regeneration decision + feedback
+# --------------------------------------------------------------------------- #
+def regenerate_if_needed(
+    wf_old: Dict[str, Any],
+    wf_new: Dict[str, Any],
+    threshold: int = 2,
+    regen_fn: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
     """
     Trigger workflow regeneration if the diff exceeds threshold.
-    Also logs feedback and evaluation metrics after each comparison cycle.
+
+    Args:
+        wf_old: Original workflow dict.
+        wf_new: Modified workflow dict.
+        threshold: Minimum diff_size to consider regeneration.
+        regen_fn: Optional callable that takes wf_new and returns a
+                  regenerated workflow dict. If None, no actual regeneration
+                  is performed; only feedback is recorded.
+
+    Behavior:
+    - Always compute diff_summary.
+    - If diff_size >= threshold and regen_fn is provided:
+        - call regen_fn(wf_new) → regenerated
+        - evaluate clarity on regenerated
+        - record feedback with regenerated=True
+    - Else:
+        - evaluate clarity on wf_new
+        - record feedback with regenerated=False
+
+    Returns:
+        Final workflow used (regenerated or wf_new).
     """
-    from ai_memory.feedback_integrator import FeedbackIntegrator
-    from ai_evaluation.quality_metrics import evaluate_clarity
-
-    logger = get_logger()
     diff_summary = compute_diff_summary(wf_old, wf_new)
-    log_event(logger, "diff_analysis", diff_summary)
+    log_event("diff_analysis", diff_summary)
 
-    # Initialize feedback memory
     feedback = FeedbackIntegrator()
 
-    if diff_summary["diff_size"] >= threshold:
-        log_event(logger, "regeneration_triggered", {"reason": "diff_threshold_exceeded"})
-        orch = Orchestrator()
-        print("🔁 Significant divergence detected. Regenerating workflow...")
+    # Decide whether to regenerate
+    if diff_summary["diff_size"] >= threshold and regen_fn is not None:
+        log_event(
+            "regeneration_triggered",
+            {"reason": "diff_threshold_exceeded", "threshold": threshold},
+        )
+        print("🔁 Significant divergence detected. Regeneration requested...")
 
-        regenerated = orch.run(wf_new.get("metadata", {}))
+        regenerated = regen_fn(wf_new)
         eval_metrics = evaluate_clarity(regenerated)
         feedback.record_cycle(diff_summary, eval_metrics, regenerated=True)
 
-        print(f"🧠 Feedback integrated. New clarity score: {eval_metrics['clarity_score']:.2f}")
+        print(
+            f"🧠 Feedback integrated. "
+            f"New clarity score: {eval_metrics.get('clarity_score', 0.0):.2f}"
+        )
         return regenerated
 
-    # No regeneration occurred, still record passive feedback
+    # No regeneration occurred (either below threshold, or no regen_fn)
     eval_metrics = evaluate_clarity(wf_new)
     feedback.record_cycle(diff_summary, eval_metrics, regenerated=False)
 
-    print(f"✅ Changes below threshold — no regeneration required (Clarity {eval_metrics['clarity_score']:.2f})")
+    if diff_summary["diff_size"] >= threshold and regen_fn is None:
+        print(
+            f"⚠️ Diff above threshold ({diff_summary['diff_size']} ≥ {threshold}) "
+            "but no regen function was provided — skipping regeneration."
+        )
+    else:
+        print(
+            "✅ Changes below threshold — no regeneration required "
+            f"(Clarity {eval_metrics.get('clarity_score', 0.0):.2f})"
+        )
+
     return wf_new
 
 
-
-def compare_workflows(old_path: str, new_path: str, auto_regen: bool = True) -> dict:
+# --------------------------------------------------------------------------- #
+# File-based CLI helper
+# --------------------------------------------------------------------------- #
+def compare_workflows(
+    old_path: str,
+    new_path: str,
+    auto_regen: bool = True,
+    regen_fn: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
     """
-    High-level function for diff-based regeneration.
-    Compares two JSON workflow files and optionally regenerates.
+    High-level function for diff-based comparison of two JSON workflow files.
+
+    Args:
+        old_path: Path to original workflow JSON.
+        new_path: Path to modified workflow JSON.
+        auto_regen: If True and regen_fn is provided, call regenerate_if_needed.
+        regen_fn: Optional regeneration callable.
+
+    Returns:
+        Final workflow dict (regenerated or wf_new).
     """
     wf_old = load_workflow(old_path)
     wf_new = load_workflow(new_path)
 
-    print(f"\n Comparing versions:\n- Old: {old_path}\n- New: {new_path}")
+    print(f"\nComparing versions:\n- Old: {old_path}\n- New: {new_path}")
     diff_summary = compute_diff_summary(wf_old, wf_new)
 
     if auto_regen:
-        wf_final = regenerate_if_needed(wf_old, wf_new)
+        wf_final = regenerate_if_needed(wf_old, wf_new, regen_fn=regen_fn)
     else:
         wf_final = wf_new
 
+    # Persist diff summary for later inspection
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = f"./data/workflows/workflow_diff_{timestamp}.json"
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(diff_summary, f, indent=2)
 
@@ -170,6 +285,7 @@ if __name__ == "__main__":
     new_file = "./data/workflows/workflow_modified.json"
 
     if os.path.exists(old_file) and os.path.exists(new_file):
-        compare_workflows(old_file, new_file)
+        # No regeneration function in CLI demo; just diff + feedback.
+        compare_workflows(old_file, new_file, auto_regen=False)
     else:
         print("ERROR: Example workflow files not found.")

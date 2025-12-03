@@ -1,82 +1,184 @@
-import os
+#!/usr/bin/env python3
+"""
+generator/exporters.py — Workflow Export Utilities for SSWG MVM
+
+Exports:
+ - JSON (schema-aligned)
+ - Markdown (human-readable)
+ - Async combined export
+
+Assumes a dict-based workflow structure consistent with workflow_schema.json:
+{
+  "workflow_id": "wf_campfire_001",
+  "version": "0.0.1",
+  "schema_version": "1.0.0",
+  "metadata": {...},
+  "phases": [...],
+  "modules": [...],
+  "outputs": [...],
+  "evaluation": {...},
+  "recursion": {...}
+}
+"""
+
+from __future__ import annotations
+
+import asyncio
 import json
-from typing import Dict, Any, Optional
-from .utils import log  # relative import to fix import errors
+from pathlib import Path
+from typing import Any, Awaitable, Callable, Dict, List, Optional
+
+from ai_monitoring.structured_logger import log_event
 
 
 # ─── Directory Utilities ───────────────────────────────────────────
-def ensure_dir_exists(path: str):
+def ensure_dir_exists(path: str | Path) -> None:
     """Ensure the directory for a given path exists."""
-    os.makedirs(os.path.dirname(path), exist_ok=True)
+    p = Path(path)
+    p.mkdir(parents=True, exist_ok=True)
 
 
-# ─── Export Functions ─────────────────────────────────────────────
-def export_markdown(workflow: Any, out_dir: str = "templates") -> str:
-    """Export workflow to Markdown format."""
+# ─── JSON Export ──────────────────────────────────────────────────
+def export_json(workflow: Dict[str, Any], out_dir: str = "data/outputs") -> str:
+    """
+    Export a workflow (dict-based) to JSON using a schema-aligned structure.
+
+    Args:
+        workflow: Workflow object as Python dict.
+        out_dir: Output directory.
+
+    Returns:
+        Path to the JSON file (as string).
+    """
     ensure_dir_exists(out_dir)
-    filename = os.path.join(out_dir, f"{workflow.workflow_id}.md")
 
-    log(f"Exporting workflow {workflow.workflow_id} → Markdown")
-    md_content = f"# Workflow {workflow.workflow_id}\n\n"
-    md_content += f"**Objective:** {workflow.objective}\n\n## Stages\n"
+    workflow_id = workflow.get("workflow_id", "unnamed_workflow")
+    filename = Path(out_dir) / f"{workflow_id}.json"
 
-    for stage, steps in workflow.structured_instruction.items():
-        md_content += f"### {stage}\n"
-        for step in steps:
-            md_content += f"- {step}\n"
+    log_event(
+        "export.json.started",
+        {"workflow_id": workflow_id, "path": str(filename)},
+    )
 
-    md_content += "\n## Modules\n"
-    md_content += json.dumps(workflow.modular_workflow.get("modules", {}), indent=2)
-    md_content += "\n\n## Dependencies\n"
-    for dep in workflow.modular_workflow.get("dependencies", []):
-        md_content += f"- {dep}\n"
-
-    md_content += "\n\n## Evaluation Report\n"
-    for k, v in (workflow.evaluation_report or {}).items():
-        md_content += f"- {k.capitalize()}: {v}\n"
-
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(md_content)
-
-    log(f"Markdown saved at {filename}")
-    return filename
-
-
-def export_json(workflow: Any, out_dir: str = "templates") -> str:
-    """Export workflow to JSON format."""
-    ensure_dir_exists(out_dir)
-    filename = os.path.join(out_dir, f"{workflow.workflow_id}.json")
-
-    log(f"Exporting workflow {workflow.workflow_id} → JSON")
     data: Dict[str, Any] = {
-        "workflow_id": workflow.workflow_id,
-        "objective": workflow.objective,
-        "stages": workflow.structured_instruction,
-        "modules": workflow.modular_workflow,
-        "evaluation_report": workflow.evaluation_report,
-        "improved_workflow": workflow.improved_workflow,
+        "workflow_id": workflow_id,
+        "version": workflow.get("version", "0.0.0"),
+        "schema_version": workflow.get("schema_version", "1.0.0"),
+        "metadata": workflow.get("metadata", {}),
+        "phases": workflow.get("phases", []),
+        "modules": workflow.get("modules", []),
+        "outputs": workflow.get("outputs", []),
+        "evaluation": workflow.get("evaluation", {}),
+        "recursion": workflow.get("recursion", {}),
     }
 
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4)
+    filename.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
-    log(f"JSON saved at {filename}")
-    return filename
+    log_event(
+        "export.json.completed",
+        {"workflow_id": workflow_id, "path": str(filename)},
+    )
+    return str(filename)
+
+
+# ─── Markdown Export ──────────────────────────────────────────────
+def export_markdown(workflow: Dict[str, Any], out_dir: str = "data/outputs") -> str:
+    """
+    Human-readable Markdown export for debugging & documentation.
+
+    Args:
+        workflow: Dict describing workflow.
+        out_dir: Output directory.
+
+    Returns:
+        Path to the Markdown file (as string).
+    """
+    ensure_dir_exists(out_dir)
+
+    workflow_id = workflow.get("workflow_id", "unnamed_workflow")
+    filename = Path(out_dir) / f"{workflow_id}.md"
+
+    log_event(
+        "export.md.started",
+        {"workflow_id": workflow_id, "path": str(filename)},
+    )
+
+    md: List[str] = []
+    md.append(f"# Workflow: {workflow_id}\n")
+    md.append(f"**Version:** {workflow.get('version', '0.0.0')}")
+    md.append(f"**Schema Version:** {workflow.get('schema_version', '1.0.0')}\n")
+
+    # Metadata
+    meta = workflow.get("metadata", {})
+    if meta:
+        md.append("## Metadata")
+        for k, v in meta.items():
+            md.append(f"- **{k}**: {v}")
+        md.append("")
+
+    # Phases
+    phases = workflow.get("phases", [])
+    if phases:
+        md.append("## Phases")
+        for ph in phases:
+            name = ph.get("name") or ph.get("phase_id") or "Unnamed phase"
+            md.append(f"### {name}")
+            desc = ph.get("description") or ""
+            if desc:
+                md.append(desc)
+            md.append("")
+    
+    # Modules
+    modules = workflow.get("modules", [])
+    if modules:
+        md.append("## Modules")
+        for m in modules:
+            name = m.get("name") or m.get("module_id") or "Unnamed module"
+            md.append(f"### {name}")
+            md.append(f"- **ID:** {m.get('module_id')}")
+            md.append(f"- **Phase:** {m.get('phase_id')}")
+            md.append(f"- **Inputs:** {m.get('inputs', [])}")
+            md.append(f"- **Outputs:** {m.get('outputs', [])}")
+            md.append(f"- **Dependencies:** {m.get('dependencies', [])}")
+            md.append(f"- **AI Logic:** {m.get('ai_logic', '')}")
+            md.append(f"- **Human Actionable:** {m.get('human_actionable', '')}")
+            md.append("")
+
+    # Evaluation
+    eval_block = workflow.get("evaluation", {})
+    if eval_block:
+        md.append("## Evaluation Report")
+        for k, v in eval_block.items():
+            md.append(f"- **{k.capitalize()}**: {v}")
+        md.append("")
+
+    # Recursion metadata
+    rec = workflow.get("recursion", {})
+    if rec:
+        md.append("## Recursion Parameters")
+        for k, v in rec.items():
+            md.append(f"- **{k}**: {v}")
+        md.append("")
+
+    filename.write_text("\n".join(md), encoding="utf-8")
+
+    log_event(
+        "export.md.completed",
+        {"workflow_id": workflow_id, "path": str(filename)},
+    )
+
+    return str(filename)
 
 
 # ─── Async Helpers ───────────────────────────────────────────────
-import asyncio
-from typing import Awaitable, Callable
-
-
-async def run_task(task_func: Callable[..., Awaitable[Any]], *args, **kwargs) -> Any:
+async def run_task(
+    task_func: Callable[..., Awaitable[Any]], *args, **kwargs
+) -> Any:
     """
     Run an async task and catch exceptions.
 
     Args:
         task_func: Async function to run.
-        *args: Positional arguments for task_func.
-        **kwargs: Keyword arguments for task_func.
 
     Returns:
         The result of the async function, or None if it failed.
@@ -84,15 +186,21 @@ async def run_task(task_func: Callable[..., Awaitable[Any]], *args, **kwargs) ->
     try:
         return await task_func(*args, **kwargs)
     except Exception as e:
-        log(f"Async task {task_func.__name__} failed: {e}")
+        log_event(
+            "export.async.error",
+            {"error": str(e), "task": getattr(task_func, "__name__", repr(task_func))},
+        )
         return None
 
 
-async def export_workflow_async(workflow: Any, out_dir: str = "templates") -> None:
+async def export_workflow_async(
+    workflow: Dict[str, Any], out_dir: str = "data/outputs"
+) -> None:
     """
     Run both export tasks asynchronously.
     """
     await asyncio.gather(
-        run_task(export_json, workflow, out_dir),
-        run_task(export_markdown, workflow, out_dir),
+        run_task(lambda wf, d: asyncio.to_thread(export_json, wf, d), workflow, out_dir),
+        run_task(lambda wf, d: asyncio.to_thread(export_markdown, wf, d), workflow, out_dir),
     )
+# ----------------------------------------------------------------------

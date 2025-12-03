@@ -1,191 +1,283 @@
 #!/usr/bin/env python3
 """
-generator/main.py — Grimoire v1.0 MVM
-AI Instructional Workflow Generator
------------------------------------
-Modular, phase-based workflow generator with recursive self-expansion.
-Generates both human-readable (Markdown) and machine-readable (JSON) outputs.
+generator/main.py — SSWG Minimum Viable Model Entrypoint
+
+AI Instructional Workflow Generator (MVM)
+
+This version operates on schema-aligned JSON workflows:
+- Loads a workflow JSON file (e.g., data/templates/campfire_workflow.json)
+- Validates it against workflow_schema.json
+- Builds and checks a dependency graph, with autocorrect for common issues
+- Performs a simple recursive refinement pass
+- Exports JSON + Markdown artifacts
+- Records history of parent/child workflow relationships
 """
 
 from __future__ import annotations
-from pathlib import Path
-import sys
-import json
-import argparse
-import datetime
-import logging
-from typing import Dict, Any, Optional
 
-# ─── Local Imports ────────────────────────────────────────────────
-try:
-    from ai_core.workflow import Workflow
-    from ai_core.exporters import export_json, export_markdown
-    from ai_recursive.expansion import generate as recursive_generate
-    from ai_recursive.merging import merge as recursive_merge
-    from ai_monitoring.telemetry import record as telemetry_record
-    from ai_validation.schema_tracker import validate_schema
-    from generator.recursion_manager import RecursionManager
-    from ai_core.utils import generate_workflow_id, log
-except ImportError as e:
-    print(f"Error importing local modules: {e}")
-    sys.exit(1)
+import argparse
+import json
+import logging
+from copy import deepcopy
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 # ─── Logging Setup ────────────────────────────────────────────────
-logger = logging.getLogger("generator")
+logger = logging.getLogger("generator.main")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
 logger.addHandler(handler)
 
+# ─── Imports from other subsystems ───────────────────────────────
+from ai_validation.schema_validator import validate_workflow
+from ai_graph.dependency_mapper import DependencyGraph
+from ai_visualization.mermaid_generator import mermaid_from_workflow
+from generator.recursion_manager import simple_refiner
+from generator.exporters import export_json, export_markdown
+from generator.history import HistoryManager
 
-# ─── Input Parsing ────────────────────────────────────────────────
-def parse_user_input(argv: Optional[list] = None) -> Dict[str, Any]:
-    parser = argparse.ArgumentParser(description="AI Instructional Workflow Generator")
-    parser.add_argument("--purpose", "-p", type=str, help="Purpose of the workflow")
-    parser.add_argument("--audience", "-a", type=str, help="Target audience")
-    parser.add_argument(
-        "--delivery_mode", "-d", type=str, help="Delivery modes (text, code)"
+# Optional telemetry integration
+try:
+    from ai_monitoring.structured_logger import log_event
+except Exception:  # fallback if monitoring not wired yet
+    def log_event(event: str, payload: Optional[dict] = None) -> None:
+        logger.info("log_event(%s, %r)", event, payload)
+
+
+# Default template path for MVM demos
+DEFAULT_TEMPLATE = Path("data/templates/campfire_workflow.json")
+
+
+# ─── CLI Parsing ─────────────────────────────────────────────────
+def parse_args(argv: Optional[list] = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="SSWG MVM: Workflow validation, refinement, and export."
     )
     parser.add_argument(
-        "--expansion_mode", "-x", type=str, help="Expansion modes (recursive, modular)"
-    )
-    parser.add_argument("--evaluation_method", "-e", type=str, help="Evaluation method")
-    parser.add_argument("--style", "-s", type=str, help="Workflow style/voice")
-    parser.add_argument(
-        "--title", "-t", type=str, default="AI Instructional Workflow Generator"
-    )
-    parser.add_argument(
-        "--out", "-o", type=Path, default=Path("./data/outputs/ai_workflow_output.json")
+        "-j",
+        "--workflow-json",
+        type=Path,
+        default=DEFAULT_TEMPLATE,
+        help="Path to input workflow JSON (schema-aligned).",
     )
     parser.add_argument(
-        "--pretty", action="store_true", help="Write pretty JSON output"
+        "-o",
+        "--out-dir",
+        type=Path,
+        default=Path("data/outputs"),
+        help="Directory for exported artifacts.",
     )
     parser.add_argument(
-        "--overwrite", action="store_true", help="Allow overwriting existing files"
+        "--no-refine",
+        action="store_true",
+        help="Disable recursive refinement step.",
     )
-    parser.add_argument("--version", action="store_true", help="Print version and exit")
-    args = parser.parse_args(argv)
+    parser.add_argument(
+        "--no-history",
+        action="store_true",
+        help="Disable history recording.",
+    )
+    parser.add_argument(
+        "--preview",
+        action="store_true",
+        help="Print a JSON preview of the final workflow.",
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="Print generator version and exit.",
+    )
+    return parser.parse_args(argv)
+
+
+# ─── IO Helpers ──────────────────────────────────────────────────
+def load_workflow(path: Path) -> Dict[str, Any]:
+    if not path.exists():
+        raise FileNotFoundError(f"Workflow JSON not found: {path}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    logger.info("Loaded workflow %s from %s", data.get("workflow_id", "<unknown>"), path)
+    return data
+
+
+# ─── Core Processing Pipeline ────────────────────────────────────
+def process_workflow(
+    workflow: Dict[str, Any],
+    *,
+    enable_refinement: bool = True,
+) -> Dict[str, Any]:
+    """
+    Run the MVM pipeline on a workflow dict:
+    - schema validation
+    - dependency graph autocorrect
+    - mermaid visualization
+    - simple refinement (optional)
+    """
+    workflow_id = workflow.get("workflow_id", "unnamed_workflow")
+    log_event("mvm.process.started", {"workflow_id": workflow_id})
+
+    # 1. Schema validation
+    ok, errors = validate_workflow(workflow)
+    if not ok and errors:
+        logger.warning("Initial schema validation reported %d issues.", len(errors))
+        workflow.setdefault("evaluation", {}).setdefault(
+            "notes", []
+        ).append("Schema validation reported issues; see logs for details.")
+
+    # 2. Build dependency graph and autocorrect structural issues
+    modules = workflow.get("modules", [])
+    dg = DependencyGraph(modules)
+    dg.autocorrect_missing_dependencies()
+
+    if dg.detect_cycle():
+        logger.warning("Dependency cycle detected; attempting autocorrect.")
+        corrected = dg.attempt_autocorrect_cycle()
+        if not corrected and workflow.get("evaluation") is not None:
+            workflow["evaluation"].setdefault("notes", []).append(
+                "Unresolved dependency cycle detected; manual review required."
+            )
+
+    # 3. Generate mermaid representation (for logging/debugging)
+    mermaid = mermaid_from_workflow(workflow)
+    logger.info("Mermaid graph for workflow %s:\n%s", workflow_id, mermaid)
+
+    # 4. Simple refinement (single iteration) if enabled
+    refined = deepcopy(workflow)
+    if enable_refinement:
+        refined = simple_refiner(refined)
+        log_event(
+            "mvm.process.refined",
+            {"workflow_id": refined.get("workflow_id", workflow_id)},
+        )
+
+    log_event("mvm.process.completed", {"workflow_id": workflow_id})
+    return refined
+
+
+# ─── Export & History Recording ──────────────────────────────────
+def export_artifacts(
+    workflow: Dict[str, Any],
+    out_dir: Path,
+) -> Dict[str, str]:
+    """
+    Export JSON + Markdown artifacts for the workflow.
+
+    Returns:
+        Mapping from artifact type to path (as str).
+    """
+    out_dir = out_dir or Path("data/outputs")
+    out_dir_str = str(out_dir)
+    logger.info("Exporting artifacts to %s", out_dir_str)
+
+    json_path = export_json(workflow, out_dir_str)
+    md_path = export_markdown(workflow, out_dir_str)
+
+    return {"json": json_path, "markdown": md_path}
+
+
+def record_history_if_needed(
+    original: Dict[str, Any],
+    refined: Dict[str, Any],
+    *,
+    enable_history: bool = True,
+) -> None:
+    """
+    Record a lineage entry if there is a meaningful difference between
+    original and refined workflows (e.g., coverage improvement, added modules).
+    """
+    if not enable_history:
+        return
+
+    parent_id = original.get("workflow_id", "unnamed_workflow")
+    child_id = refined.get("workflow_id", parent_id)
+
+    # Use evaluation composite or coverage delta if available
+    orig_eval = original.get("evaluation", {}) or {}
+    new_eval = refined.get("evaluation", {}) or {}
+
+    orig_score = float(orig_eval.get("composite_score", 0.0) or 0.0)
+    new_score = float(new_eval.get("composite_score", 0.0) or 0.0)
+    score_delta = new_score - orig_score
+
+    modifications = []
+    if len(refined.get("modules", [])) != len(original.get("modules", [])):
+        modifications.append("Module count changed")
+    if new_score != orig_score:
+        modifications.append(f"Composite score changed ({orig_score} -> {new_score})")
+    if not modifications:
+        # No detectable differences worth a history record
+        return
+
+    hm = HistoryManager()
+    record = hm.record_transition(
+        parent_workflow=parent_id,
+        child_workflow=child_id,
+        modifications=modifications,
+        score_delta=score_delta,
+        metadata={"original_eval": orig_eval, "refined_eval": new_eval},
+    )
+    logger.info(
+        "Recorded history: %s -> %s (Δscore=%.3f)",
+        record.parent_workflow,
+        record.child_workflow,
+        record.score_delta,
+    )
+
+
+# ─── Public API Entry for Programmatic Use ───────────────────────
+def run_mvm(
+    workflow_path: Path,
+    *,
+    out_dir: Path = Path("data/outputs"),
+    enable_refinement: bool = True,
+    enable_history: bool = True,
+    preview: bool = False,
+) -> Dict[str, Any]:
+    """
+    Public function to run the MVM pipeline on a workflow JSON file.
+
+    Returns:
+        The refined workflow dict.
+    """
+    workflow = load_workflow(workflow_path)
+    original = deepcopy(workflow)
+    refined = process_workflow(workflow, enable_refinement=enable_refinement)
+    export_artifacts(refined, out_dir)
+    record_history_if_needed(original, refined, enable_history=enable_history)
+
+    if preview:
+        snippet = json.dumps(refined, indent=2)[:800]
+        print("\n--- Workflow Preview ---\n", snippet, "...\n")
+
+    return refined
+
+
+# ─── Main CLI Entrypoint ─────────────────────────────────────────
+def main(argv: Optional[list] = None) -> int:
+    args = parse_args(argv)
 
     if args.version:
-        print("AI Instructional Workflow Generator v1.0 MVM")
-        sys.exit(0)
+        print("SSWG Workflow Generator — MVM v0.1.0")
+        return 0
 
-    def ask(val: Optional[str], prompt: str) -> str:
-        return val or input(prompt).strip()
-
-    return {
-        "purpose": ask(args.purpose, "Enter workflow purpose: "),
-        "audience": ask(args.audience, "Enter target audience: "),
-        "delivery_mode": [
-            m.strip() for m in (args.delivery_mode or "text,code").split(",")
-        ],
-        "expansion_mode": [
-            m.strip() for m in (args.expansion_mode or "recursive,modular").split(",")
-        ],
-        "evaluation_method": ask(args.evaluation_method, "Enter evaluation method: "),
-        "style": ask(args.style, "Enter workflow style/voice: "),
-        "title": args.title,
-        "out_path": args.out,
-        "pretty": args.pretty,
-        "overwrite": args.overwrite,
-    }
-
-
-# ─── Workflow Assembly ────────────────────────────────────────────
-def assemble_metadata(params: Dict[str, Any]) -> Dict[str, Any]:
-    now = datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-    return {
-        "author": "Tommy Raven",
-        "created": now,
-        "purpose": params["purpose"],
-        "audience": params["audience"],
-        "style": params["style"],
-        "delivery_mode": params["delivery_mode"],
-        "expansion_mode": params["expansion_mode"],
-        "evaluation_method": params["evaluation_method"],
-        "language": "en-US",
-        "schema_version": "1.0",
-        "phase_metadata": {},
-    }
-
-
-def assemble_workflow(params: Dict[str, Any]) -> Dict[str, Any]:
-    workflow_id = generate_workflow_id()
-    metadata = assemble_metadata(params)
-
-    wf = Workflow(workflow_id, params)
-    wf.run_all_phases()
-
-    # Recursive expansion (safe fallback if missing)
     try:
-        expanded = recursive_merge(
-            recursive_generate(
-                {
-                    "workflow_id": workflow_id,
-                    "objective": wf.results.get("Phase 1 — Initialization", {}).get(
-                        "objective", params["purpose"]
-                    ),
-                    "stages": wf.results.get("Phase 2 — How-To Generation", {}),
-                    "modules": wf.results.get("Phase 3 — Modularization", {}),
-                }
-            )
+        refined = run_mvm(
+            workflow_path=args.workflow_json,
+            out_dir=args.out_dir,
+            enable_refinement=not args.no_refine,
+            enable_history=not args.no_history,
+            preview=args.preview,
         )
+        logger.info(
+            "MVM run completed for workflow_id=%s",
+            refined.get("workflow_id", "<unknown>"),
+        )
+        return 0
     except Exception as e:
-        logger.warning("Recursive expansion failed: %s", e)
-        expanded = {}
-
-    # Telemetry record (optional)
-    try:
-        telemetry_record(workflow_id, expanded)
-    except Exception:
-        pass
-
-    workflow_data = {
-        "workflow_id": workflow_id,
-        "title": params["title"],
-        "metadata": metadata,
-        "phases": wf.results,
-        "recursive_expansion": expanded,
-        "timestamp": metadata["created"],
-    }
-
-    try:
-        validate_schema(workflow_data)
-    except Exception as e:
-        logger.warning("Schema validation skipped/failed: %s", e)
-
-    return workflow_data
-
-
-# ─── Export ──────────────────────────────────────────────────────
-def export_all(
-    workflow: Dict[str, Any],
-    out_path: Path,
-    pretty: bool = False,
-    overwrite: bool = True,
-):
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if out_path.exists() and not overwrite:
-        logger.error("File exists and overwrite=False: %s", out_path)
-        sys.exit(2)
-
-    export_json(workflow, out_path, pretty)
-    export_markdown(workflow)
-    logger.info("Workflow export complete: JSON -> %s", out_path)
-
-
-# ─── Main Entrypoint ─────────────────────────────────────────────
-def main(argv: Optional[list] = None) -> int:
-    params = parse_user_input(argv)
-    workflow_data = assemble_workflow(params)
-    export_all(workflow_data, params["out_path"], params["pretty"], params["overwrite"])
-
-    preview = json.dumps(workflow_data, indent=2)[:800]
-    print("\n--- Workflow Preview ---\n", preview, "...\n")
-    logger.info("Workflow generation complete for ID: %s", workflow_data["workflow_id"])
-    return 0
+        logger.error("MVM run failed: %s", e)
+        return 1
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+# End of generator/main.py

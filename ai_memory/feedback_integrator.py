@@ -1,116 +1,164 @@
 #!/usr/bin/env python3
 """
 ai_memory/feedback_integrator.py
-Grimoire v4.8 — Feedback Integration & Long-Term Memory Engine
-This module aggregates historical feedback, regeneration outcomes,
-and evaluation metrics into a persistent knowledge base.
-It allows Grimoire to learn over multiple diff cycles, detect recurring
-weaknesses or strengths, and adjust regeneration thresholds adaptively.
+Grimoire / SSWG MVM — Feedback Integration & Long-Term Memory Engine
+
+Aggregates historical feedback, regeneration outcomes, and evaluation
+metrics into a persistent knowledge base. Used to:
+- Track diff complexity over time
+- Track clarity scores
+- Adapt regeneration thresholds based on historical performance
 """
 
-import os
+from __future__ import annotations
+
 import json
+import os
 import statistics
 from datetime import datetime
+from typing import Any, Dict, List
+
 from ai_monitoring.structured_logger import get_logger, log_event
 
 
 class FeedbackIntegrator:
-    def __init__(self, path: str = "./data/feedback_log.json"):
+    """
+    Persist and aggregate feedback from diff cycles and evaluations.
+
+    Responsibilities:
+    - Store per-cycle records (diff size, clarity, regeneration flag).
+    - Maintain a history of clarity scores.
+    - Adapt the regeneration threshold based on average clarity.
+    """
+
+    def __init__(self, path: str = "./data/feedback_log.json") -> None:
         self.path = path
-        self.logger = get_logger()
-        self.feedback_data = self._load_feedback()
+        self.logger = get_logger("feedback")
+        self.feedback_data: Dict[str, Any] = self._load_feedback()
 
     # ---------------------- Internal Helpers ---------------------- #
 
-    def _load_feedback(self):
+    def _load_feedback(self) -> Dict[str, Any]:
         """Load or initialize persistent feedback data."""
         if os.path.exists(self.path):
-            with open(self.path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        else:
-            return {
-                "records": [],
-                "regeneration_threshold": 2,
-                "clarity_scores": [],
-                "average_clarity": None
-            }
+            try:
+                with open(self.path, "r", encoding="utf-8") as file_handle:
+                    data = json.load(file_handle)
+                # Ensure minimal structure exists
+                data.setdefault("records", [])
+                data.setdefault("regeneration_threshold", 2)
+                data.setdefault("clarity_scores", [])
+                data.setdefault("average_clarity", None)
+                return data
+            except (OSError, json.JSONDecodeError):
+                # Corrupt or unreadable file → reset structure
+                pass
 
-    def _save_feedback(self):
+        return {
+            "records": [],
+            "regeneration_threshold": 2,
+            "clarity_scores": [],
+            "average_clarity": None,
+        }
+
+    def _save_feedback(self) -> None:
         """Persist current feedback data to disk."""
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
-        with open(self.path, "w", encoding="utf-8") as f:
-            json.dump(self.feedback_data, f, indent=2)
+        with open(self.path, "w", encoding="utf-8") as file_handle:
+            json.dump(self.feedback_data, file_handle, indent=2)
 
     # ---------------------- Core Methods ---------------------- #
 
-    def record_cycle(self, diff_summary: dict, evaluation_metrics: dict, regenerated: bool):
+    def record_cycle(
+        self,
+        diff_summary: Dict[str, Any],
+        evaluation_metrics: Dict[str, Any],
+        regenerated: bool,
+    ) -> None:
         """
         Log the outcome of a regeneration or evaluation cycle.
-        Stores diff metrics, clarity scores, and regeneration triggers.
+
+        Args:
+            diff_summary: Output of version_diff_engine.compute_diff_summary.
+            evaluation_metrics: e.g. {"clarity_score": float, ...}.
+                                Assumed to be in [0.0, 1.0] for clarity_score.
+            regenerated: True if a regeneration was performed this cycle.
         """
+        clarity_score = evaluation_metrics.get("clarity_score")
+
         record = {
-            "timestamp": datetime.now().isoformat(),
-            "diff_size": diff_summary.get("diff_size", 0),
-            "regeneration_triggered": regenerated,
-            "clarity_score": evaluation_metrics.get("clarity_score"),
+            "timestamp": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+            "diff_size": int(diff_summary.get("diff_size", 0)),
+            "regeneration_triggered": bool(regenerated),
+            "clarity_score": clarity_score,
             "changed_fields": len(diff_summary.get("changed_fields", [])),
             "added_phases": len(diff_summary.get("added_phases", [])),
             "removed_phases": len(diff_summary.get("removed_phases", [])),
-            "modified_phases": len(diff_summary.get("modified_phases", []))
+            "modified_phases": len(diff_summary.get("modified_phases", [])),
         }
 
         self.feedback_data["records"].append(record)
-        self.feedback_data["clarity_scores"].append(record["clarity_score"])
+        self.feedback_data["clarity_scores"].append(clarity_score)
+
         log_event(self.logger, "feedback_recorded", record)
+
         self._recalculate_threshold()
         self._save_feedback()
 
-    def _recalculate_threshold(self):
+    def _recalculate_threshold(self) -> None:
         """
-        Dynamically adjust regeneration threshold based on
-        historical clarity and diff complexity.
+        Dynamically adjust regeneration threshold based on historical
+        clarity and diff complexity.
+
+        Assumes clarity_scores are in [0.0, 1.0]:
+        - >= 0.9 → threshold = 3
+        - >= 0.7 → threshold = 2
+        - else   → threshold = 1
         """
-        clarity_scores = [c for c in self.feedback_data["clarity_scores"] if c is not None]
+        raw_scores: List[Any] = self.feedback_data.get("clarity_scores", [])
+        # Filter out None and coerce to float so Pylance / statistics are happy
+        clarity_scores: List[float] = [
+            float(score) for score in raw_scores if score is not None
+        ]
         if not clarity_scores:
             return
 
-        avg_clarity = statistics.mean(clarity_scores)
-        self.feedback_data["average_clarity"] = round(avg_clarity, 2)
+        average_clarity = statistics.mean(clarity_scores)
+        self.feedback_data["average_clarity"] = round(average_clarity, 3)
 
-        # Adaptive logic: as clarity improves, threshold rises to prevent over-regeneration
-        if avg_clarity >= 9.0:
-            self.feedback_data["regeneration_threshold"] = 3
-        elif avg_clarity >= 7.0:
-            self.feedback_data["regeneration_threshold"] = 2
+        if average_clarity >= 0.9:
+            threshold = 3
+        elif average_clarity >= 0.7:
+            threshold = 2
         else:
-            self.feedback_data["regeneration_threshold"] = 1
+            threshold = 1
 
-        log_event(self.logger, "threshold_adjusted", {
-            "new_threshold": self.feedback_data["regeneration_threshold"],
-            "average_clarity": avg_clarity
-        })
+        self.feedback_data["regeneration_threshold"] = threshold
+
+        log_event(
+            self.logger,
+            "threshold_adjusted",
+            {
+                "new_threshold": threshold,
+                "average_clarity": average_clarity,
+            },
+        )
 
     # ---------------------- Accessor Methods ---------------------- #
 
-    def get_summary(self):
+    def get_summary(self) -> Dict[str, Any]:
         """Return current learning status."""
-        total = len(self.feedback_data["records"])
-        avg_clarity = self.feedback_data.get("average_clarity")
+        total_cycles = len(self.feedback_data.get("records", []))
+        average_clarity = self.feedback_data.get("average_clarity")
         threshold = self.feedback_data.get("regeneration_threshold")
         return {
-            "total_cycles": total,
-            "average_clarity": avg_clarity,
-            "adaptive_threshold": threshold
+            "total_cycles": total_cycles,
+            "average_clarity": average_clarity,
+            "adaptive_threshold": threshold,
         }
 
 
-# ---------------------- Example Execution ---------------------- #
-
 if __name__ == "__main__":
-    from ai_recursive.version_diff_engine import compute_diff_summary
-
-    # Example simulation
     integrator = FeedbackIntegrator()
 
     fake_diff = {
@@ -121,11 +169,11 @@ if __name__ == "__main__":
         "modified_phases": [],
     }
 
-    fake_eval = {"clarity_score": 8.6}
+    # Example clarity in [0, 1]
+    fake_eval = {"clarity_score": 0.86}
 
     integrator.record_cycle(fake_diff, fake_eval, regenerated=True)
-    summary = integrator.get_summary()
+    SUMMARY = integrator.get_summary()
 
     print("\n📚 Feedback Summary")
-    print(summary)
-
+    print(SUMMARY)

@@ -2,24 +2,26 @@ version: 2
 updates:
 
   # ───────────────────────────────────────────────
-  # 1. Python Dependencies (SSWG Core Only)
+  # 1. Python Dependencies (One Ecosystem Block)
+  #    • Groups handle separation of concerns
   # ───────────────────────────────────────────────
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-    allow:
-      # Only dependencies that matter to SSWG internals
-      - dependency-type: "direct"
+
     commit-message:
       prefix: "deps"
-      prefix-development: "deps-dev"
       include: "scope"
+
     labels:
       - "dependency-update"
       - "sswg-core"
+
+    # Grouping is how we do “multiple update tracks”
     groups:
-      sswg-core-deps:
+
+      sswg-core:
         patterns:
           - "jsonschema*"
           - "pydantic*"
@@ -27,11 +29,26 @@ updates:
           - "rich*"
           - "anyio*"
           - "deepdiff*"
+          - "ai-*"
+          - "sswg-*"
+
+      dev-tooling:
+        patterns:
           - "pytest*"
+          - "pytest-*"
           - "mypy*"
           - "ruff*"
           - "black*"
           - "isort*"
+
+      security-critical:
+        patterns:
+          - "*"   # broad match
+        update-types:
+          - "security"
+        # These receive the “security” prefix automatically
+        # and are allowed to open more PRs even if others are pending
+        open-pull-requests-limit: 5
 
   # ───────────────────────────────────────────────
   # 2. GitHub Actions Dependencies
@@ -40,35 +57,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
     commit-message:
       prefix: "ci"
       include: "scope"
+
     labels:
       - "ci"
       - "dependency-update"
+
     groups:
       core-ci-actions:
         patterns:
           - "actions/*"
           - "peter-evans/*"
-
-  # ───────────────────────────────────────────────
-  # 3. Security-critical dependencies (Auto)
-  # ───────────────────────────────────────────────
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-type: "direct"
-    labels:
-      - "security"
-      - "sswg-core"
-    commit-message:
-      prefix: "security"
-    groups:
-      security-patches:
-        patterns:
-          - "*"
-    # Auto-merge only for security-critical updates
-    open-pull-requests-limit: 3

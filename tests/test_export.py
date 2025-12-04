@@ -1,20 +1,17 @@
-"""
-Tests export functionality for Graphviz and multi-mode output.
-"""
-
-from ai_visualization.export_manager import export_workflow
+from generator.exporters import export_json, export_markdown
 import os
 
 
 def test_export_workflow_json_and_md(tmp_path):
     wf = {
-        "workflow_id": "test_workflow",
-        "version": "1.0",
-        "metadata": {"purpose": "Export test"},
-        "phases": [{"title": "Phase 1", "tasks": ["Run", "Save"]}],
-        "dependency_graph": {"nodes": ["Run", "Save"], "edges": [["Run", "Save"]]},
+        "workflow_id": "test",
+        "version": "v.09.mvm.25",
+        "metadata": {"purpose": "test"},
+        "phases": [],
     }
 
-    exports = export_workflow(wf, export_mode="both")
-    for key, path in exports.items():
-        assert os.path.exists(path), f"{key} export failed: {path}"
+    json_out = export_json(wf, out_dir=str(tmp_path))
+    md_out = export_markdown(wf, out_dir=str(tmp_path))
+
+    assert os.path.exists(json_out)
+    assert os.path.exists(md_out)

@@ -1,21 +1,115 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-
-[tool.black]
-line-length = 88
-target-version = ['py310']
-
-[tool.isort]
-profile = "black"
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "ai-instructional-workflow-generator"
-version = "1.0.0"
-authors = [{ name="Tommy-Raven", email="ravenrecordings@proton.me" }]
-description = "A recursive AI system for generating modular instructional workflows."
+name = "sswg-mvm"
+version = "0.1.0-mvm"
+authors = [
+    { name = "Tommy Raven", email = "ravenrecordings@proton.me" }
+]
+description = "SSWG Minimum Viable Model — a recursive, schema-aligned AI workflow engine for modular instruction generation and autonomous refinement."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 
+keywords = [
+    "SSWG",
+    "recursive-ai",
+    "workflow-engine",
+    "instructional-design",
+    "MVM",
+    "meta-learning",
+    "autonomous-systems"
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    # Schema + validation
+    "jsonschema>=4.21.0",
+
+    # Memory + persistence
+    "pydantic>=2.0",
+
+    # Visualization
+    "graphviz>=0.20.1",
+
+    # CLI + structured logging
+    "rich>=13.0.0",
+
+    # Async helpers
+    "anyio>=4.0",
+
+    # Optional: enhanced diff
+    "deepdiff>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0",
+    "isort>=5.12.0",
+    "ruff>=0.1.0",
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "mypy>=1.5.0",
+]
+
 [project.scripts]
-aiwf = "generator.main:main"
+sswg = "generator.main:main"
+
+# ----------------------------
+# TOOLING CONFIGURATIONS
+# ----------------------------
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "I", "C90"]
+ignore = []
+exclude = ["build/", "dist/", ".venv/"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "--disable-warnings"
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_return_any = false
+ignore_missing_imports = true
+strict_optional = true
+
+# ----------------------------
+# SSWG–MVM Internal Metadata
+# ----------------------------
+[tool.sswg]
+schema-version = "1.0.0"
+mvm-profile = "sswg_mvm_v0_1"
+default-template = "training"
+enable-recursion = true
+enable-history = true
+enable-autocorrect = true
+
+[tool.sswg.modules]
+validation = "ai_validation"
+graph = "ai_graph"
+memory = "ai_memory"
+recursion = "ai_recursive"
+visualization = "ai_visualization"
+monitoring = "ai_monitoring"
+generator = "generator"

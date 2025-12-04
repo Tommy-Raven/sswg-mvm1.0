@@ -1,69 +1,111 @@
-name: SSWG-MVM CI
+name: SSWG–MVM Continuous Integration (v0.9.mvm.25)
 
+# ───────────────────────────────────────────────
+# EVENT TRIGGERS
+# ───────────────────────────────────────────────
 on:
   push:
     branches: ["main", "canonical", "dev", "mvm"]
   pull_request:
     branches: ["main", "canonical"]
+  workflow_dispatch:
 
+permissions:
+  contents: read
+
+env:
+  SSWG_VERSION: "v0.9.mvm.25"
+
+# ───────────────────────────────────────────────
+# JOB: CI PIPELINE
+# ───────────────────────────────────────────────
 jobs:
   build-test-lint:
+    name: 🧪 Build • Lint • Test • Package
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout repository
+
+      # ----------------------------------------------------
+      # 1) Checkout
+      # ----------------------------------------------------
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
+      # ----------------------------------------------------
+      # 2) Python + System Setup
+      # ----------------------------------------------------
+      - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
-      - name: Install system dependencies
+      - name: 🧩 Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz
 
-      - name: Install project dependencies
+      # ----------------------------------------------------
+      # 3) Install Dependencies
+      # ----------------------------------------------------
+      - name: 📦 Install project dependencies (editable mode)
         run: |
           python3 -m pip install --upgrade pip wheel setuptools
-          python3 -m pip install -e ".[dev]"
+          if [ -f pyproject.toml ]; then
+            pip install -e .[dev]
+          else
+            pip install -r REQUIREMENTS.txt
+          fi
 
-      # ————————————————————————————————
-      #       STATIC ANALYSIS
-      # ————————————————————————————————
-      - name: Run Ruff
+      # ───────────────────────────────────────────────
+      # STATIC ANALYSIS LAYER
+      # ───────────────────────────────────────────────
+
+      - name: 🔍 Run Ruff (Lint + Style)
         run: ruff check .
 
-      - name: Run Black (check only)
+      - name: 🎨 Run Black (check only)
         run: black --check .
 
-      - name: Run isort (check only)
+      - name: 🔧 Run isort (check only)
         run: isort . --check-only
 
-      - name: Run MyPy
+      - name: 🔎 Run MyPy (Type checking)
         run: mypy .
 
-      - name: Run Pylint
+      - name: 📝 Run Pylint
         run: |
-          find . -name "*.py" -print0 \
-            | xargs -0 pylint --score=no
+          echo "Running Pylint across project..."
+          find . -name "*.py" -print0 | xargs -0 pylint --score=no
 
-      # ————————————————————————————————
-      #           TEST SUITE
-      # ————————————————————————————————
-      - name: Run PyTest
-        run: pytest -q
+      # ───────────────────────────────────────────────
+      # TEST SUITE
+      # ───────────────────────────────────────────────
+      - name: 🧪 Run PyTest
+        run: |
+          pytest -q --disable-warnings --maxfail=1
 
-      # ————————————————————————————————
-      #          PACKAGE BUILD
-      # ————————————————————————————————
-      - name: Build distribution
+      # ───────────────────────────────────────────────
+      # PACKAGE BUILD
+      # ───────────────────────────────────────────────
+      - name: 📦 Build distribution
         run: python3 -m build
 
-      - name: Upload build artifacts
+      - name: 📤 Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sswg-mvm-dist
           path: dist/
+
+      # ───────────────────────────────────────────────
+      # OPTIONAL: ENGINE SUMMARY
+      # ───────────────────────────────────────────────
+      - name: 🧾 SSWG–MVM Environment Summary
+        run: |
+          echo "🚀 SSWG-MVM CI Summary"
+          echo "• Version: $SSWG_VERSION"
+          echo "• Python: $(python3 --version)"
+          echo "• Installed packages:"
+          pip list
+          echo "• Completed at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"

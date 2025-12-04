@@ -1,0 +1,111 @@
+site_name: "SSWG–MVM Documentation"
+site_description: "Synthetic Synthesist of Workflow Generation — Minimum Viable Model (v.09.mvm.25)"
+site_author: "Tommy Raven / Raven Recordings, LLC © 2025"
+site_url: "https://tommy-raven.github.io/AI_instructions_workflow/"
+
+repo_name: "AI_instructions_workflow"
+repo_url: "https://github.com/Tommy-Raven/AI_instructions_workflow"
+
+# --------------------------
+# BUILD / THEME
+# --------------------------
+theme:
+  name: "material"
+  palette:
+    - scheme: default
+      primary: deep-purple
+      accent: indigo
+    - scheme: slate
+      primary: deep-purple
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  icon:
+    logo: material/bird
+    repo: fontawesome/brands/github
+  favicon: assets/favicon.svg
+  logo: assets/raven.svg
+
+# --------------------------
+# MARKDOWN EXTENSIONS
+# --------------------------
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tasklist
+  - pymdownx.magiclink
+  - pymdownx.highlight
+
+# --------------------------
+# PLUGINS
+# --------------------------
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            docstring_style: google
+  - mermaid2
+  - macros
+
+extra_css:
+  - assets/sswg-theme.css
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+
+# --------------------------
+# NAVIGATION
+# --------------------------
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting_started/overview.md
+      - Installation: getting_started/installation.md
+      - Running the MVM: getting_started/run_mvm.md
+
+  - Architecture:
+      - System Architecture: architecture/system_architecture.md
+      - Folder Structure: architecture/folder_structure.md
+      - Data Flow & Recursion Model: architecture/recursion_model.md
+
+  - Templates:
+      - Creative Writing: templates/creative_writing.md
+      - Technical Procedure: templates/technical_procedure.md
+      - Meta Reflection: templates/meta_reflection.md
+      - Training Curriculum: templates/training_curriculum.md
+
+  - Schema:
+      - Workflow Schema: schema/workflow_schema.md
+      - Examples: schema/examples.md
+
+  - Developer Guide:
+      - CLI Usage: dev/cli.md
+      - Module Reference: dev/modules.md
+      - Testing: dev/testing.md
+      - CI/CD: dev/cicd.md
+      - Versioning Rules: dev/versioning.md
+
+  - Visualization:
+      - Mermaid Graphs: viz/mermaid.md
+      - DAG Structures: viz/dag.md
+
+  - Release Notes:
+      - Changelog: changelog.md
+
+# --------------------------
+# COPYRIGHT
+# --------------------------
+extra:
+  copyright:
+    text: "© 2025 Raven Recordings, LLC — Tommy Raven"

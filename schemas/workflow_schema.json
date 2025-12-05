@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/schemas/workflow_schema.json",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/workflow_schema.json",
   "title": "Workflow Schema",
   "description": "Defines the full recursive instructional workflow architecture.",
   "type": "object",
@@ -14,32 +14,32 @@
       "type": "string"
     },
     "metadata": {
-      "$ref": "metadata_schema.json"
+      "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/metadata_schema.json"
     },
     "phases": {
       "type": "array",
       "items": {
-        "$ref": "phase_schema.json"
+        "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/phase_schema.json"
       },
       "minItems": 1
     },
     "modules": {
       "type": "array",
       "items": {
-        "$ref": "module_schema.json"
+        "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/module_schema.json"
       }
     },
     "semantics": {
       "type": "array",
       "items": {
-        "$ref": "semantics_schema.json"
+        "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/semantics_schema.json"
       }
     },
     "evaluation": {
-      "$ref": "evaluation_schema.json"
+      "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/evaluation_schema.json"
     },
     "recursion": {
-      "$ref": "recursion_schema.json"
+      "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/recursion_schema.json"
     },
     "dependency_graph": {
       "type": "object",

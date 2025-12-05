@@ -1,24 +1,36 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/phase_schema.json",
   "title": "Phase Schema",
   "description": "A workflow phase composed of one or more instructional tasks.",
   "type": "object",
   "required": ["id", "title", "tasks"],
   "properties": {
-    "id": { "type": "string" },
-    "title": { "type": "string" },
-    "description": { "type": "string" },
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
     "tasks": {
       "type": "array",
-      "items": { "$ref": "task_schema.json" },
+      "items": {
+        "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/task_schema.json"
+      },
       "minItems": 1
     },
     "subphases": {
       "type": "array",
-      "items": { "$ref": "phase_schema.json" }
+      "items": {
+        "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/phase_schema.json"
+      }
     },
-    "evaluation_schema": { "$ref": "evaluation_schema.json" }
+    "evaluation_schema": {
+      "$ref": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/evaluation_schema.json"
+    }
   },
   "additionalProperties": false
 }
-

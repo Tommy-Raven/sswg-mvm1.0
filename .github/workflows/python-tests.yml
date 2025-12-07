@@ -44,12 +44,20 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
-          if [ -f pyproject.toml ]; then
-            pip install -e ".[dev]"
-          elif [ -f build/REQUIREMENTS.txt ]; then
-            pip install -r build/REQUIREMENTS.txt
-          fi
-          pip install flake8 pytest
+          python3 -m pip install --upgrade pip
+          if [ -f reproducibility/requirements.txt ]; 
+            then
+              pip install -r reproducibility/requirements.txt
+          elif [ -f REQUIREMENTS.txt ]; 
+            then
+              pip install -r REQUIREMENTS.txt
+          if [ -f pyproject.toml ]; 
+            then
+              pip install -e ".[dev]"
+          elif [ -f build/REQUIREMENTS.txt ]; 
+            then
+              pip install -r build/REQUIREMENTS.txt
+          pip install fastapi uvicorn flake8 pytest httpx pytest rich black json
 
 
       - name: 🧪 Execute tests

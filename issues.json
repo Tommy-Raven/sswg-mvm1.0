@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Enforce full JSON Schema validation for templates, workflows, and outputs in CI",
+    "body": "Goal\n-----\nMake schema validation a hard gate for every workflow artifact (inputs and outputs) to prevent contract drift and silent failures.\n\nScope\n-----\n- Validate all of the following against `schemas/*.json` via CI:\n  - `data/templates/*.json`\n  - `data/workflows/*.json`\n  - any JSON emitted into `data/outputs/`\n- Use `ai_validation.schema_validator` + `jsonschema` in CI workflows.\n- Fail PRs if any artifact violates the active SSWG-MVM schemas.\n\nTasks\n-----\n- [ ] Add/extend a CI job (e.g. in `sswg-mvm-ci.yml` or `template-validations.yaml`) to run full-schema validation over all template/workflow/output files.\n- [ ] Ensure schemas are loaded with their canonical `$id`/`$ref` rules.\n- [ ] Add a short \"schema validation\" section to `docs/SCHEMA_TRACKING.md`.\n- [ ] Add a regression test in `tests/` that validates at least one real workflow + template end to end.\n",
+    "labels": ["priority: P0", "type: ci", "area: schema", "stage: mvm-hardening"]
+  },
+  {
+    "title": "Connect RecursionManager to FeedbackIntegrator and metrics for adaptive recursion control",
+    "body": "Goal\n-----\nUse real feedback and clarity scores to drive recursion depth and regeneration decisions, instead of fixed thresholds.\n\nScope\n-----\n- Wire `RecursionManager` / `RecursionPolicy` (in `generator/recursion_manager.py`) to `FeedbackIntegrator` (in `ai_memory/feedback_integrator.py`).\n- Use averaged clarity scores and diff complexity to adjust:\n  - max recursion depth\n  - regeneration thresholds\n  - stop conditions.\n\nTasks\n-----\n- [ ] Add a simple interface for `RecursionManager` to query feedback metrics from `FeedbackIntegrator`.\n- [ ] Update recursion policy decisions (continue/stop/refine) to use clarity history instead of static values.\n- [ ] Ensure these decisions are logged via `ai_monitoring.telemetry` with clear event names.\n- [ ] Add tests that show recursion behavior changing based on synthetic feedback histories.\n",
+    "labels": ["priority: P0", "type: feature", "area: recursion", "area: memory"]
+  },
+  {
+    "title": "Instrument generator main flows with latency and error-rate performance alerts",
+    "body": "Goal\n-----\nIntroduce basic SRE-style checks for latency and error rates around critical MVM operations.\n\nScope\n-----\n- Use `ai_monitoring/performance_alerts.py` alongside `structured_logger`/`telemetry`.\n- Wrap key `generator/main.py` operations (schema validation, dependency graph, refinement, export) with latency and error tracking.\n\nTasks\n-----\n- [ ] Add instrumentation in `generator/main.py` to measure durations of major phases and call `check_latency_threshold`.\n- [ ] Track per-run error rate and call `check_error_rate_threshold` where appropriate.\n- [ ] Log alert results via `TelemetryLogger` with structured JSON fields (phase, threshold, observed value, status).\n- [ ] Document thresholds and expected behavior in `docs/METRICS_SYSTEM.md` or a dedicated SLO section.\n",
+    "labels": ["priority: P0", "type: enhancement", "area: monitoring", "area: generator"]
+  },
+  {
+    "title": "Extend memory coherence checks beyond recursive benchmark scenarios",
+    "body": "Goal\n-----\nEnsure `ai_memory` coherence guarantees apply not only to synthetic benchmarks but also (or at least more) to real workflows.\n\nScope\n-----\n- Reuse logic from the Recursive Benchmark Engine CI job to validate memory coherence in additional scenarios.\n- Optionally define a set of \"representative workflows\" that are always checked.\n\nTasks\n-----\n- [ ] Identify a small set of real or canonical workflows to use as memory-coherence smoke tests.\n- [ ] Add a script (e.g. under `scripts/`) that runs these workflows and checks memory snapshots for consistency.\n- [ ] Integrate that script into CI (new job or extension of the benchmark job).\n- [ ] Add a brief doc section on \"memory coherence checks\" in `docs/EVOLUTION_LOGGING.md` or `ai_memory.md`.\n",
+    "labels": ["priority: P1", "type: enhancement", "area: memory", "area: ci"]
+  },
+  {
+    "title": "Align RecursionManager implementation with documented Recursion Manager design",
+    "body": "Goal\n-----\nBring `generator/recursion_manager.py` closer to the fully documented Recursion Manager: semantic delta scoring, caching, per-phase logic, config-driven behavior.\n\nScope\n-----\n- This is a staged change; start with the highest impact features.\n- Use `config/recursion.yml` and existing semantic analysis/evaluation utilities.\n\nTasks (phase 1)\n----------------\n- [ ] Implement struct for per-phase recursion thresholds and conditions.\n- [ ] Add support for semantic delta scores as a trigger for stopping/continuing recursion.\n- [ ] Load recursion parameters from `config/recursion.yml`.\n\nTasks (phase 2)\n----------------\n- [ ] Add caching/reuse of intermediate results where safe.\n- [ ] Integrate evaluation metrics to gate further recursion passes.\n- [ ] Document the new behavior and differences from the MVM baseline in `docs/RECURSION_MANAGER.md`.\n",
+    "labels": ["priority: P1", "type: feature", "area: recursion", "stage: post-mvm"]
+  },
+  {
+    "title": "Normalize SSWG-MVM JSON Schemas and fix `$ref` / `$id` inconsistencies",
+    "body": "Goal\n-----\nEnsure all schemas in `schemas/` are internally consistent, correctly referenced, and deterministic under the ts/dtr rules.\n\nScope\n-----\n- Audit `workflow_schema.json`, `phase_schema.json`, `task_schema.json`, `module_schema.json`, `metadata_schema.json`, `evaluation_schema.json`, etc.\n- Fix any incorrect `$ref`s (e.g. self-ref where metadata schema should be referenced).\n- Validate schemas themselves with `jsonschema` and/or meta-schema tools.\n\nTasks\n-----\n- [ ] Run a schema audit script that attempts to resolve all `$ref` values.\n- [ ] Fix any mis-references (e.g. `module_schema.json` metadata pointing to itself instead of `metadata_schema.json`).\n- [ ] Add a minimal \"schema self-check\" job to CI that validates the schemas against the 2020-12 meta-schema.\n- [ ] Document schema IDs and referencing rules in the SSWG Schema Overview and link from `docs/SCHEMA_TRACKING.md`.\n",
+    "labels": ["priority: P1", "type: bug", "area: schema"]
+  },
+  {
+    "title": "Add focused tests for memory, feedback, telemetry, and schema migration paths",
+    "body": "Goal\n-----\nIncrease confidence in subsystems that currently have strong design but relatively opaque runtime guarantees.\n\nScope\n-----\n- `ai_memory/memory_store.py`\n- `ai_memory/feedback_integrator.py`\n- `ai_monitoring/structured_logger.py` + `telemetry.py` + `performance_alerts.py`\n- `ai_validation/schema_tracker` / `version_migrator`\n\nTasks\n-----\n- [ ] Add tests that verify memory snapshots are stored and loaded correctly, with meaningful error handling.\n- [ ] Add tests that exercise `FeedbackIntegrator`’s adaptive thresholds and clarity history logic.\n- [ ] Add tests that check telemetry events are well-formed and correctly written to log files.\n- [ ] Add migration tests that simulate schema version changes and ensure `version_migrator` behaves as documented.\n",
+    "labels": ["priority: P1", "type: test", "area: memory", "area: monitoring", "area: schema"]
+  },
+  {
+    "title": "Create unified “Runtime Observability & Evolution” guide",
+    "body": "Goal\n-----\nGive contributors and operators a single, coherent doc that explains how recursion, metrics, telemetry, and evolution logging work together.\n\nScope\n-----\n- Consolidate material from:\n  - `docs/RECURSION_MANAGER.md`\n  - `docs/METRICS_SYSTEM.md`\n  - `docs/TELEMETRY_GUIDE.md`\n  - `docs/EVOLUTION_LOGGING.md`\n- Emphasize concrete flows through `generator/main.py`, `ai_memory`, and `ai_monitoring`.\n\nTasks\n-----\n- [ ] Create `docs/OBSERVABILITY_AND_EVOLUTION.md` (or similar).\n- [ ] Add a section with a simple ASCII data-flow diagram (CLI → generator → recursion → evaluation → memory → telemetry).\n- [ ] Reference real code paths and config files.\n- [ ] Link this doc from `README.md` and `CONTRIBUTOR_GUIDE.md`.\n",
+    "labels": ["priority: P2", "type: docs", "area: observability"]
+  },
+  {
+    "title": "Promote SSWG-MVM Schema Overview as canonical schema index",
+    "body": "Goal\n-----\nMake the SSWG-MVM Schema Overview doc the single, authoritative index for all schema contracts and ensure it stays in sync with the `schemas/` folder.\n\nScope\n-----\n- Use the existing overview doc as the hub for:\n  - Schema list + IDs.\n  - Versioning and ts/dtr rules.\n  - Sample JSON fragments.\n\nTasks\n-----\n- [ ] Move or link the overview into `docs/SCHEMA_TRACKING.md` (or keep it as a separate doc and link from there).\n- [ ] Add a short checklist describing what must be updated when schemas change.\n- [ ] Ensure existing examples in docs and templates reference the same field names and structure.\n- [ ] Consider a simple script or checklist in the repo to verify docs ↔ schema consistency when PRs touch `schemas/`.\n",
+    "labels": ["priority: P2", "type: docs", "area: schema"]
+  },
+  {
+    "title": "Clarify SSWG-MVM vs. legacy “Recursive_Grimoire” naming and versioning",
+    "body": "Goal\n-----\nRemove ambiguity between older “Recursive_Grimoire” terminology and current “SSWG-MVM” naming/versioning, especially for new contributors.\n\nScope\n-----\n- Docs: architecture, recursion, evolution, metrics, schema.\n- Public-facing README and intro docs.\n\nTasks\n-----\n- [ ] Identify docs where “Recursive_Grimoire” is still primary and clarify its status as historical or internal codename.\n- [ ] Ensure SSWG-MVM naming + versioning is consistently used for current code and flows.\n- [ ] Add a short legend: “Recursive_Grimoire” → “SSWG-MVM” mapping.\n- [ ] Update any diagrams and examples that mix the two without explanation.\n",
+    "labels": ["priority: P2", "type: docs", "area: naming"]
+  },
+  {
+    "title": "Add “MVM development loop” section to CONTRIBUTOR_GUIDE",
+    "body": "Goal\n-----\nGive contributors a simple step-by-step loop for working on SSWG-MVM, from editing templates/schemas to running generator and tests locally.\n\nScope\n-----\n- `CONTRIBUTOR_GUIDE.md` (and optionally `README.md`).\n\nTasks\n-----\n- [ ] Add a section outlining a typical dev loop:\n  1. Modify a template or schema.\n  2. Run local schema validation.\n  3. Run `generator/main.py` against a target template.\n  4. Inspect metrics/telemetry and outputs.\n  5. Run pytest.\n  6. Push and let CI run full suite and recursive benchmarks.\n- [ ] Link to relevant docs (schema overview, recursion, metrics, telemetry).\n- [ ] Optionally include example commands.\n",
+    "labels": ["priority: P2", "type: docs", "area: onboarding"]
+  },
+  {
+    "title": "Elevate recursive benchmark anomalies to a formal governance signal",
+    "body": "Goal\n-----\nTurn the existing benchmark CI job and anomaly PRs into a formal input to decision-making around schema changes, recursion policies, and release readiness.\n\nScope\n-----\n- CI job: recursive benchmark engine.\n- Governance docs: CHANGELOG, EVOLUTION_LOGGING, release process.\n\nTasks\n-----\n- [ ] Document in `docs/EVOLUTION_LOGGING.md` or `docs/OPTIMIZATION_PLAN.md` how anomaly PRs should be triaged.\n- [ ] Define thresholds that require human review (and possibly block releases).\n- [ ] Optionally add a label (e.g. `benchmark: anomaly`) for PRs opened by the benchmark workflow.\n- [ ] Ensure maintainers understand how benchmark results relate to SSWG-MVM versioning and ts/dtr constraints.\n",
+    "labels": ["priority: P2", "type: process", "area: ci", "area: governance"]
+  }
+]

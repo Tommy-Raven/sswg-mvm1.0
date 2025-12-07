@@ -22,14 +22,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: Set up Python
-        uses: actions/setup-python@82c7e631bb3cfad61ab9166887a6c1b1d5ef5c2
-        with:
-          python-version: "3.11"  # or keep in sync with your main CI python
-
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
-          pip install -r reproducibility/requirements.txt
+          python3 -m pip install --upgrade pip
+          if [ -f reproducibility/requirements.txt ]; 
+            then
+              pip install -r reproducibility/requirements.txt
+          elif [ -f REQUIREMENTS.txt ]; 
+            then
+              pip install -r REQUIREMENTS.txt
+          fi
+          pip install fastapi uvicorn flake8 pytest httpx pytest rich black json
 
       - name: List template files
         run: |

@@ -1,4 +1,4 @@
-# **SSWG–MVM v.0.0.9mvm**  
+# **sswg–MVM v.0.0.9mvm**  
 ### *sswg — Synthetic Synthesist of Workflow Generation (Minimum Viable Model)*
 
 <div id="top"></div>
@@ -7,7 +7,7 @@
 </div>
 
 <div align="center">
-<h2>SSWG–MVM</h2>
+<h2>sswg–MVM</h2>
 <i>Recursive, Schema-Aligned Workflow Engine • Designed by Tommy Raven</i>
 </div>
 
@@ -22,13 +22,13 @@
 
 </div>
 
-> **Pre-release notice:** SSWG–MVM is proprietary software; private evaluation is allowed, but redistribution, hosting, model-training, or derivative use is prohibited.
+> **Pre-release notice:** sswg–MVM is proprietary software; private evaluation is allowed, but redistribution, hosting, model-training, or derivative use is prohibited.
 
 ---
 
 ## ⚖️ Legal At-A-Glance
 
-**Current Status (v0.9.0mvm)**  
+**Current Status (v0.0.9mvm)**  
 - Proprietary • All rights reserved  
 - No redistribution, resale, hosting, or dataset extraction  
 - No forks or derivative systems  
@@ -199,7 +199,7 @@ Fun fact: *Not actually an Apache helicopter — but thriving anyway.*
 
 ## 📜 License Summary
 
-**SSWG–MVM is proprietary pre-release software.**  
+**sswg–MVM is proprietary pre-release software.**  
 Private evaluation is permitted; redistribution, resale, hosting, model-training,  
 or derivative works are **not allowed**. See full terms in `LICENSE.md`.
 

@@ -48,21 +48,16 @@ jobs:
       - name: 🧾 Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@82c7e631bb3cfad61ab9166887a6c1b1d5ef5c2
-        with:
-          python-version: "3.11"
-
       - name: 📦 Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          # Use reproducibility lock file if available
+          # Primary dependency path
           if [ -f reproducibility/requirements.txt ]; then
             pip install -r reproducibility/requirements.txt
           elif [ -f REQUIREMENTS.txt ]; then
             pip install -r REQUIREMENTS.txt
           fi
-          pip install flake8 pytest
+          pip install fastapi uvicorn flake8 pytest httpx
 
       - name: 🔍 Lint SSWG Core Modules
         run: |
@@ -81,11 +76,6 @@ jobs:
       - name: 🧾 Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@82c7e631bb3cfad61ab9166887a6c1b1d5ef5c2
-        with:
-          python-version: "3.11"
-
       - name: 📦 Install dependencies
         run: |
           python3 -m pip install --upgrade pip
@@ -94,7 +84,7 @@ jobs:
           elif [ -f REQUIREMENTS.txt ]; then
             pip install -r REQUIREMENTS.txt
           fi
-          pip install pytest
+          pip install fastapi uvicorn flake8 pytest httpx
 
       - name: 🧪 Execute full test suite
         run: |

@@ -42,14 +42,17 @@ jobs:
       # ----------------------------------------------------
       # 2. Setup Python
       # ----------------------------------------------------
-      - name: Setup Python 3.11
-        uses: actions/setup-python@82c7e631bb3cfad61ab9166887a6c1b1d5ef5c2
-        with:
-          python-version: "3.11"
-
-      - name: Install Dependencies
+      - name: 📦 Install dependencies
         run: |
           python3 -m pip install --upgrade pip
+          if [ -f reproducibility/requirements.txt ]; 
+            then
+              pip install -r reproducibility/requirements.txt
+          elif [ -f REQUIREMENTS.txt ]; 
+            then
+              pip install -r REQUIREMENTS.txt
+          fi
+          pip install fastapi uvicorn flake8 pytest httpx pytest rich black json
           # Optional: install SSWG local project (editable mode)
           if [ -f pyproject.toml ]; then pip install -e .; fi
 

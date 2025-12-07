@@ -42,21 +42,15 @@ jobs:
       - name: 🧾 Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332692973e3d937129bcbf40652eb9f2f61becf3332  # v4 pinned
 
-      - name: 🐍 Set up Python 3.11
-        uses: actions/setup-python@82c7e631bb3cfad61ab9166887a6c1b1d5ef5c2  # v5 pinned
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
       - name: 📦 Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
           if [ -f pyproject.toml ]; then
-            pip install -e .[dev]
-          elif [ -f REQUIREMENTS.txt ]; then
-            pip install -r REQUIREMENTS.txt
+            pip install -e ".[dev]"
+          elif [ -f build/REQUIREMENTS.txt ]; then
+            pip install -r build/REQUIREMENTS.txt
           fi
-          pip install pytest
+          pip install flake8 pytest
+
 
       - name: 🧪 Execute tests
         run: |
@@ -68,3 +62,4 @@ jobs:
         with:
           name: python-test-results
           path: tests/
+

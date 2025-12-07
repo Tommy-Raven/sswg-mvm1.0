@@ -1,0 +1,6 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Tommy-Raven/SSWG-mvm1.0/main/schemas/workflow_schema.json",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/data/workflows/workflow_001.json",
+  "workflow_id": "workflow_001",
+  "version": "0.1.0"
+}

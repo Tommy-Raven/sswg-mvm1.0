@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Workflow Template Schema",
+  "description": "Defines a lightweight template blueprint for instructional workflows that can be expanded into full schema-aligned workflows.",
+  "type": "object",
+  "required": ["template_id", "title", "description", "phases", "metadata"],
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "Slug-like identifier used to reference this template (e.g., 'meta_reflection', 'training_curriculum').",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable template title."
+    },
+    "description": {
+      "type": "string",
+      "description": "High-level description of the template's purpose and domain."
+    },
+    "phases": {
+      "type": "array",
+      "description": "Ordered list of phases in the template. Each phase will be expanded into full phase/task objects by the generator.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "tasks"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Phase identifier (e.g., 'P1', 'P2')."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short name for the phase."
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional human-readable description of the phase."
+          },
+          "tasks": {
+            "type": "array",
+            "description": "List of task labels or prompts. These are lightweight strings that will later be expanded into full task objects.",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Template-level metadata used for categorization and discovery. This is intentionally lighter than workflow metadata.",
+      "required": ["category", "author", "version"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "High-level domain or category (e.g., 'Metacognition', 'Education', 'Engineering')."
+        },
+        "author": {
+          "type": "string",
+          "description": "Template author or source system."
+        },
+        "version": {
+          "type": "string",
+          "description": "Template version identifier."
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

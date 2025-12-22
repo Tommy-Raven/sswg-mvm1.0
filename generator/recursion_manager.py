@@ -10,9 +10,12 @@ Provides:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict, Optional
+import json
 import logging
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, Optional
+
+from modules.llm_adapter import RefinementContract, generate_refinement
 
 logger = logging.getLogger("generator.recursion_manager")
 
@@ -40,8 +43,29 @@ class RecursionManager:
     At MVM stage, refinement is non-destructive and only annotates metadata.
     """
 
-    def __init__(self, policy: Optional[RecursionPolicy] = None) -> None:
+    def __init__(
+        self,
+        policy: Optional[RecursionPolicy] = None,
+        llm_generate: Optional[Callable[..., str]] = None,
+        contract: Optional[RefinementContract] = None,
+    ) -> None:
         self.policy = policy or RecursionPolicy()
+        self.llm_generate = llm_generate or self._default_llm_generate
+        self.contract = contract or RefinementContract()
+
+    @staticmethod
+    def _default_llm_generate(prompt: str) -> str:
+        """Return a contract-compliant stub when no LLM is wired."""
+
+        logger.info("LLM generation stub invoked with prompt preview: %s", prompt[:200])
+        default_response = {
+            "decision": "stop",
+            "refined_workflow": {},
+            "reasoning": "No LLM configured; returning unchanged workflow.",
+            "confidence": 0.0,
+            "score_delta": 0.0,
+        }
+        return json.dumps(default_response)
 
     def should_recurse(self, depth: int, score_delta: float) -> bool:
         """
@@ -67,15 +91,61 @@ class RecursionManager:
         depth: int,
     ) -> Dict[str, Any]:
         """
-        Create a minimally adjusted copy of workflow_data for the next recursion step.
+        Generate a refined workflow variant using the LLM contract.
 
-        For the MVM, this simply attaches recursion metadata and returns a
-        shallow copy of the input workflow.
+        The LLM is instructed to return a strict JSON payload with the following
+        fields (see ``modules.llm_adapter.RefinementContract``):
+
+        - decision: "accept", "revise", or "stop"
+        - refined_workflow: dict representing changes or a full replacement
+        - reasoning: short natural-language justification
+        - confidence: numeric confidence score
+        - score_delta: numeric estimate of improvement
+
+        The parsed response is merged into the returned workflow under
+        ``recursion_metadata`` for traceability.
         """
+
         refined_workflow = dict(workflow_data)
         recursion_metadata = refined_workflow.setdefault("recursion_metadata", {})
-        recursion_metadata["depth"] = depth
-        recursion_metadata["last_evaluation"] = evaluation_report
+
+        try:
+            refinement = generate_refinement(
+                workflow_data,
+                evaluation_report,
+                depth,
+                llm_generate=self.llm_generate,
+                contract=self.contract,
+            )
+        except Exception as exc:  # pylint: disable=broad-exception-caught
+            logger.warning("LLM-driven refinement failed; preserving workflow. %s", exc)
+            recursion_metadata.update(
+                {
+                    "depth": depth,
+                    "last_evaluation": evaluation_report,
+                    "llm_status": "error",
+                    "llm_error": str(exc),
+                }
+            )
+            return refined_workflow
+
+        llm_workflow = refinement.get("refined_workflow", {})
+        if isinstance(llm_workflow, dict):
+            refined_workflow.update(llm_workflow)
+
+        recursion_metadata.update(
+            {
+                "depth": depth,
+                "last_evaluation": evaluation_report,
+                "llm_decision": refinement.get("decision"),
+                "llm_reasoning": refinement.get("reasoning"),
+                "llm_confidence": refinement.get("confidence"),
+                "llm_score_delta": refinement.get("score_delta"),
+                "llm_contract_version": refinement.get("contract_version"),
+                "llm_status": "ok",
+            }
+        )
+
         return refined_workflow
 
 

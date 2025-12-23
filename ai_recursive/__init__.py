@@ -13,6 +13,14 @@ from __future__ import annotations
 
 from .variant_generator import generate_variants
 from .merge_engine import merge_variants
+from .recursion_manager import (
+    RecursionBudgetError,
+    RecursionCheckpointError,
+    RecursionLimitError,
+    RecursionManager,
+    RecursionSnapshot,
+    RecursionTerminationError,
+)
 from .version_control import (
     VersionController,
     create_child_version,
@@ -22,6 +30,12 @@ from .version_diff_engine import diff_workflows
 __all__ = [
     "generate_variants",
     "merge_variants",
+    "RecursionManager",
+    "RecursionSnapshot",
+    "RecursionLimitError",
+    "RecursionBudgetError",
+    "RecursionCheckpointError",
+    "RecursionTerminationError",
     "VersionController",
     "create_child_version",
     "diff_workflows",

@@ -1,185 +1,88 @@
 name: SSWG–MVM Recursive Benchmark Engine
 
-# ───────────────────────────────────────────────
-# EVENT TRIGGERS
-# ───────────────────────────────────────────────
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * *"   # daily 5AM UTC recursive benchmark
+    - cron: "0 5 * * *"
   push:
-    branches: ["main", "dev"]
+    branches: ["main"]
     paths:
       - "generator/**"
       - "ai_recursive/**"
       - "ai_core/**"
       - "ai_memory/**"
-      - ".github/workflows/sswg-recursive-bench.yml"
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 env:
   SSWG_VERSION: "v0.9.mvm.25"
 
-# ───────────────────────────────────────────────
-# JOB 1 — INITIALIZE RECURSION ENVIRONMENT
-# ───────────────────────────────────────────────
 jobs:
   setup:
-    name: ⚙️ Prepare Benchmark Environment
     runs-on: ubuntu-latest
-
     outputs:
-      benchmark-id: ${{ steps.id_gen.outputs.bench_id }}
-
-    steps:
-      - name: 🧾 Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-      - name: 🆔 Generate benchmark run ID
-        id: id_gen
-        run: |
-          uuid=$(uuidgen)
-            echo "bench_id=$uuid" >> $GITHUB_OUTPUT
-            echo "Benchmark ID: $uuid"
-
-      - name: 📦 Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          if [ -f reproducibility/requirements.txt ]; 
-            then
-              pip install -r reproducibility/requirements.txt
-          elif [ -f REQUIREMENTS.txt ]; 
-            then
-              pip install -r REQUIREMENTS.txt
-          fi
-          pip install fastapi uvicorn flake8 pytest httpx pytest rich black json
-# ───────────────────────────────────────────────
-# JOB 2 — RUN RECURSIVE BENCHMARK (Deep Cycles)
-# ───────────────────────────────────────────────
-  recursion_benchmark:
-    name: 🔁 Deep Recursion Benchmark
-    needs: setup
-    runs-on: ubuntu-latest
-    env:
-      BENCH_ID: ${{ needs.setup.outputs.benchmark-id }}
+      bench_id: ${{ steps.id.outputs.bench_id }}
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-      - name: 🚀 Run 10-cycle recursive benchmark
+
+      - name: Generate benchmark ID
+        id: id
         run: |
-          echo "Running recursive benchmark for BENCH_ID=$BENCH_ID"
+          echo "bench_id=$(uuidgen)" >> $GITHUB_OUTPUT
+
+      - name: Install deps
+        run: |
+          python3 -m pip install --upgrade pip
+          if [ -f reproducibility/requirements.txt ]; then
+            pip install -r reproducibility/requirements.txt
+          elif [ -f REQUIREMENTS.txt ]; then
+            pip install -r REQUIREMENTS.txt
+          fi
+
+  recursion:
+    needs: setup
+    runs-on: ubuntu-latest
+    env:
+      BENCH_ID: ${{ needs.setup.outputs.bench_id }}
+
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Run benchmark
+        run: |
           python3 - <<'EOF'
           from ai_recursive.recursion_engine import run_recursive_cycle
           import json
 
           results = []
           for i in range(10):
-              print(f"🔁 Cycle {i+1}/10...")
-              out = run_recursive_cycle({"purpose": f"Benchmark cycle {i}", "mode": "recursive"})
+              out = run_recursive_cycle({"purpose": f"Cycle {i}", "mode": "recursive"})
               results.append(out)
+
           with open("benchmark_results.json", "w") as f:
               json.dump(results, f, indent=2)
-          EOF     
-              
-      - name: 📦 Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          if [ -f reproducibility/requirements.txt ]; 
-            then
-              pip install -r reproducibility/requirements.txt
-          elif [ -f REQUIREMENTS.txt ]; 
-            then
-              pip install -r REQUIREMENTS.txt
-          fi
-          pip install fastapi uvicorn flake8 pytest httpx pytest rich black json
+          EOF
 
-      - name: 📊 Upload benchmark results
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b
+      - uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b
         with:
-          name: sswg-recursive-bench-${{ env.BENCH_ID }}
+          name: recursive-bench-${{ env.BENCH_ID }}
           path: benchmark_results.json
 
-# ───────────────────────────────────────────────
-# JOB 3 — MEMORY CONSISTENCY CHECK
-# ───────────────────────────────────────────────
   memory_check:
-    name: 🧠 Memory Cycle Consistency Check
-    needs: recursion_benchmark
+    needs: recursion
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: 🧠 Validate memory coherence
+      - name: Validate memory coherence
         run: |
           python3 - <<'EOF'
           from ai_memory.benchmark_tracker import evaluate_history_coherence
           score = evaluate_history_coherence()
-          print("Memory-Coherence Score:", score)
+          print("Score:", score)
           if score < 0.5:
-              raise SystemExit("❌ Memory coherence degraded below safe threshold.")
-          else:
-              print("✅ Memory coherence stable.")
+              raise SystemExit("Memory coherence failure")
           EOF
-
-# ───────────────────────────────────────────────
-# JOB 4 — OPEN PR IF ANOMALIES DETECTED
-# ───────────────────────────────────────────────
-  anomaly_pr:
-    name: 🚨 Auto-PR on Recursion or Memory Anomalies
-    needs: [memory_check]
-    runs-on: ubuntu-latest
-    if: failure()
-
-    steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-
-      - name: 🚨 Create anomaly report
-        run: |
-          echo "## Recursive Benchmark Anomaly Report" > anomaly.md
-          echo "- Version: $SSWG_VERSION" >> anomaly.md
-          echo "- Timestamp: $(date -u)" >> anomaly.md
-          echo "- Automated detection triggered PR" >> anomaly.md
-
-<<<<<<< HEAD
-      - name: 📝 Open Pull Request
-        uses: peter-evans/create-pull-request@d4f3be6ce6f4083b7ac7490ab98b48a62db1ee41
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "⚠️ SSWG–MVM Benchmark Anomaly Detected"
-          body: |
-            Automated anomaly detection triggered during:
-            - **Recursive Deep Benchmark**
-            - **Memory Coherence Validation**
-
-            See attached benchmark artifacts + anomaly report.
-          branch: sswg-anomaly-$(date +'%Y%m%d%H%M')
-          base: dev
-          commit-message: "SSWG–MVM auto-detected anomaly (v0.9.mvm.25)"
-=======
-    
-         # title: "⚠️ SSWG–MVM Benchmark Anomaly Detected"
-          #body: |
-            #Automated anomaly detection triggered during:
-          #  - **Recursive Deep Benchmark**
-        #    - **Memory Coherence Validation**
->>>>>>> c73475f626c83fba983d977a2ce34fbc1c846deb
-
-       #     See attached benchmark artifacts + anomaly report.
-        #  branch: sswg-anomaly-$(date +'%Y%m%d%H%M')
-     #     base: dev
-    #      commit-message: "SSWG–MVM auto-detected anomaly (v0.9.mvm.25)"
-#
-# ───────────────────────────────────────────────
-# JOB 5 — SUCCESS NOTIFICATION  
-# ───────────────────────────────────────────────
-  notify:
-    name: 🎉 Benchmark Success
-    needs: memory_check
-    runs-on: ubuntu-latest
-    if: success()
-    steps:
-      - name: 🎉 Success message
-        run: echo "✅ SSWG–MVM Recursive Benchmark Completed Successfully"

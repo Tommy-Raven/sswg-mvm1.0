@@ -1,95 +1,150 @@
-# Quickstart Guide
+# Quickstart Guide â€” SSWG-MVM
 
-Welcome to **AI Instructions Workflow Generator v4.5**
+Welcome to **SSWG-MVM (Synthetic Synthesist of Workflow Generation â€” Minimum Viable Model)**.
 
-This system creates, evaluates, and recursively evolves instructional AI workflows, providing both human- and machine-readable outputs.
+This system generates, evaluates, and recursively evolves instructional workflows, producing both **human-readable** and **machine-readable** outputs. It is designed for reproducibility, extensibility, and research-grade inspection.
+
+This Quickstart is intentionally minimal: it gets you from clone â†’ first run â†’ understanding recursion.
 
 ---
 
-## 🚀 Getting Started
+## ðŸš€ Getting Started
 
-1. **Clone the repository**
+### 1. Clone the Canonical Repository
 
 ```bash
-git clone https://github.com/Tommy-Raven/AI_instructions_workflow.git
-cd AI_instructions_workflow
+git clone https://github.com/Tommy-Raven/SSWG-mvm1.0.git
+cd SSWG-mvm1.0
 ```
 
-2. **Install dependencies**
+### 2. Install Dependencies
+
+Using pip:
 
 ```bash
 pip install -r REQUIREMENTS.txt
 ```
 
-3. **Run the main generator**
+For fully reproducible environments, see:
+- `reproducibility/`
+- `docker/Dockerfile`
+
+---
+
+### 3. Run the Main Generator
 
 ```bash
 python generator/main.py
 ```
 
-4. **Trigger recursion (optional)**
-
-When prompted, type `E` to generate recursive workflow variants and merge best results.
-
----
-
-## 🛠 Requirements
-
-* Python 3.11+
-* VS Code recommended for editing, debugging, and testing
-* Optional: Docker for containerized execution
+This executes the default MVM pipeline:
+- schema validation
+- dependency resolution
+- workflow generation
+- evaluation and scoring
+- export of artifacts
 
 ---
 
-## 📂 Outputs
+### 4. Trigger Recursive Refinement (Optional)
 
-* Human-readable: Markdown (`.md`)
-* Machine-readable: JSON (`.json`)
+When prompted during execution, choose the option to **refine or expand** the workflow.
 
-All outputs are archived and versioned in `data/outputs/`.
-
----
-
-## 🏗 Architecture Reference (`ARCHITECTURE.md`)
-
-**AI Instructions Workflow v4.5** follows a modular, recursive design divided into eight optimization phases.
-
-### 🔧 Core Directories
-
-| Directory           | Purpose                                                              |
-| ------------------- | -------------------------------------------------------------------- |
-| `generator/`        | CLI & workflow creation, recursion management, caching, export logic |
-| `ai_core/`          | Phase orchestration, dependency graph, task coordination             |
-| `ai_recursive/`     | Variant generation, merging, memory tracking, and version evolution  |
-| `ai_evaluation/`    | Workflow scoring, semantic comparison, quality metrics               |
-| `ai_monitoring/`    | Logging, telemetry, real-time CLI dashboard                          |
-| `ai_validation/`    | Schema validation, regression tests, version tracking                |
-| `ai_visualization/` | Workflow graph rendering via Graphviz/Mermaid                        |
-| `ai_memory/`        | Persistent storage, benchmarks, analytics, and feedback adaptation   |
-| `ai_graph/`         | Dependency mapping and semantic network construction                 |
+Recursive execution will:
+- generate variant workflows,
+- evaluate semantic and quality deltas,
+- select or merge improved results,
+- record metrics and lineage.
 
 ---
 
-### 🔄 Workflow Phases
+## ðŸ›  Requirements
 
-1. **Initialization & Variable Acquisition** — Gather inputs and environment variables
-2. **Objective Refinement** — Convert abstract goals into measurable outcomes
-3. **Human-Readable How-To Generation** — Generate Markdown/JSON instructions
-4. **Modular Expansion & Reusability** — Create reusable workflow components
-5. **Evaluation & Quality Assurance** — Semantic scoring, clarity, coverage, and AI-readability
-6. **Regeneration & Evolution** — Recursive output refinement and feedback integration
-7. **Visualization & Monitoring** — Render workflow graphs and track metrics
-8. **Adaptive Optimization & Learning Memory** — Store and leverage prior run data for future improvements
+- Python 3.11+
+- Git
+- Optional but recommended:
+  - Docker (containerized execution)
+  - VS Code or compatible editor
 
 ---
 
-### ⚡ Quick Tips
+## ðŸ“‚ Outputs
 
-* Use `generator/main.py` for local CLI execution
-* Recursive workflow generation improves clarity and reduces redundant steps
-* All generated outputs are versioned in `data/outputs/` for traceability
-* Combine with `ai_monitoring.telemetry` to track real-time recursion metrics
+The system produces:
+
+- Human-readable artifacts:
+  - Markdown (`.md`)
+- Machine-readable artifacts:
+  - JSON (`.json`)
+
+All generated outputs, diagrams, metrics, and history snapshots are written to:
+
+```
+data/outputs/
+```
+
+Artifacts are additive-only and versioned for traceability.
 
 ---
 
-This Quickstart provides enough to generate your first workflow, monitor its evaluation, and optionally trigger recursive improvements for self-evolving workflows.
+## ðŸ— Architecture Reference
+
+For a complete, code-aligned system description, see:
+
+```
+docs/ARCHITECTURE.md
+```
+
+This document defines:
+- subsystem responsibilities,
+- recursion and feedback loops,
+- evaluation metrics,
+- demo pipeline structure,
+- and governance guarantees.
+
+---
+
+## ðŸ”§ Core Directories (At a Glance)
+
+| Directory | Purpose |
+|--------|--------|
+| generator/ | Workflow execution, recursion, export, history |
+| ai_core/ | Orchestration, phase control, lifecycle |
+| ai_recursive/ | Variant generation, merging, version control |
+| ai_evaluation/ | Semantic and quality scoring |
+| ai_memory/ | Persistence, benchmarks, feedback |
+| ai_graph/ | Dependency and semantic graph logic |
+| ai_validation/ | Schema governance and regression safety |
+| ai_visualization/ | Diagram and artifact rendering |
+| schemas/ | Canonical contracts |
+| artifacts/ | Generated outputs |
+| docs/ | Documentation and guides |
+
+---
+
+## ðŸ”„ Conceptual Workflow Phases
+
+The MVM pipeline follows these high-level phases:
+
+1. Initialization and input acquisition  
+2. Structural validation against schemas  
+3. Workflow generation and modular expansion  
+4. Evaluation and semantic scoring  
+5. Recursive refinement and evolution  
+6. Visualization and artifact export  
+7. Memory persistence and feedback logging  
+
+Exact execution order and responsibilities are defined in `docs/ARCHITECTURE.md`.
+
+---
+
+## âš¡ Tips
+
+- Use `generator/main.py` for local CLI execution.
+- Recursive runs improve clarity and reduce redundancy over iterations.
+- All outputs are versioned; inspect diffs to understand evolution.
+- Metrics and feedback guide recursion decisions.
+
+---
+
+This Quickstart provides everything needed to generate your first workflow, inspect its evaluation, and optionally explore recursive self-improvement.

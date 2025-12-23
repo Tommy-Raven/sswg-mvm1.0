@@ -1,3 +1,10 @@
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: Memory, Lineage & Versioning
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Detail how the SSWG-MVM tracks workflow history, lineage, and regeneration triggers. Explain memory storage, schema alignment, and graph interactions so SSWG-focused iterations remain reproducible. Provide navigation anchors to the root [README](../../README.md) and [docs/README.md](../README.md).
+
 # 🧬 Memory, Lineage & Versioning
 
 SSWG-MVM includes a **long-term memory subsystem** that logs workflow evolution and triggers intelligent regeneration.

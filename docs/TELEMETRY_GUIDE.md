@@ -1,32 +1,28 @@
-# Telemetry & Logging — Updated
+sswg-mvm; version 1.0+ (living document)
+Date: 12-22-2025
+Document title: TELEMETRY_GUIDE.md
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Outline how telemetry and structured logging expose recursion performance, with links to README.md and docs/README.md for navigation. Provide actionable setup steps, metrics descriptions, and integration notes so contributors can monitor new features safely. Clarify the expectations operators and contributors should follow when updating monitoring pipelines.
 
-## Overview
+# Telemetry & Logging
 
-Telemetry and structured logging provide real-time insight into workflow recursion, performance, and quality. Metrics are captured at each iteration and visualized via CLI dashboards or stored for historical analysis.
+Telemetry keeps recursive workflows observable in real time. Start with the platform descriptions in the root [README.md](../README.md) and navigation in [docs/README.md](./README.md), then use this guide to wire monitoring into new modules.
 
----
+## Modules
+- `ai_monitoring/telemetry.py` — collects runtime metrics emitted by recursion and evaluation components.
+- `ai_monitoring/structured_logger.py` — writes structured JSON logs that mirror evolution records described in [docs/EVOLUTION_LOGGING.md](./EVOLUTION_LOGGING.md).
+- `ai_monitoring/cli_dashboard.py` — renders live terminal dashboards for recursion depth, iteration speed, and quality metrics.
 
-## 🧭 Modules
+## Metrics tracked
+- Recursion depth per workflow cycle
+- Semantic delta score between iterations
+- Workflow quality scores (clarity, expandability, translatability)
+- Memory usage (MB) and cache hits
+- Generation time per cycle
+- Plugin execution counts to validate extensions built from [docs/PLUGIN_DEVELOPMENT.md](./PLUGIN_DEVELOPMENT.md)
 
-* `ai_monitoring/telemetry.py` — Collects runtime metrics from recursive workflows.
-* `ai_monitoring/structured_logger.py` — Outputs structured JSON logs compatible with dashboards and analysis tools.
-* `ai_monitoring/cli_dashboard.py` — Live terminal visualization for recursion depth, iteration speed, and quality metrics.
-
----
-
-## 🧩 Metrics Tracked
-
-* Recursion depth per workflow cycle
-* Semantic delta score between iterations
-* Workflow quality score (clarity, expandability, translatability)
-* Memory usage (RAM consumption in MB)
-* Generation time per cycle
-* Cache hits and module reuse
-
----
-
-## Example Log Format
-
+## Example log payload
 ```json
 {
   "iteration": 3,
@@ -39,10 +35,13 @@ Telemetry and structured logging provide real-time insight into workflow recursi
 }
 ```
 
----
+## Integration guidance
+- Emit telemetry alongside evolution logs so lineage analysis remains consistent across tools.
+- Normalize field names with schemas in `schemas/` to simplify downstream parsing.
+- Keep thresholds and alerting rules in configuration; document changes in PRs to help operators adjust dashboards.
+- Validate output formats with local runs using the CLI dashboard before shipping changes.
 
-## Notes
-
-* Logs integrate with `RecursionManager` to detect convergence and halt conditions.
-* Historical logs can be analyzed for trend detection and performance tuning.
-* Designed for both human readability and machine parsing for analytics pipelines.
+## Operational checklist
+- Verify log write permissions and retention settings wherever `ai_monitoring` stores artifacts.
+- Ensure new metrics are explained in code comments and mirrored here for reviewers.
+- Cross-link telemetry updates in `CHANGELOG.md` when they affect operators or SLOs.

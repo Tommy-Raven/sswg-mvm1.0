@@ -1,4 +1,11 @@
-# 🏛 System Architecture  
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: System Architecture
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Summarize the layered architecture of the SSWG-MVM, showing how schema enforcement, recursion, memory, and evaluation connect. Provide pointers back to the root [README](../../README.md) and [docs/README.md](../README.md) for navigation. Clarify how SSWG anchors each module so refinement cycles stay on-topic.
+
+# 🏛 System Architecture
 ### SSWG-MVM — Synthetic Synthesist of Workflow Generation
 
 SSWG-MVM organizes itself as a **layered modular architecture**, balancing strict schema-driven control with dynamic recursive refinement.

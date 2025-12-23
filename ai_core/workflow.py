@@ -125,7 +125,7 @@ class Workflow:
         Return the default ordered list of phase identifiers.
 
         For schema-based workflows:
-        - If `phases` contains dicts with `phase_id` fields, use those.
+        - If `phases` contains dicts with `id`/`phase_id`/`name` fields, use those.
 
         For legacy workflows:
         - Fall back to the original hard-coded phases.
@@ -133,7 +133,7 @@ class Workflow:
         if self.phases:
             ids: List[str] = []
             for ph in self.phases:
-                pid = ph.get("phase_id") or ph.get("name")
+                pid = ph.get("id") or ph.get("phase_id") or ph.get("name")
                 if pid:
                     ids.append(str(pid))
             if ids:

@@ -1,8 +1,15 @@
-# AI Recursion Module — Recursive_Grimoire_ v1.13.0
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: AI Recursion Module
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Describe how the SSWG recursion layer drives iterative improvement, aligns with repository entrypoints, and keeps refinements observable and reproducible across runs. Summarize the core components that translate evaluation signals into new iterations. Provide onboarding tips for extending the module while preserving schema and safety guarantees. Show how recursion connects to memory, evaluation, and export paths referenced in the root [README](../README.md) and [docs/README.md](./README.md).
+
+# AI Recursion Module — SSWG-MVM
 
 ## Overview
 
-The AI Recursion module is a core component of **Recursive_Grimoire_**, responsible for enabling workflows to self-improve, self-expand, and propagate learning across subsequent workflows. This module ensures that each generated instructional workflow can recursively teach itself, update its own logic, and provide feedback to other AI agents or human operators.
+The AI Recursion module is a core component of the **SSWG-MVM**, responsible for enabling workflows to self-improve, self-expand, and propagate learning across subsequent workflows. This module ensures that each generated instructional workflow can recursively teach itself, update its own logic, and provide feedback to other AI agents or human operators. SSWG (the topic base multiplier) anchors each refinement pass so outputs stay centered on the requested subject while the system iterates.
 
 Key goals of the module:
 
@@ -17,7 +24,7 @@ Key goals of the module:
 ### Expansion Engine
 
 * Generates new workflows from previous outputs
-* Applies learned patterns to generate consistent instructions
+* Applies learned patterns to generate consistent instructions tied to the SSWG focus
 * Ensures recursive workflows preserve instructional integrity
 
 ### Merging Engine
@@ -48,7 +55,7 @@ Key goals of the module:
 
 For new developers and users:
 
-* Recursive workflows are designed to teach the next workflow
+* Recursive workflows are designed to teach the next workflow while keeping the SSWG target constant.
 * Phase-based modularity ensures clear understanding of progression: Initialization → Refinement → Generation → Evaluation → Regeneration
 * JSON and Markdown outputs are both human- and machine-readable
 * Use `generator/main.py` or FastAPI endpoints to initiate recursive workflow creation
@@ -61,7 +68,7 @@ For new developers and users:
 3. Merge results using `ai_recursive.merging.merge()`
 4. Evaluate with `ai_evaluation` for quality metrics
 5. Store in memory via `ai_memory.store()`
-6. Repeat recursively for new generations
+6. Repeat recursively for new generations while validating that SSWG stays the leading topic.
 
 ## Design Principles
 

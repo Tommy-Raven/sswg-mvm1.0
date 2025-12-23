@@ -1,109 +1,205 @@
-# AI Instructional Workflow Generator — System Architecture
+Version: 1.0 (Canonical Architecture Reference)  
+Last Updated: 2025-12-21  
+Applies to: SSWG-MVM 1.x branch  
 
-## Overview
+Status: Living document aligned to repository state
 
-This document outlines the architecture of **Recursive_Grimoire_ v1.13.0**, a modular AI system for generating, evaluating, and recursively improving instructional workflows. The system supports human- and machine-readable outputs, persistent memory, recursive feedback loops, and deterministic execution. The architecture emphasizes clear modular separation, recursive workflow design, and integration with safety, constitution, and risk pipelines.
+# SSWG-MVM Architecture
 
----
+## Scope
+This document describes the canonical architecture of the SSWG-MVM system as implemented in the SSWG-mvm1.0 repository.
 
-## Layers and Modules
-
-### Root / Project Base
-
-* Configuration, environment, and standard project files
-* `.editorconfig`, `.gitignore`, `README.md`, `CHANGELOG.md`, `LICENSE`
-* Dependency management: `pyproject.toml`, `REQUIREMENTS.txt`
-* Packaging instructions: `make_repo_zip_instructions.txt`
-
-### Interface / Legacy CLI
-
-* `/generator/` — CLI scripts for workflow invocation
-* Modules: `main.py`, `workflow.py`, `evaluation.py`, `recursive_expansion.py`, `exporters.py`, `utils.py`
-* Entry points for initiating workflow generation and recursive expansion
-
-### Core Orchestration — `ai_core/`
-
-* Handles workflow logic, module management, and recursive control
-* Subpackages and modules:
-
-  * `phases/` — Initialization, Objective Refinement, Modularization, Human-Readable Generation, Evaluation, Regeneration
-  * `workflow.py` — Main orchestration engine
-  * `registry.py` — Central storage of workflow metadata
-
-### Recursive Engine — `ai_recursive/`
-
-* Expansion engine: generates new workflows from previous outputs
-* Merging engine: resolves conflicts and consolidates workflows
-* Evaluator: scores recursive outputs for clarity, coverage, and translatability
-* Registry and memory interfaces: track lineage and versioning
-
-### Memory System — `ai_memory/`
-
-* Stores workflows, versioned histories, metrics, and analytics
-* Provides persistent storage for traceable recursive iterations
-
-### Evaluation — `ai_evaluation/`
-
-* Assesses workflow quality, clarity, coverage, and AI-readability
-* Provides structured feedback for recursive improvement
-
-### Supporting Data & Schemas — `data/`, `schemas/`
-
-* Templates: standardized JSON/Markdown formats for workflows
-* Outputs: generated workflows for human and machine consumption
-* JSON schemas: enforce structure, dependencies, and consistency
-
-### Safety Stack
-
-* `safety/` modules: sanitizers, safety classifiers, sandbox simulation
-* Ensures safe and policy-compliant workflow outputs
-
-### Constitution Engine — `constitution/`
-
-* Enforces rules and predicates from a rulebook
-* Approves, rejects, or flags workflows for logical consistency
-
-### Contradiction Detection & Auto-Remediation — `contradiction/`
-
-* Identifies inconsistencies such as draft vs approved conflicts
-* Automatically resolves contradictions where possible
-
-### Reproducibility & Deterministic Execution — `reproducibility/`
-
-* `DeterministicRunner`: stable execution via hashing and canonicalization
-* Reconstruct API and model metadata tracking ensure repeatable results
-
-### Web Layer — `web/`
-
-* FastAPI endpoints for workflows, runs, and inventory
-* RESTful interface for triggering workflow generation and evaluation
-
-### Testing & CI — `tests/`
-
-* Unit, integration, and acceptance tests
-* GitHub Actions workflows for CI/CD automation
+It is intentionally code-first: all diagrams, subsystems, and execution flows reference real files and directories present in the repository. This document serves simultaneously as:
+- a developer onboarding reference,
+- a production architecture specification,
+- and a research-grade system description.
 
 ---
 
-## Onboarding Highlights
-
-* Each workflow teaches the next workflow how to teach
-* Recursive loops ensure continuous improvement and evolution
-* Modular structure supports clear phase-based progression
-* Outputs are versioned, archived, and fully traceable
-* Integration-friendly with safety, evaluation, and constitution pipelines
+## System Definition
+SSWG-MVM (Synthetic Synthesist of Workflow Generation â€” Minimum Viable Model) is a schema-governed workflow generation and refinement system featuring:
+- deterministic pipeline execution,
+- formal validation against versioned schemas,
+- semantic and quality evaluation,
+- recursive refinement and expansion,
+- memory-driven feedback loops,
+- versioned lineage and diff tracking,
+- visualization and export of artifacts,
+- and reproducible execution via CI and environment locking.
 
 ---
 
-## Phase-Based Workflow Overview
+## Subsystem Map (Responsibility Boundaries)
 
-1. **Initialization** — Variable acquisition and setup
-2. **Objective Refinement** — Abstract goals → measurable outcomes
-3. **Human-Readable How-To Generation** — Produce Markdown/JSON instructions
-4. **Modular Expansion** — Generate reusable workflow modules
-5. **Evaluation** — Clarity, coverage, and AI-readability scoring
-6. **Regeneration & Evolution** — Recursive output and feedback integration
+### Entry Surfaces
+Provides user-facing and developer-facing invocation points.
 
+- CLI:
+  - cli/cli.py
+  - ai_core/cli.py
+  - config/cli.py
+- Scripts / Utilities:
+  - scripts/main.py
+  - scripts/local_ci.py
+  - scripts/check_templates.py
+  - scripts/create_issues_from_json.py
+
+---
+
+### Core Orchestration
+Orchestrates cross-module phase execution, dependency resolution, and workflow lifecycle control.
+
+- ai_core/orchestrator.py
+- ai_core/phase_controller.py
+- ai_core/workflow.py
+- ai_core/dependency_graph.py
+- ai_core/module_registry.py
+
+---
+
+### Generator Pipeline
+Executes the primary MVM workflow: validation, generation, evaluation, recursion, export, and history tracking.
+
+- generator/main.py
+- generator/workflow.py
+- generator/modules.py
+- generator/exporters.py
+- generator/history.py
+- generator/utils.py
+- generator/performance_tracker.py
+
+#### Recursion & Expansion
+- generator/recursion_manager.py
+- generator/recursive_expansion.py
+
+#### Semantic & Evaluation Hooks
+- generator/evaluation.py
+- generator/semantic_scorer.py
+
+---
+
+### Evaluation & Metrics
+Quantifies workflow quality and semantic improvement to guide recursion decisions.
+
+- ai_evaluation/evaluation_engine.py
+- ai_evaluation/quality_metrics.py
+- ai_evaluation/scoring_adapter.py
+- ai_evaluation/semantic_analysis.py
+
+---
+
+### Graph & Dependency Intelligence
+Resolves dependencies, recursive flows, and semantic relationships between workflow components.
+
+- ai_graph/dependency_mapper.py
+- ai_graph/recursive_flow_graph.py
+- ai_graph/semantic_network.py
+
+---
+
+### Memory / Feedback / Benchmarks
+Persists snapshots, metrics, anomalies, and historical signals to enable adaptive behavior.
+
+- ai_memory/memory_store.py
+- ai_memory/feedback_integrator.py
+- ai_memory/anomaly_detector.py
+- ai_memory/benchmark_tracker.py
+
+---
+
+### Recursive Evolution / Version Control
+Manages semantic diffs, variant generation, and lineage-aware workflow evolution.
+
+- ai_recursive/version_control.py
+- ai_recursive/version_diff_engine.py
+- ai_recursive/merge_engine.py
+- ai_recursive/variant_generator.py
+- ai_recursive/memory_adapter.py
+
+---
+
+### Validation / Schema Governance
+Enforces structural correctness and manages schema evolution across versions.
+
+- ai_validation/schema_validator.py
+- ai_validation/schema_tracker.py
+- ai_validation/version_migrator.py
+- ai_validation/regression_tests.py
+- ai_validation/template_regression_tests.py
+
+---
+
+### Visualization & Export
+Translates internal state into human-readable diagrams and artifacts.
+
+- ai_visualization/export_manager.py
+- ai_visualization/mermaid_generator.py
+- ai_visualization/graphviz_adapter.py
+- ai_visualization/markdown_importer.py
+
+---
+
+### Schemas (Contracts)
+Defines the canonical structural and semantic contracts for workflows.
+
+- schemas/workflow_schema.json
+- schemas/module_schema.json
+- schemas/phase_schema.json
+- schemas/recursion_schema.json
+- schemas/evaluation_schema.json
+- schemas/semantics_schema.json
+- schemas/metadata_schema.json
+- schemas/ontology_schema.json
+- schemas/template_schema.json
+
+---
+
+### LLM Adapter Layer
+Abstracts model inference, enabling integration with local or API-based LLMs for refinement and meta-generation.
+
+- modules/llm_adapter.py
+
+This layer allows SSWG-MVM to remain model-agnostic while supporting LLM-in-the-loop recursion.
+
+---
+
+### Reproducibility & Packaging
+Locks environments and execution conditions for replicable results.
+
+- reproducibility/*
+- docker/Dockerfile
+- pyproject.toml
+- REQUIREMENTS.txt
+
+---
+
+### Proof & Validation
+Ensures correctness, regression safety, and execution stability.
+
+- tests/test_generator_main.py
+- tests/test_recursion.py
+- tests/test_semantics.py
+- tests/test_templates.py
+- tests/test_versioning.py
+- additional unit and integration tests under tests/
+
+---
+
+## Planned Evolution (Non-Binding)
+
+| Module | Status | Purpose |
+|------|------|------|
+| ai_reasoning/ | future | Hybrid reasoning and semantic embedding management |
+| ai_alignment/ | future | Reward tuning and recursion policy alignment |
+| modules/agent_bridge.py | planned | Multi-agent LLM orchestration |
+| meta_governance/ | roadmap | Formal recursion policy and safety constraints |
+
+---
+
+## Alignment Guarantees
+- All subsystems correspond to real paths in the repository.
+- No speculative modules are required for correctness.
+- Any architectural change must update this document to remain canonical.
 ---
 
 ## Directory & File Mapping
@@ -131,3 +227,4 @@ This document outlines the architecture of **Recursive_Grimoire_ v1.13.0**, a mo
 * **Traceable Outputs:** Versioned, archived, and human/machine-readable
 * **Integration-Ready:** Seamless interaction with safety, constitution, and risk pipelines
 * **Deployment-Ready:** CLI, containerization, and visualization support
+

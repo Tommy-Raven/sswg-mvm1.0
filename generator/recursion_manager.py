@@ -10,19 +10,15 @@ pipeline can demonstrate recursive improvement.
 
 from __future__ import annotations
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import json
 import logging
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, Optional
 
 from modules.llm_adapter import RefinementContract, generate_refinement
-=======
 import logging
-=======
 import logging
->>>>>>> 87c21bd (Harden demo recursion pipeline)
+import logging
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
@@ -35,10 +31,6 @@ from ai_evaluation.semantic_analysis import SemanticAnalyzer
 from ai_memory.feedback_integrator import FeedbackIntegrator
 from ai_recursive.version_diff_engine import compute_diff_summary
 from modules.llm_adapter import generate_text
-<<<<<<< HEAD
->>>>>>> 87c21bd (Harden demo recursion pipeline)
-=======
->>>>>>> 87c21bd (Harden demo recursion pipeline)
 
 logger = logging.getLogger("generator.recursion_manager")
 
@@ -108,9 +100,7 @@ class SemanticDeltaCalculator:
 class RecursionManager:
     """Decide whether to recurse and generate refined workflow variants."""
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    At MVM stage, refinement is non-destructive and only annotates metadata.
+"""    At MVM stage, refinement is non-destructive and only annotates metadata.
     """
 
     def __init__(
@@ -136,7 +126,6 @@ class RecursionManager:
             "score_delta": 0.0,
         }
         return json.dumps(default_response)
-=======
     def __init__(
         self,
         policy: Optional[RecursionPolicy] = None,
@@ -144,7 +133,6 @@ class RecursionManager:
         output_dir: Path = Path("data/outputs"),
     ) -> None:
         self.policy = policy or RecursionPolicy()
-=======
     def __init__(
         self,
         policy: Optional[RecursionPolicy] = None,
@@ -152,7 +140,13 @@ class RecursionManager:
         output_dir: Path = Path("data/outputs"),
     ) -> None:
         self.policy = policy or RecursionPolicy()
->>>>>>> 87c21bd (Harden demo recursion pipeline)
+    def __init__(
+        self,
+        policy: Optional[RecursionPolicy] = None,
+        *,
+        output_dir: Path = Path("data/outputs"),
+    ) -> None:
+        self.policy = policy or RecursionPolicy()
         self.output_dir = output_dir
         self.delta_calculator = SemanticDeltaCalculator()
         self.feedback = FeedbackIntegrator()
@@ -269,18 +263,12 @@ class RecursionManager:
                 }
             )
         return regenerated
-<<<<<<< HEAD
->>>>>>> 87c21bd (Harden demo recursion pipeline)
-=======
->>>>>>> 87c21bd (Harden demo recursion pipeline)
 
     def should_recurse(self, depth: int, score_delta: float) -> bool:
         if depth >= self.policy.max_depth:
             return False
         return score_delta >= self.policy.min_improvement
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     def refine_workflow(
         self,
         workflow_data: Dict[str, Any],
@@ -371,7 +359,6 @@ def simple_refiner(workflow: Dict[str, Any]) -> Dict[str, Any]:
         logger.warning(
             "Refinement skipped in simple_refiner due to signature mismatch: %s",
             exc,
-=======
     def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
         baseline_report = self._evaluate(workflow_data)
         candidate = self._propose_regeneration(workflow_data, baseline_report, depth)
@@ -380,8 +367,6 @@ def simple_refiner(workflow: Dict[str, Any]) -> Dict[str, Any]:
         score_delta = (
             candidate_report["quality"]["overall_score"]
             - baseline_report["quality"]["overall_score"]
->>>>>>> 87c21bd (Harden demo recursion pipeline)
-=======
     def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
         baseline_report = self._evaluate(workflow_data)
         candidate = self._propose_regeneration(workflow_data, baseline_report, depth)
@@ -390,7 +375,14 @@ def simple_refiner(workflow: Dict[str, Any]) -> Dict[str, Any]:
         score_delta = (
             candidate_report["quality"]["overall_score"]
             - baseline_report["quality"]["overall_score"]
->>>>>>> 87c21bd (Harden demo recursion pipeline)
+    def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
+        baseline_report = self._evaluate(workflow_data)
+        candidate = self._propose_regeneration(workflow_data, baseline_report, depth)
+        candidate_report = self._evaluate(candidate)
+
+        score_delta = (
+            candidate_report["quality"]["overall_score"]
+            - baseline_report["quality"]["overall_score"]
         )
         semantic_delta = self.delta_calculator.delta(
             baseline_report["embedding"], candidate_report["embedding"]

@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 """LLM adapter for recursion-aware refinement.
 
 This module defines the contract for LLM-in-the-loop refinement and exposes
@@ -161,9 +159,6 @@ def generate_text(prompt: str, **_: Any) -> str:  # pragma: no cover - passthrou
         "No LLM backend configured. Provide llm_generate to generate_refinement "
         "or monkey-patch modules.llm_adapter.generate_text."
     )
-=======
-=======
->>>>>>> 87c21bd (Harden demo recursion pipeline)
 """
 modules/llm_adapter.py — lightweight text generator shim.
 
@@ -197,7 +192,3 @@ def generate_text(prompt: str) -> str:
         - Tighten module dependencies and ensure evaluation hooks run.
         """
     ).strip()
-<<<<<<< HEAD
->>>>>>> 87c21bd (Harden demo recursion pipeline)
-=======
->>>>>>> 87c21bd (Harden demo recursion pipeline)

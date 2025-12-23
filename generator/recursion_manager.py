@@ -14,11 +14,14 @@ from typing import Any, Callable, Dict, Optional
 from ai_evaluation.evaluation_engine import evaluate_workflow_quality
 from ai_evaluation.semantic_analysis import SemanticAnalyzer
 from ai_memory.feedback_integrator import FeedbackIntegrator
+from ai_memory.memory_store import MemoryStore
+from ai_monitoring.structured_logger import log_event
 from ai_recursive.version_diff_engine import compute_diff_summary
 from modules.llm_adapter import (
     RefinementContract,
     generate_refinement,
 )
+from generator.history import HistoryManager
 
 logger = logging.getLogger("generator.recursion_manager")
 
@@ -100,8 +103,54 @@ class RecursionManager:
         self.output_dir = output_dir
         self.delta_calculator = SemanticDeltaCalculator()
         self.feedback = FeedbackIntegrator()
+        self.memory_store = MemoryStore()
+        self.history = HistoryManager()
         self.llm_generate = llm_generate
         self.contract = contract or RefinementContract()
+
+    def _ensure_schema_tags(self, workflow: Dict[str, Any]) -> str:
+        """Ensure schema version metadata is present for downstream consumers."""
+
+        schema_version = str(workflow.get("schema_version") or "1.0.0")
+        workflow["schema_version"] = schema_version
+        metadata = workflow.setdefault("metadata", {})
+        metadata.setdefault("schema_version", schema_version)
+        return schema_version
+
+    def _load_lineage_context(self, workflow: Dict[str, Any]) -> Dict[str, Any]:
+        """Load the latest stored snapshot and compute deltas for rationale anchoring."""
+
+        workflow_id = str(
+            workflow.get("workflow_id")
+            or workflow.get("id")
+            or workflow.get("metadata", {}).get("workflow_id", "unnamed")
+        )
+
+        previous_snapshot = self.memory_store.load_latest(workflow_id)
+        diff_summary: Optional[Dict[str, Any]] = None
+        prior_reasoning: Optional[str] = None
+
+        if previous_snapshot:
+            diff_summary = compute_diff_summary(previous_snapshot, workflow)
+            prior_reasoning = previous_snapshot.get("recursion_metadata", {}).get(
+                "llm_reasoning"
+            )
+
+        log_event(
+            "mvm.recursion.lineage_loaded",
+            {
+                "workflow_id": workflow_id,
+                "has_previous": previous_snapshot is not None,
+                "previous_diff_size": diff_summary.get("diff_size") if diff_summary else 0,
+            },
+        )
+
+        return {
+            "workflow_id": workflow_id,
+            "previous_snapshot": previous_snapshot,
+            "diff_summary": diff_summary,
+            "prior_reasoning": prior_reasoning,
+        }
 
     def _evaluate(self, workflow: Dict[str, Any]) -> Dict[str, Any]:
         quality = evaluate_workflow_quality(workflow)
@@ -195,11 +244,16 @@ class RecursionManager:
         workflow_data: Dict[str, Any],
         evaluation_report: Dict[str, Any],
         depth: int,
+        lineage_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Generate a refined workflow variant using the LLM contract."""
 
         refined_workflow = deepcopy(workflow_data)
         recursion_metadata = refined_workflow.setdefault("recursion_metadata", {})
+        if lineage_context and lineage_context.get("prior_reasoning"):
+            recursion_metadata.setdefault(
+                "prior_reasoning", lineage_context.get("prior_reasoning")
+            )
 
         try:
             refinement = generate_refinement(
@@ -241,8 +295,22 @@ class RecursionManager:
         return refined_workflow
 
     def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
+        schema_version = self._ensure_schema_tags(workflow_data)
+        lineage_context = self._load_lineage_context(workflow_data)
+
+        log_event(
+            "mvm.recursion.cycle_started",
+            {
+                "workflow_id": lineage_context["workflow_id"],
+                "depth": depth,
+                "schema_version": schema_version,
+            },
+        )
+
         baseline_report = self._evaluate(workflow_data)
-        candidate = self.refine_workflow(workflow_data, baseline_report, depth)
+        candidate = self.refine_workflow(
+            workflow_data, baseline_report, depth, lineage_context
+        )
         candidate_report = self._evaluate(candidate)
 
         score_delta = (
@@ -273,6 +341,27 @@ class RecursionManager:
             diff_summary,
             {"clarity_score": clarity_score, "score_delta": score_delta},
             regenerated=regenerate,
+        )
+
+        self.history.record_transition(
+            parent_workflow_id=lineage_context["workflow_id"],
+            child_workflow_id=lineage_context["workflow_id"],
+            score_delta=score_delta,
+            modifications=diff_summary.get("changed_fields", []),
+        )
+
+        self.memory_store.save(final_workflow)
+
+        log_event(
+            "mvm.recursion.cycle_completed",
+            {
+                "workflow_id": lineage_context["workflow_id"],
+                "depth": depth,
+                "semantic_delta": semantic_delta,
+                "score_delta": score_delta,
+                "diff_size": diff_summary.get("diff_size", 0),
+                "regenerated": regenerate,
+            },
         )
 
         return RecursionOutcome(

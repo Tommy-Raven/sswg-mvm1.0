@@ -51,6 +51,48 @@ Each refinement pass applies layered checks:
 
 ---
 
+## 🧱 Hardening the Recursion Engine
+
+Clear guardrails keep iterative passes aligned with their original intent and rationale.
+
+**Failure mode if ignored:**
+
+- outputs diverge in style, tone, or intent over iterations
+- later generations contradict earlier assumptions
+- the system loses track of why a decision was made
+
+**What good looks like:**
+
+- each generation explicitly references prior rationale and logged decisions
+- recursion operates through deltas, not full rewrites, so the lineage stays transparent
+- the system can explain what changed and why across iterations, backed by structured logs
+
+Operationally, this means every recursion call should pull the last saved delta from `ai_memory`, annotate adjustments in the structured logger, and pass both into evaluators to confirm intent alignment before proceeding.
+
+---
+
+## 🧭 Normalize and Harden Schema Logic
+
+Schema rigor prevents ambiguity as recursive refinements accumulate.
+
+**Why it matters:** Creative systems still require structure; without schema rigor, expressive freedom becomes ambiguity.
+
+**Failure mode if ignored:**
+
+- inconsistent field meanings between iterations or templates
+- partial or malformed artifacts that block downstream validators
+- consumers misinterpret intent because optional vs. required elements are unclear
+
+**What good looks like:**
+
+- every field maps to a single semantic meaning and is reused consistently
+- optional vs. required elements are explicit in both schemas and prompts
+- schema changes are versioned, backward-aware, and logged so recursion can reconcile old and new shapes
+
+In practice, tie each recursion pass to the authoritative JSON schemas in `schemas/`, require version tags in emitted metadata, and surface schema diffs in telemetry to guard downstream consumers.
+
+---
+
 ## 🔁 Recursion Depth and Control
 
 The current MVM ships a minimal entry point:

@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+"""Command-line entrypoint for generating instructional workflows."""
+
 import argparse
 from ai_core.orchestrator import Orchestrator
 

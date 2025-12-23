@@ -1,4 +1,7 @@
-# .vscode/run_linting.py
+#!/usr/bin/env python3
+
+"""Run linting and structural checks from the repository root."""
+
 import os
 import subprocess
 import sys

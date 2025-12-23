@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+"""Package configuration for the AI Instructional Workflow Generator."""
+
 from setuptools import setup, find_packages
 
 setup(

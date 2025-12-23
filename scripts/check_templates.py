@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+"""Validate template files against the schema definition."""
+
 from pathlib import Path
 import json
 

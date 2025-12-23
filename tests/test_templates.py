@@ -1,3 +1,5 @@
+"""Schema validation tests for bundled templates."""
+
 import json
 from pathlib import Path
 

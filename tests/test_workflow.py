@@ -1,4 +1,3 @@
-
 """
 Comprehensive test — ensures end-to-end workflow lifecycle passes
 through generation → validation → evaluation → export.

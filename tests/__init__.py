@@ -1,6 +1,5 @@
-# __init__.py
-"""
-SSWG–MVM Test Suite Initialization
+"""SSWG–MVM test suite initialization.
+
 Ensures pytest resolves imports relative to project root.
 """
 

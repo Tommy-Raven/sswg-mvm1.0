@@ -26,7 +26,7 @@ permissions:
 # ───────────────────────────────────────────────
 jobs:
   generate-rest-api-doc:
-    name: Generate git_REST_API.md (SSWG–MVM)
+    name: "Generate git_REST_API.md (SSWG–MVM)"
     runs-on: ubuntu-latest
     timeout-minutes: 8
 
@@ -54,7 +54,9 @@ jobs:
           fi
           pip install fastapi uvicorn flake8 pytest httpx pytest rich black json
           # Optional: install SSWG local project (editable mode)
-          if [ -f pyproject.toml ]; then pip install -e .; fi
+          if [ -f pyproject.toml ]; then
+            pip install -e .
+          fi
 
       # ----------------------------------------------------
       # 3. Run Generator Script
@@ -72,15 +74,16 @@ jobs:
         id: detect_changes
         run: |
           if git diff --quiet git_REST_API.md; then
-            echo "doc_changed=false" >> $GITHUB_OUTPUT
+            echo "doc_changed=false" >> "$GITHUB_OUTPUT"
           else
-            echo "doc_changed=true" >> $GITHUB_OUTPUT
+            echo "doc_changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       # ----------------------------------------------------
       # 5. Commit to Auto-Branch When Changes Exist
       # ----------------------------------------------------
       - name: Commit Updated Documentation
+        id: commit_updated_documentation
         if: steps.detect_changes.outputs.doc_changed == 'true'
         run: |
           git config --global user.name "SSWG-MVM AutoDoc Bot"
@@ -93,14 +96,14 @@ jobs:
           git commit -m "Auto-generate git_REST_API.md (SSWG-MVM v0.9.mvm.25)"
           git push origin "$branch"
 
-          echo "branch_name=$branch" >> $GITHUB_OUTPUT
+          echo "branch_name=$branch" >> "$GITHUB_OUTPUT"
 
       # ----------------------------------------------------
       # 6. Create PR (SSWG-compliant)
       # ----------------------------------------------------
       - name: Open Pull Request
         if: steps.detect_changes.outputs.doc_changed == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@d4f3be6ce6f4083b7ac7490ab98b48a62db1ee41
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "SSWG-MVM AutoDoc Update: git_REST_API.md"

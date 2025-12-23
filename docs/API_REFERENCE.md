@@ -1,8 +1,15 @@
-# API Reference — Recursive_Grimoire_ v1.13.0
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: API Reference
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Summarize the primary programmatic interfaces for the SSWG-MVM. Show how to create, refine, and persist workflows while respecting schema and safety constraints. Provide quick examples that keep the SSWG topic base multiplier centered in recursive passes. Point readers back to the root [README](../README.md) and [docs/README.md](./README.md) for navigation.
+
+# API Reference — SSWG-MVM
 
 ## Overview
 
-The API provides programmatic access to **Recursive_Grimoire_**’s workflow generation, evaluation, recursion, and memory systems. It enables developers to initiate workflows, evaluate their quality, recursively refine outputs, and interact with stored workflow histories. The API is designed to support both human-readable and machine-readable outputs and integrates seamlessly with safety, constitution, and risk pipelines.
+The API provides programmatic access to the **SSWG-MVM** workflow generation, evaluation, recursion, and memory systems. It enables developers to initiate workflows, evaluate their quality, recursively refine outputs, and interact with stored workflow histories. The API is designed to support both human-readable and machine-readable outputs and integrates seamlessly with safety, constitution, and risk pipelines while ensuring the SSWG target remains stable through iterations.
 
 ## Main Classes & Functions
 

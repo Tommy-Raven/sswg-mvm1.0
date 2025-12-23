@@ -1,8 +1,15 @@
-# Community & Collaboration Guide
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: Community & Collaboration Guide
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Outline how contributors collaborate around the SSWG-MVM, including contribution etiquette, communication channels, and onboarding steps. Reinforce that SSWG is the topic base multiplier that guides recursive work. Link newcomers to the root [README](../README.md) and [docs/README.md](./README.md) for deeper system context.
+
+# Community & Collaboration Guide — SSWG-MVM
 
 ## Overview
 
-**Recursive_Grimoire_ v1.13.0** encourages collaboration, learning, and shared development of AI instructional workflows. This document outlines community expectations, contribution paths, and communication channels.
+**SSWG-MVM** encourages collaboration, learning, and shared development of AI instructional workflows. This document outlines community expectations, contribution paths, and communication channels.
 
 ---
 
@@ -38,7 +45,7 @@
 ## Communication Channels
 
 * **GitHub Issues & Pull Requests** — Primary discussion and contribution forum.
-* **Docs & Wiki** — Reference `docs/` for architecture, API, and recursive workflow guides.
+* **Docs & Wiki** — Reference `docs/` for architecture, API, and SSWG-guided recursive workflow guides.
 * **Discussions / Q&A** — Use GitHub Discussions for brainstorming and non-urgent questions.
 
 ---
@@ -46,6 +53,6 @@
 ## Onboarding Highlights
 
 * Each module is designed for clarity: initialization → refinement → generation → evaluation → regeneration.
-* Recursive outputs teach subsequent workflows, creating an evolving knowledge base.
+* Recursive outputs teach subsequent workflows, creating an evolving knowledge base anchored on SSWG.
 * JSON and Markdown outputs are human- and machine-readable.
-* Use `generator/main.py` or FastAPI endpoints to explore recursive workflow creation.
+* Use `generator/main.py` or FastAPI endpoints to explore SSWG-guided recursive workflow creation.

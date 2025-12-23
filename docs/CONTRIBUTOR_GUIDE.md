@@ -1,8 +1,15 @@
-# Contributor Guide — Recursive_Grimoire_ v1.13.0
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: Contributor Guide
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Help new contributors onboard to the SSWG-MVM by outlining setup, project structure, coding standards, and support channels. Reinforce that SSWG is the topic base multiplier guiding recursive refinement. Direct readers to the root [README](../README.md) and [docs/README.md](./README.md) for system entrypoints and navigation.
+
+# Contributor Guide — SSWG-MVM
 
 ## Welcome
 
-Welcome to **Recursive_Grimoire_**, an AI instructional workflow generator. This guide helps new contributors onboard quickly, understand the system architecture, and follow best practices for development, testing, and contribution.
+Welcome to the **SSWG-MVM**, an AI instructional workflow generator anchored on the SSWG topic base multiplier. This guide helps new contributors onboard quickly, understand the system architecture, and follow best practices for development, testing, and contribution.
 
 ---
 
@@ -54,7 +61,7 @@ Generated workflows appear in `data/workflows/` and logs in `logs/workflow.log`.
 ## Project Structure
 
 * `/ai_core/` — Core workflow orchestration, module management, and phases
-* `/ai_recursive/` — Recursive generation and self-improving workflow routines
+* `/ai_recursive/` — Recursive generation and self-improving workflow routines tuned to SSWG
 * `/ai_memory/` — Persistent memory, version history, and lineage tracking
 * `/ai_evaluation/` — Evaluation metrics: clarity, coverage, expandability, translatability
 * `/generator/` — CLI interface for workflow creation
@@ -119,7 +126,7 @@ CI/CD uses GitHub Actions to enforce tests, code linting, and deployment checks.
 
 ## Onboarding Highlights
 
-* Understand the recursive workflow: each output can feed the next workflow.
+* Understand the recursive workflow: each output can feed the next workflow while keeping SSWG stable.
 * Workflows are bimodal: Markdown for humans, JSON for machines.
 * Schema-driven validation ensures consistency.
 * Safety and constitution engines maintain policy compliance.
@@ -133,4 +140,4 @@ CI/CD uses GitHub Actions to enforce tests, code linting, and deployment checks.
 * GitHub Issues preferred for questions or support.
 * Author: Tommy Raven
 * Repository: [github.com/Tommy-Raven/AI_instructions_workflow](https://github.com/Tommy-Raven/AI_instructions_workflow)
-* Codename: Recursive_Grimoire_ v1.13.0
+* Codename: SSWG-MVM

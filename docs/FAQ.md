@@ -1,9 +1,16 @@
-# Frequently Asked Questions (FAQ) — Recursive_Grimoire v1.13.0
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: Frequently Asked Questions (FAQ)
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Provide quick answers about the SSWG-MVM, including installation, workflow execution, recursion controls, memory, evaluation, and contribution pathways. Connect new readers to the root [README](../README.md) and [docs/README.md](./README.md) so they can navigate to deeper architecture and API guides. Emphasize SSWG as the topic base multiplier that keeps refinements anchored during iterative runs.
+
+# Frequently Asked Questions (FAQ) — SSWG-MVM
 
 ## General
 
-**Q:** What is Recursive_Grimoire?
-**A:** Recursive_Grimoire is a modular AI system for generating, evaluating, and recursively improving instructional workflows. It produces human- and machine-readable outputs, with persistent memory and deterministic execution.
+**Q:** What is the SSWG-MVM?
+**A:** The SSWG-MVM is a modular AI system for generating, evaluating, and recursively improving instructional workflows. It produces human- and machine-readable outputs, with persistent memory and deterministic execution while keeping the SSWG topic focus anchored as iterations progress.
 
 **Q:** Who is this system intended for?
 **A:** Developers, AI researchers, and instructional designers looking for automated workflow generation with self-improving recursive capabilities.
@@ -26,7 +33,7 @@
 ## Workflow Execution
 
 **Q:** How do I start a new workflow?
-**A:** Use `generator.main.create_workflow(user_params)` to initiate a workflow, or trigger a recursive cycle via `ai_recursive.expansion.generate()`.
+**A:** Use `generator.main.create_workflow(user_params)` to initiate a workflow, or trigger a recursive cycle via `ai_recursive.expansion.generate()` when you need the SSWG-guided refinement pass.
 
 **Q:** How does recursion work?
 **A:** Recursive workflows feed previous outputs into new iterations, applying semantic scoring, merging, and evaluation to improve clarity and coverage continuously.

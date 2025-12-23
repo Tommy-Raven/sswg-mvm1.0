@@ -1,32 +1,31 @@
+sswg-mvm; version 1.0+ (living document)
+Date: 12-22-2025
+Document title: SEMANTIC_ANALYSIS.md
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Explain how sswg-mvm measures semantic change across recursion cycles and how those scores influence stopping conditions. Provide guidance linked to README.md and docs/README.md so contributors can align evaluation work with the broader architecture. Include practical thresholds, integration notes, and extension hooks.
+
 # Semantic Analysis & Scoring
 
-## Overview
+Semantic analysis evaluates whether a new recursion output meaningfully differs from prior iterations. Start with the system introductions in the root [README.md](../README.md) and [docs/README.md](./README.md), then use this guide to align evaluation changes.
 
-The Semantic Analysis module evaluates recursive workflow outputs to determine meaningful changes and content stability. It integrates directly with the recursion manager to enforce stopping conditions when outputs converge.
+## Goals
+- Detect material differences between iterations and prevent unnecessary rewrites when content stabilizes.
+- Supply delta metrics to the recursion manager and telemetry stack so convergence is transparent.
+- Keep scores consistent with evaluation taxonomies outlined in `ai_evaluation` and documented in [docs/METRICS_SYSTEM.md](./METRICS_SYSTEM.md).
 
----
+## Scoring signals
+- **Embedding similarity:** cosine similarity or dot-product scores computed via `generator.semantic_scorer.SemanticScorer`.
+- **Edit distance:** Levenshtein-based character or token deltas for markdown-heavy outputs.
+- **Structural drift:** optional checks for step reordering or DAG edge changes paired with the validators in `ai_graph`.
 
-## Purpose
-
-* Detect whether new recursive outputs meaningfully differ from previous iterations.
-* Assign delta and similarity scores using cosine similarity, Levenshtein distance, or embedding-based semantic metrics.
-* Automatically halt recursion if semantic change falls below a configurable threshold.
-* Provide actionable feedback for phase refinement and improvement.
-
----
-
-## Scoring Formula
-
+### Formula example
 ```
 Semantic Delta = 1 - Similarity(Old_Output, New_Output)
 ```
+The similarity function should be deterministic and documented in code comments to aid reproducibility.
 
-Where `Similarity()` can be computed using text embeddings or token-level distance measures.
-
----
-
-## Example Integration
-
+## Integration flow
 ```python
 from generator.semantic_scorer import SemanticScorer
 
@@ -36,11 +35,11 @@ score = scorer.compare(text_a, text_b)
 if score < 0.15:
     stop_recursion()
 ```
+- Thresholds should be stored in configuration (`config/`) and referenced in PR descriptions when adjusted.
+- Semantic deltas feed into logs managed in [docs/EVOLUTION_LOGGING.md](./EVOLUTION_LOGGING.md) and telemetry dashboards in [docs/TELEMETRY_GUIDE.md](./TELEMETRY_GUIDE.md).
 
----
-
-## Notes
-
-* Supports integration with `ai_evaluation` to log scores and track semantic stability over multiple iterations.
-* Works with both human-readable Markdown workflows and machine-readable JSON outputs.
-* Configurable thresholds allow fine-grained control over recursion halting conditions.
+## Practices for contributors
+- Add unit tests that freeze model seeds or fixture text to guarantee consistent scoring outcomes.
+- Document new similarity functions in both code docstrings and this file so downstream teams know how to interpret values.
+- When tuning thresholds, reference the recursion controls in [docs/architecture/recursion_engine.md](./architecture/recursion_engine.md) to keep behavior predictable.
+- Surface outliers in the evolution logs so reviewers can correlate semantic spikes with specific code changes.

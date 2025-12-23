@@ -1,6 +1,13 @@
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: Optimization & System Evolution Plan
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Outline planned and in-flight optimizations for the SSWG-MVM, mapping each initiative to the modular phases described in the root [README](../README.md) and [docs/README.md](./README.md). Keep the focus on SSWG as the topic base multiplier while refining performance, stability, and observability. Provide a quick reference to track status, priorities, and supporting modules.
+
 # Optimization & System Evolution Plan
 
-This document tracks ongoing optimization efforts and system evolution for **Recursive_Grimoire v1.13.0**, aligned with phase-based workflow execution and recursive improvements.
+This document tracks ongoing optimization efforts and system evolution for the **SSWG-MVM**, aligned with phase-based workflow execution and recursive improvements.
 
 | Phase                             | Focus Area                                | Description                                                                                                                 | Status         |
 | --------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------- |

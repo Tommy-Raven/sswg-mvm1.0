@@ -115,9 +115,24 @@ Outputs are stable, regenerable, and lineage-tracked.
 2. Normalize input and validate against schema  
 3. Build dependency graph (DAG)  
 4. Execute recursive refinement steps  
-5. Produce artifacts (JSON, Mermaid, Markdown)  
-6. Record lineage snapshot  
-7. Auto-bump version if core modules changed  
+5. Produce artifacts (JSON, Mermaid, Markdown)
+6. Record lineage snapshot
+7. Auto-bump version if core modules changed
+
+### Reproducible demo
+
+Run the complete recursive pipeline (validation → evaluation → recursion → exports)
+from the repo root with a single command:
+
+```bash
+python generator/main.py --demo --preview
+```
+
+Outputs land in `data/outputs/demo_run` and include:
+- Refined workflow JSON + Markdown
+- Mermaid + Graphviz diagrams
+- Before/after metric plot (`metrics_before_after.svg`)
+- Evaluation deltas and history snapshots
 
 ---
 

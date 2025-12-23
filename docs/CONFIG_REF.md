@@ -1,8 +1,15 @@
-# Configuration Reference — Recursive_Grimoire_ v1.13.0
+sswg-mvm; version 1.0+ (living document)
+Date: 05-03-2025
+Document title: Configuration Reference
+Author: Tommy Raven
+Licensing: Raven Recordings ©️ see: *LICENSE.md*
+(Document) Purpose: Capture the configuration surfaces that drive the SSWG-MVM, including environment variables, schema files, and runtime options. Keep SSWG as the topic base multiplier across phases by highlighting where settings influence recursion, evaluation, and memory. Tie readers back to the root [README](../README.md) and [docs/README.md](./README.md) for full execution flow.
+
+# Configuration Reference — SSWG-MVM
 
 ## Overview
 
-This document outlines configuration files, environment settings, and schema references for **Recursive_Grimoire_**. Proper configuration ensures deterministic execution, reproducibility, and safe workflow generation.
+This document outlines configuration files, environment settings, and schema references for the **SSWG-MVM**. Proper configuration ensures deterministic execution, reproducibility, and safe workflow generation while preserving the SSWG anchor during recursive passes.
 
 ---
 

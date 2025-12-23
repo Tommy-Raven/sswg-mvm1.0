@@ -1,42 +1,157 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/recursion_schema.json",
   "title": "Recursion Schema",
+  "description": "Domain-agnostic recursion controls that remain deterministic and inheritance-safe under recursive expansion.",
   "type": "object",
-  "required": [],
+  "required": ["depth_limit", "trigger_condition"],
+  "additionalProperties": false,
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Version of the recursion schema contract used by the runtime.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[a-zA-Z0-9._-]+)?$"
+    },
     "depth_limit": {
-      "type": "integer",
-      "minimum": 0
+      "$ref": "#/$defs/boundedInteger",
+      "description": "Maximum recursion depth that may be traversed."
+    },
+    "max_iterations": {
+      "$ref": "#/$defs/boundedInteger",
+      "description": "Optional hard stop for total recursive iterations across all branches."
     },
     "trigger_condition": {
-      "type": "string"
-    },
-
-    "max_iterations": {
-      "type": "integer",
-      "minimum": 0
-    },
-    "auto_refine": {
-      "type": "boolean"
-    },
-    "require_human_approval": {
-      "type": "boolean"
-    },
-
-    "allow_recursive_refinement": {
-      "type": "boolean"
-    },
-    "preferred_modes": {
-      "type": "array",
-      "items": { "type": "string" }
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Primary condition that authorizes recursion entry."
     },
     "trigger_conditions": {
       "type": "array",
-      "items": { "type": "string" }
+      "description": "Supplemental conditions that all must be satisfied for recursion to proceed.",
+      "items": { "$ref": "#/$defs/nonEmptyString" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "regeneration_threshold": {
+      "type": "number",
+      "description": "Normalized threshold (0-1) that gates whether regeneration occurs.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "feedback_source": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Source identifier for the feedback stream that drives recursion decisions."
+    },
+    "auto_refine": {
+      "type": "boolean",
+      "description": "Whether recursion may self-initiate refinement without human gating.",
+      "default": false
+    },
+    "require_human_approval": {
+      "type": "boolean",
+      "description": "If true, recursion branches must be acknowledged by a human before execution.",
+      "default": false
+    },
+    "allow_recursive_refinement": {
+      "type": "boolean",
+      "description": "Whether recursive re-entry is permitted after a refinement cycle.",
+      "default": true
+    },
+    "preferred_modes": {
+      "type": "array",
+      "description": "Preferred recursion execution modes (engine-defined but namespaced).",
+      "items": { "$ref": "#/$defs/mode" },
+      "uniqueItems": true
+    },
+    "policies": {
+      "type": "array",
+      "description": "Explicit policy list applied to every recursion hop; namespaced to avoid collisions.",
+      "items": { "$ref": "#/$defs/policy" },
+      "uniqueItems": true
+    },
+    "expansion_tree": {
+      "$ref": "#/$defs/recursion_node",
+      "description": "Recursive plan describing branch-specific constraints in a predictable tree structure."
+    },
+    "evaluation_schema": {
+      "$ref": "evaluation_schema.json",
+      "description": "Evaluation contract used to assess recursion outputs."
+    },
+    "history_log": {
+      "type": "array",
+      "description": "Ordered log identifiers for prior recursion invocations.",
+      "items": { "$ref": "#/$defs/nonEmptyString" }
     },
     "metadata": {
-      "$ref": "recursion_schema.json"
+      "$ref": "metadata_schema.json",
+      "description": "Optional descriptive metadata for the recursion contract."
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Namespaced domain-specific extensions; keys must be collision-safe.",
+      "patternProperties": {
+        "^[a-zA-Z][\\w.-]*$": {
+          "description": "Any JSON-compatible payload scoped under a stable namespace key.",
+          "type": ["string", "number", "integer", "boolean", "array", "object", "null"]
+        }
+      },
+      "additionalProperties": false
     }
   },
-  "additionalProperties": false
+  "$defs": {
+    "boundedInteger": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "description": "Adapter-defined recursion mode identifier (e.g., depth-first, breadth-first).",
+      "pattern": "^[a-zA-Z][\\w-]*$",
+      "minLength": 1
+    },
+    "policy": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "description": { "type": "string" },
+        "constraints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "inherit_from": {
+          "type": "array",
+          "description": "Policies this policy derives from (resolved by name); prevents ambiguous inheritance.",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "recursion_node": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "condition": { "$ref": "#/$defs/nonEmptyString" },
+        "limit": { "$ref": "#/$defs/boundedInteger" },
+        "strategy": { "$ref": "#/$defs/mode" },
+        "policies": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/policy" },
+          "uniqueItems": true
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/recursion_node" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
 }

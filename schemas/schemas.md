@@ -282,14 +282,23 @@ Key Properties
 Type: object
 Required: depth_limit, trigger_condition
 
-• depth_limit – integer ≥ 1
-• trigger_condition – string
-• regeneration_threshold – number [0, 1]
-• feedback_source – string
+• schema_version – semantic version string for the contract in use
+• depth_limit – integer ≥ 1 (hard cap on recursion depth)
+• max_iterations – integer ≥ 1 (optional total branch limit)
+• trigger_condition – primary string condition that enables recursion
+• trigger_conditions – array of supplemental non-empty conditions (unique, minItems = 1)
+• regeneration_threshold – number [0, 1] gating regeneration
+• feedback_source – non-empty string identifying the feedback driver
+• auto_refine / require_human_approval / allow_recursive_refinement – booleans controlling authority and re-entry
+• preferred_modes – array of namespaced mode identifiers
+• policies – array of policy objects (name, optional description/constraints/inherit_from)
+• expansion_tree – recursive tree of branch nodes (id, optional condition/limit/strategy/policies/children)
 • evaluation_schema – $ref evaluation_schema.json
-• history_log – array of strings
+• history_log – array of non-empty strings
+• metadata – $ref metadata_schema.json
+• extensions – namespaced object for domain-specific payloads (keys must match ^[a-zA-Z][\w.-]*$)
 
-Strictness: additionalProperties = false
+Strictness: additionalProperties = false; extensions are the sole sanctioned expansion point.
 
 Referenced by: workflow_schema.json → recursion
 

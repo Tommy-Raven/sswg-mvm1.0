@@ -1,34 +1,24 @@
 #!/usr/bin/env python3
-"""
-generator/recursion_manager.py — Recursion policy and refinement.
-
-This version wires in semantic deltas (SentenceTransformer embeddings),
-quality evaluations, and the offline llm_adapter shim to decide whether
-regeneration is worth running. It also emits before/after metric plots so the
-pipeline can demonstrate recursive improvement.
-"""
+"""Recursion policy, refinement orchestration, and feedback logging."""
 
 from __future__ import annotations
 
+import importlib
+import json
 import logging
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
-
-import importlib
+from typing import Any, Callable, Dict, Optional
 
 from ai_evaluation.evaluation_engine import evaluate_workflow_quality
 from ai_evaluation.semantic_analysis import SemanticAnalyzer
 from ai_memory.feedback_integrator import FeedbackIntegrator
 from ai_recursive.version_diff_engine import compute_diff_summary
-from modules.llm_adapter import generate_text
-import json
-import logging
-from dataclasses import dataclass
-from typing import Any, Callable, Dict, Optional
-
-from modules.llm_adapter import RefinementContract, generate_refinement
+from modules.llm_adapter import (
+    RefinementContract,
+    generate_refinement,
+)
 
 logger = logging.getLogger("generator.recursion_manager")
 
@@ -103,11 +93,15 @@ class RecursionManager:
         policy: Optional[RecursionPolicy] = None,
         *,
         output_dir: Path = Path("data/outputs"),
+        llm_generate: Optional[Callable[[str], str]] = None,
+        contract: Optional[RefinementContract] = None,
     ) -> None:
         self.policy = policy or RecursionPolicy()
         self.output_dir = output_dir
         self.delta_calculator = SemanticDeltaCalculator()
         self.feedback = FeedbackIntegrator()
+        self.llm_generate = llm_generate
+        self.contract = contract or RefinementContract()
 
     def _evaluate(self, workflow: Dict[str, Any]) -> Dict[str, Any]:
         quality = evaluate_workflow_quality(workflow)
@@ -191,104 +185,20 @@ class RecursionManager:
         plot_path.write_text("\n".join(svg_parts), encoding="utf-8")
         return plot_path
 
-    def _propose_regeneration(
-        self, workflow: Dict[str, Any], evaluation: Dict[str, Any], depth: int
-    ) -> Dict[str, Any]:
-        prompt = (
-            "Refine workflow to raise quality scores. "
-            f"Current overall={evaluation['quality']['overall_score']:.3f}, depth={depth}. "
-            f"Metrics={evaluation['quality']['metrics']}"
-        )
-        suggestion = generate_text(prompt)
-
-        regenerated = deepcopy(workflow)
-        recursion_meta = regenerated.setdefault("recursion", {})
-        recursion_meta["llm_prompt"] = prompt
-        recursion_meta["llm_suggestion"] = suggestion
-
-        for phase in regenerated.get("phases", []):
-            if not isinstance(phase, dict):
-                continue
-            text = phase.get("ai_task_logic") or ""
-            phase["ai_task_logic"] = f"{text}\n\nImprovement: {suggestion}".strip()
-            break
-        else:
-            regenerated.setdefault("phases", []).append(
-                {
-                    "id": "refined_phase",
-                    "title": "Refined Guidance",
-                    "ai_task_logic": suggestion,
-                }
-            )
-        return regenerated
-    def __init__(
-        self,
-        policy: Optional[RecursionPolicy] = None,
-        llm_generate: Optional[Callable[..., str]] = None,
-        contract: Optional[RefinementContract] = None,
-    ) -> None:
-        self.policy = policy or RecursionPolicy()
-        self.llm_generate = llm_generate or self._default_llm_generate
-        self.contract = contract or RefinementContract()
-
-    @staticmethod
-    def _default_llm_generate(prompt: str) -> str:
-        """Return a contract-compliant stub when no LLM is wired."""
-
-        logger.info("LLM generation stub invoked with prompt preview: %s", prompt[:200])
-        default_response = {
-            "decision": "stop",
-            "refined_workflow": {},
-            "reasoning": "No LLM configured; returning unchanged workflow.",
-            "confidence": 0.0,
-            "score_delta": 0.0,
-        }
-        return json.dumps(default_response)
-
     def should_recurse(self, depth: int, score_delta: float) -> bool:
         if depth >= self.policy.max_depth:
             return False
         return score_delta >= self.policy.min_improvement
 
-    def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
-        baseline_report = self._evaluate(workflow_data)
-        candidate = self._propose_regeneration(workflow_data, baseline_report, depth)
-        candidate_report = self._evaluate(candidate)
-
-        score_delta = (
-            candidate_report["quality"]["overall_score"]
-            - baseline_report["quality"]["overall_score"]
-        )
-        semantic_delta = self.delta_calculator.delta(
-            baseline_report["embedding"], candidate_report["embedding"]
-        )
-
-        regenerate = self.should_recurse(depth, score_delta) or (
-            semantic_delta >= self.policy.min_semantic_delta
-        )
     def refine_workflow(
         self,
         workflow_data: Dict[str, Any],
         evaluation_report: Dict[str, Any],
         depth: int,
     ) -> Dict[str, Any]:
-        """
-        Generate a refined workflow variant using the LLM contract.
+        """Generate a refined workflow variant using the LLM contract."""
 
-        The LLM is instructed to return a strict JSON payload with the following
-        fields (see ``modules.llm_adapter.RefinementContract``):
-
-        - decision: "accept", "revise", or "stop"
-        - refined_workflow: dict representing changes or a full replacement
-        - reasoning: short natural-language justification
-        - confidence: numeric confidence score
-        - score_delta: numeric estimate of improvement
-
-        The parsed response is merged into the returned workflow under
-        ``recursion_metadata`` for traceability.
-        """
-
-        refined_workflow = dict(workflow_data)
+        refined_workflow = deepcopy(workflow_data)
         recursion_metadata = refined_workflow.setdefault("recursion_metadata", {})
 
         try:
@@ -329,6 +239,28 @@ class RecursionManager:
         )
 
         return refined_workflow
+
+    def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
+        baseline_report = self._evaluate(workflow_data)
+        candidate = self.refine_workflow(workflow_data, baseline_report, depth)
+        candidate_report = self._evaluate(candidate)
+
+        score_delta = (
+            candidate_report["quality"]["overall_score"]
+            - baseline_report["quality"]["overall_score"]
+        )
+        semantic_delta = self.delta_calculator.delta(
+            baseline_report["embedding"], candidate_report["embedding"]
+        )
+
+        llm_decision = candidate.get("recursion_metadata", {}).get("llm_decision")
+        regenerate = (
+            llm_decision in {"accept", "revise"}
+            and (
+                self.should_recurse(depth, score_delta)
+                or semantic_delta >= self.policy.min_semantic_delta
+            )
+        )
 
         final_workflow = candidate if regenerate else workflow_data
         plot_path = self._render_metric_plot(

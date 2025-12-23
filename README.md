@@ -94,6 +94,8 @@ Outputs are stable, regenerable, and lineage-tracked.
     ├── data/templates/               → Seed workflow templates
     └── schemas/                      → Canonical JSON schemas
 
+- **System Overview:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+
 ---
 
 ## ⭐ Core Features

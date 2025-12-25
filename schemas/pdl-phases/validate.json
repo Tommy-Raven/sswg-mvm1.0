@@ -1,0 +1,31 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/validate.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: validate",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "validate" },
+            "type": { "const": "validation" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "schema_validation_required": { "type": "boolean", "const": true },
+                "invariants_required": { "type": "boolean", "const": true },
+                "bijectivity_check_required": { "type": "boolean" }
+              },
+              "required": ["schema_validation_required", "invariants_required"]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

@@ -1,0 +1,33 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/generate.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: generate",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "generate" },
+            "type": { "const": "generation" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "outputs_must_be_declarative": { "type": "boolean", "const": true },
+                "no_measurement_keys_generated_stochastically": { "type": "boolean", "const": true }
+              },
+              "required": [
+                "outputs_must_be_declarative",
+                "no_measurement_keys_generated_stochastically"
+              ]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

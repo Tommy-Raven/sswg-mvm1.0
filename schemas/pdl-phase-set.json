@@ -1,0 +1,31 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phase-set.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase set (9-phase, ordered, separated)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pipeline_profile", "phases"],
+  "properties": {
+    "pipeline_profile": {
+      "type": "string",
+      "const": "full_9_phase"
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "prefixItems": [
+        { "$ref": "pdl-phases/ingest.json#/$defs/phase" },
+        { "$ref": "pdl-phases/normalize.json#/$defs/phase" },
+        { "$ref": "pdl-phases/parse.json#/$defs/phase" },
+        { "$ref": "pdl-phases/analyze.json#/$defs/phase" },
+        { "$ref": "pdl-phases/generate.json#/$defs/phase" },
+        { "$ref": "pdl-phases/validate.json#/$defs/phase" },
+        { "$ref": "pdl-phases/compare.json#/$defs/phase" },
+        { "$ref": "pdl-phases/interpret.json#/$defs/phase" },
+        { "$ref": "pdl-phases/log.json#/$defs/phase" }
+      ],
+      "items": false
+    }
+  }
+}

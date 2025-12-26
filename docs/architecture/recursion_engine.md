@@ -127,3 +127,272 @@ mvm.process.refined
 ```
 
 These events feed into the monitoring pipeline described in [docs/TELEMETRY_GUIDE.md](../TELEMETRY_GUIDE.md) and align with the logging posture highlighted in the root [README](../../README.md).
+
+---
+
+## ✅ Remediation 14 — Standardize Recursion-Trigger Conditions (Expanded)
+
+### Why this remediation matters
+
+A recursive system’s greatest danger is not that it can’t change—it’s that it can’t stop changing. Without standardized trigger conditions, recursion becomes impulsive: the system rewrites itself because it can, not because it should. That creates instability, drift, and needless complexity. Standardized recursion triggers turn recursion into a disciplined intervention: only fire when there is evidence of error, opportunity, or unmet objectives, and only at an appropriate scope and intensity.
+
+Think of triggers as the system’s “governor” and “diagnostic thresholds,” not a creative whim generator.
+
+---
+
+### A. Failure Modes if Ignored (Expanded)
+
+#### 1) Compulsive iteration and creative churn
+
+**What this looks like**
+
+- The system repeatedly rewrites artifacts even when they already meet objectives.
+- Outputs oscillate: version A improves clarity, version B improves brevity, version C undoes both.
+- Minor stylistic differences are treated as reasons to regenerate major structure.
+
+**Why it happens**
+
+- No stop condition or convergence criterion.
+- No distinction between “nice-to-have” improvements and “must-fix” faults.
+- No cost/benefit logic applied to recursion.
+
+**What it breaks**
+
+- Stability and trust.
+- Maintainability: changes pile up faster than they can be evaluated.
+
+---
+
+#### 2) Wrong-level rewriting (scope mismatch)
+
+**What this looks like**
+
+- A localized defect triggers a global rewrite.
+- The system changes module ordering when only one task was unclear.
+- It expands depth when the real issue is missing prerequisites.
+
+**Why it happens**
+
+- Triggers aren’t linked to a “change radius” (how wide the edit should be).
+- No diagnosis step to localize fault origin.
+
+**What it breaks**
+
+- Efficiency: wasted effort.
+- Fidelity: unintended regressions increase with edit size.
+
+---
+
+#### 3) Drift disguised as “improvement”
+
+**What this looks like**
+
+- Repeated refinements slowly shift intent away from original user goals.
+- Definitions mutate across iterations as the system “simplifies” them.
+- The system begins optimizing for its own internal preferences.
+
+**Why it happens**
+
+- No anchor conditions tied to original intent.
+- Triggers fire on superficial signals (e.g., “can be improved”) rather than target metrics.
+
+**What it breaks**
+
+- Intent alignment and correctness.
+- Governance: you lose a stable canonical baseline.
+
+---
+
+#### 4) Trigger spam from noisy signals
+
+**What this looks like**
+
+- Small metric fluctuations cause rewrites even when changes are within expected variance.
+- Agents disagree slightly, and the system treats disagreement as failure.
+- The system becomes reactive rather than reflective.
+
+**Why it happens**
+
+- No tolerance bands or statistical smoothing.
+- No differentiation between noise and true regression.
+- No “cooldown” periods.
+
+**What it breaks**
+
+- Predictability and efficiency.
+- Resource usage (compute, time, human review load).
+
+---
+
+### B. What “Good” Looks Like (Expanded)
+
+#### 1) Triggers are typed: different triggers produce different kinds of recursion
+
+Good systems separate triggers by category so the response matches the cause.
+
+**Core trigger types**
+
+- Error correction: contradictions, missing prerequisites, failed validation.
+- Performance improvement: metrics below target; identifiable weak points.
+- Coverage expansion: missing required components; domain growth request.
+- Adaptation: new learner profile, new constraints, new environment.
+- Maintenance: deprecated resources, drift detection, outdated assumptions.
+
+**Outcome**
+
+The system stops treating all problems as “rewrite everything.” Recursion becomes targeted: fix, improve, expand, adapt, maintain.
+
+---
+
+#### 2) Triggers include thresholds and tolerance bands
+
+Trigger conditions should be measurable and robust to noise.
+
+**What “good” means**
+
+Each trigger has:
+
+- signal definition (what is measured)
+- threshold (when it fires)
+- tolerance band (noise range)
+- persistence rule (must persist across N evaluations)
+- severity mapping (minor/major/critical)
+
+**Outcome**
+
+The system doesn’t thrash on minor fluctuations. Recursion fires when there is consistent evidence, not a single bad sample.
+
+---
+
+#### 3) Triggers are coupled to scope and intensity (“change radius”)
+
+A key maturity feature: the system chooses how much to rewrite based on trigger severity.
+
+**What “good” means**
+
+- Small defects → local edits (task-level rewrite).
+- Moderate issues → module rework (insert bridging content, reorder prerequisites).
+- Critical failures → structural revision (rebuild dependency graph, revise core constraints).
+
+**Outcome**
+
+Changes are proportional. Risk of collateral damage drops.
+
+---
+
+#### 4) Explicit convergence and stop conditions
+
+You need a definition of “good enough” to stabilize.
+
+**What “good” means**
+
+Convergence criteria such as:
+
+- metrics meet thresholds
+- no critical issues detected
+- improvements plateau across multiple iterations
+
+Stop rules:
+
+- max recursion depth
+- max attempts per defect
+- escalation to human review when stagnation occurs
+
+**Outcome**
+
+The system can reach stable “canonical” states. Humans don’t get buried in endless micro-iterations.
+
+---
+
+#### 5) Triggers preserve intent through anchoring and invariants
+
+Triggers must not allow the system to “improve itself” into a different system.
+
+**What “good” means**
+
+The system carries forward:
+
+- original goals
+- key constraints
+- declared invariants
+
+Trigger-driven edits must demonstrate that these anchors are preserved—or explicitly justify why not.
+
+**Outcome**
+
+Recursion remains aligned to user intent and governance constraints.
+
+---
+
+### C. Designing Triggers as a Policy Layer (Conceptual Framing)
+
+A useful mental model: recursion triggers are a policy layer that decides:
+
+1. Should we change anything? (trigger firing)
+2. What kind of change is appropriate? (trigger type)
+3. How big should the change be? (scope/intensity)
+4. How do we verify improvement? (tie to evaluation checkpoints)
+5. When do we stop and escalate? (convergence + human review)
+
+This policy layer prevents “generator impulses” from masquerading as system evolution.
+
+---
+
+### D. Practical Examples (Conceptual)
+
+**Example 1: Error correction trigger**
+
+- Signal: contradiction count > 0
+- Severity: critical if contradiction involves constraints; minor if stylistic
+- Change radius: local fix for minor; structural fix for critical
+- Persistence: immediate fire for critical; require N repeats for minor
+
+**Example 2: Performance improvement trigger**
+
+- Signal: clarity score below threshold and persists across two evaluations
+- Change radius: task-level rewrite in the lowest-scoring module
+- Stop: if clarity improves without regressions, promote; else branch
+
+**Example 3: Drift trigger**
+
+- Signal: divergence from canonical glossary increases over iterations
+- Change radius: re-anchor definitions; re-run consistency checks
+- Escalate: if drift persists after 2 cycles, require review
+
+---
+
+### E. Evaluation of trigger quality (how to know triggers are well-designed)
+
+A trigger system is good if it passes these tests:
+
+- **Stability test:** triggers do not fire repeatedly under normal variance.
+- **Sensitivity test:** triggers fire reliably when genuine regressions occur.
+- **Localization test:** triggered edits are appropriately scoped (no global rewrite for local defect).
+- **Alignment test:** after trigger-driven changes, intent anchors remain intact.
+- **Efficiency test:** improvements per iteration increase; wasted iterations decrease.
+
+---
+
+### Minimum viable model (MVM) — the mental model
+
+The Minimum viable model (MVM) for recursion-trigger standardization is:
+
+1. Three trigger categories to start: error correction, performance shortfall, drift.
+2. Thresholds + persistence: each trigger fires only when evidence exceeds threshold and persists across N checks (except critical errors).
+3. Change radius mapping: every trigger category maps to a default scope (task/module/structure).
+4. Stop conditions: max iterations per defect + plateau detection + escalation rule.
+
+This MVM prevents thrash and makes recursion purposeful immediately.
+
+---
+
+### mvm — the software posture (how it should behave)
+
+As mvm (software), the system should:
+
+- evaluate triggers before initiating recursion,
+- classify trigger type and severity,
+- choose proportional edit scope automatically,
+- require evaluation checkpoints after changes,
+- block promotion when triggers fired but evidence of improvement is absent,
+- escalate to human review when triggers persist or plateau is detected.

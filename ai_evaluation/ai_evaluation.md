@@ -33,3 +33,14 @@ Responsibilities:
     "specificity": 0.85
   }
 }
+```
+
+### 2. `checkpoints.py`
+
+**Role:** Capture evaluation checkpoints for each iteration.
+
+Responsibilities:
+
+- Define success criteria per checkpoint (defaults: overall_score ≥ 0.55, clarity/coverage ≥ 0.5).
+- Flag regressions between checkpoints and surface rollback recommendations.
+- Produce compact summaries for attachment to `workflow["evaluation"]["checkpoints"]`.

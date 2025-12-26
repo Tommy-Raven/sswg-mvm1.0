@@ -38,6 +38,7 @@ from ai_visualization.export_manager import export_json as viz_export_json
 from ai_visualization.export_manager import export_markdown as viz_export_markdown
 from ai_core.orchestrator import Orchestrator
 from ai_core.workflow import Workflow
+from ai_evaluation.checkpoints import EvaluationCheckpointer
 from ai_evaluation.evaluation_engine import evaluate_workflow_quality
 from ai_memory.memory_store import MemoryStore
 from ai_memory.feedback_integrator import FeedbackIntegrator
@@ -704,6 +705,8 @@ def process_workflow(
     workflow_id = workflow.get("workflow_id", "unnamed_workflow")
     log_event("mvm.process.started", {"workflow_id": workflow_id})
 
+    checkpoint_manager = EvaluationCheckpointer()
+
     orchestrator = Orchestrator()
     workflow_obj = Workflow(workflow)
     orchestrator.telemetry.record("loaded_via_orchestrator", {"workflow_id": workflow_obj.id})
@@ -733,6 +736,17 @@ def process_workflow(
     # 6. Evaluation + semantic scoring
     base_quality = evaluate_workflow_quality(workflow)
     workflow.setdefault("evaluation", {})["quality"] = base_quality
+    base_checkpoint = checkpoint_manager.record(
+        "baseline_quality",
+        {
+            "overall_score": base_quality.get("overall_score", 0.0),
+            **(base_quality.get("metrics") or {}),
+        },
+        notes=["Initial evaluation before refinement."],
+    )
+    workflow.setdefault("evaluation", {}).setdefault("checkpoints", []).append(
+        base_checkpoint.to_dict()
+    )
     _apply_meta_metrics(workflow, quality_report=base_quality)
 
     # 7. Recursive refinement (single iteration) if enabled
@@ -750,6 +764,21 @@ def process_workflow(
                 "plot": str(outcome.plot_path),
             }
         )
+        after_quality = outcome.after_report.get("quality", {}) or {}
+        refined_checkpoint = checkpoint_manager.record(
+            "post_refinement",
+            {
+                "overall_score": after_quality.get("overall_score", 0.0),
+                **(after_quality.get("metrics") or {}),
+            },
+            notes=[
+                "Post-refinement evaluation checkpoint",
+                f"Semantic delta: {outcome.semantic_delta:.3f}",
+            ],
+        )
+        refined_eval = refined.setdefault("evaluation", {})
+        refined_eval.setdefault("checkpoints", []).append(refined_checkpoint.to_dict())
+        refined_eval["checkpoint_summary"] = checkpoint_manager.summarize()
         refined_quality = outcome.after_report.get("quality")
         if isinstance(refined_quality, dict):
             refined.setdefault("evaluation", {})["quality"] = refined_quality
@@ -791,6 +820,12 @@ def process_workflow(
         _apply_inheritance_checks(refined, change_source="refinement_pass")
         _apply_dependency_tracking(refined, change_source="refinement_pass")
 
+    if not enable_refinement:
+        workflow.setdefault("evaluation", {})[
+            "checkpoint_summary"
+        ] = checkpoint_manager.summarize()
+
+    # 6. Export updated visualization assets
     # 8. Export updated visualization assets
     export_graphviz(refined, str(out_dir))
     viz_export_json(refined, str(out_dir))

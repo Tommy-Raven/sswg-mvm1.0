@@ -90,6 +90,46 @@ root_contract:
 
     enforcement:
       failure_behavior: stop_execution
+    error_handling:
+      taxonomy:
+        - structural
+        - semantic
+        - behavioral
+        - safety
+        - operational
+      severity_tiers:
+        - critical
+        - major
+        - minor
+        - informational
+      quarantine_policy:
+        default_state: untrusted
+        promotion_requires:
+          - validation_pass
+          - evaluation_pass
+        safety_flags:
+          action: quarantine_and_escalate
+      recovery_protocol:
+        required_steps:
+          - detect
+          - classify
+          - contain
+          - diagnose
+          - remediate
+          - revalidate
+          - reevaluate
+          - decide
+          - record
+        rollback_on:
+          - critical
+          - major
+      incident_logging:
+        required_fields:
+          - workflow_id
+          - error_class
+          - severity
+          - source
+          - decision
 
   execution_policy:
     measurement:
@@ -166,3 +206,7 @@ root_contract:
     - id: validation_required
       rule: >
         Outputs that fail validation must not be promoted or reused.
+    - id: quarantine_on_failure
+      rule: >
+        Workflows with critical or major incidents must remain quarantined
+        until recovery steps complete and validation passes.

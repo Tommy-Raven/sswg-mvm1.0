@@ -1,0 +1,8 @@
+{
+  "metrics": {
+    "overall_score": 0.63,
+    "clarity": 0.58,
+    "coverage": 0.6
+  },
+  "interpretive_notes": ["Candidate summary references measured artifacts."]
+}

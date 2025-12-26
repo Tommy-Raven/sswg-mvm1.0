@@ -36,9 +36,11 @@
     "precedence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["scope"],
+      "required": ["scope", "rules"],
       "properties": {
-        "scope": { "type": "string" },
+        "scope": { "type": "string", "minLength": 1 },
+        "rules": { "type": "string", "minLength": 1 },
+        "order": { "type": "integer", "minimum": 0 },
         "notes": { "type": "string" }
       }
     },
@@ -51,7 +53,13 @@
           "type": "string",
           "enum": ["backward", "forward", "breaking"]
         },
-        "migration_plan": { "type": "string" }
+        "migration_plan": { "type": "string" },
+        "migration_steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "rollback_plan": { "type": "string" }
       }
     }
   },
@@ -66,7 +74,7 @@
       },
       "then": {
         "properties": {
-          "compatibility": { "required": ["migration_plan"] }
+          "compatibility": { "required": ["migration_plan", "migration_steps", "rollback_plan"] }
         }
       }
     }

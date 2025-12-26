@@ -1,0 +1,20 @@
+{
+  "anchor": {
+    "anchor_id": "experiment_scope",
+    "anchor_version": "1.0.0",
+    "scope": "experiment",
+    "owner": "experiments",
+    "status": "draft"
+  },
+  "exp_id": "mvm_experiment",
+  "exp_version": "0.1.0",
+  "anchor_family": "sswg v1",
+  "owner": "experiments",
+  "scope": ["overlays/", "evaluations/"],
+  "exit_criteria": [
+    "Evaluation checkpoint passes against baseline.",
+    "Provenance manifest and determinism reports are emitted.",
+    "Reproducibility replay gate passes using pinned dependencies."
+  ],
+  "graduation_ready": false
+}

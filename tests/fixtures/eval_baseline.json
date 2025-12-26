@@ -1,0 +1,8 @@
+{
+  "metrics": {
+    "overall_score": 0.62,
+    "clarity": 0.6,
+    "coverage": 0.59
+  },
+  "interpretive_notes": ["Baseline interpretive summary is stable."]
+}

@@ -4,20 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, RefResolver
-
 from generator.failure_emitter import FailureEmitter, FailureLabel
-
-
-def _load_schema(schema_path: Path) -> dict:
-    return json.loads(schema_path.read_text(encoding="utf-8"))
-
-
-def _get_validator(schema_dir: Path, schema_name: str) -> Draft202012Validator:
-    schema = _load_schema(schema_dir / schema_name)
-    base_uri = schema_dir.as_uri().rstrip("/") + "/"
-    resolver = RefResolver(base_uri=base_uri, referrer=schema)
-    return Draft202012Validator(schema, resolver=resolver)
+from generator.overlay_governance import validate_overlay_descriptor
 
 
 def _parse_args() -> argparse.Namespace:
@@ -41,29 +29,14 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     overlay = json.loads(args.overlay_path.read_text(encoding="utf-8"))
-    validator = _get_validator(args.schema_dir, "overlay-descriptor.json")
-    errors = sorted(validator.iter_errors(overlay), key=lambda e: e.path)
-    if not errors:
-        operations = overlay.get("operations", [])
-        paths = [op.get("path") for op in operations]
-        if len(paths) != len(set(paths)):
-            errors.append(
-                Exception("Overlay contains duplicate operation paths, ambiguous interpretation.")
-            )
-        scope = overlay.get("precedence", {}).get("scope", "")
-        notes = overlay.get("precedence", {}).get("notes", "")
-        if scope == "global" and "explicit" not in notes.lower():
-            errors.append(Exception("Global overlay scope requires explicit precedence notes."))
+    errors = validate_overlay_descriptor(
+        overlay,
+        schema_dir=args.schema_dir,
+        overlay_path=args.overlay_path,
+    )
     if errors:
         evidence = {
-            "errors": [
-                {
-                    "message": getattr(error, "message", str(error)),
-                    "path": list(getattr(error, "path", [])),
-                    "schema_path": list(getattr(error, "schema_path", [])),
-                }
-                for error in errors
-            ]
+            "errors": errors
         }
         failure = FailureLabel(
             Type="schema_failure",

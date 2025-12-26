@@ -11,6 +11,8 @@
   ],
   "precedence": {
     "scope": "pdl",
+    "rules": "Explicit overlay precedence for PDL phase constraints.",
+    "order": 10,
     "notes": "Overlay applies only to PDL phase constraints."
   },
   "compatibility": {

@@ -1,0 +1,143 @@
+{
+  "anchor": {
+    "anchor_id": "environment_lock",
+    "anchor_version": "1.0.0",
+    "scope": "runtime",
+    "owner": "reproducibility",
+    "status": "draft"
+  },
+  "runtime": {
+    "python_version": "3.11.12"
+  },
+  "dependencies": [
+    {
+      "name": "attrs",
+      "version": "24.2.0"
+    },
+    {
+      "name": "black",
+      "version": "25.9.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2024.8.30"
+    },
+    {
+      "name": "click",
+      "version": "8.1.7"
+    },
+    {
+      "name": "gitdb",
+      "version": "4.0.11"
+    },
+    {
+      "name": "GitPython",
+      "version": "3.1.43"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.0"
+    },
+    {
+      "name": "isort",
+      "version": "7.0.0"
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.23.0"
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1"
+    },
+    {
+      "name": "markdown-it-py",
+      "version": "3.0.0"
+    },
+    {
+      "name": "mdurl",
+      "version": "0.1.2"
+    },
+    {
+      "name": "mypy",
+      "version": "1.18.2"
+    },
+    {
+      "name": "mypy_extensions",
+      "version": "1.1.0"
+    },
+    {
+      "name": "nodeenv",
+      "version": "1.9.1"
+    },
+    {
+      "name": "packaging",
+      "version": "25.0"
+    },
+    {
+      "name": "pathspec",
+      "version": "0.12.1"
+    },
+    {
+      "name": "platformdirs",
+      "version": "4.5.0"
+    },
+    {
+      "name": "pluggy",
+      "version": "1.6.0"
+    },
+    {
+      "name": "Pygments",
+      "version": "2.18.0"
+    },
+    {
+      "name": "pyright",
+      "version": "1.1.406"
+    },
+    {
+      "name": "pytest",
+      "version": "8.4.2"
+    },
+    {
+      "name": "pytokens",
+      "version": "0.2.0"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.2"
+    },
+    {
+      "name": "referencing",
+      "version": "0.33.0"
+    },
+    {
+      "name": "rich",
+      "version": "13.7.1"
+    },
+    {
+      "name": "rpds-py",
+      "version": "0.18.1"
+    },
+    {
+      "name": "ruff",
+      "version": "0.14.2"
+    },
+    {
+      "name": "shellingham",
+      "version": "1.5.4"
+    },
+    {
+      "name": "smmap",
+      "version": "5.0.1"
+    },
+    {
+      "name": "typer",
+      "version": "0.12.3"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.15.0"
+    }
+  ],
+  "notes": "Pinned dependency lock generated from pip freeze."
+}

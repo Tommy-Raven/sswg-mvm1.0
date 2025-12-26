@@ -13,9 +13,31 @@ schema_validator if they want a stable, unified interface.
 
 from __future__ import annotations
 
+from .error_protocol import (
+    ErrorClass,
+    ErrorSignal,
+    IncidentRecord,
+    Severity,
+    apply_incident,
+    apply_incident_metadata,
+    build_incident,
+    classify_exception,
+    classify_validation_failure,
+    recovery_decision,
+)
 from .schema_validator import validate_workflow, validate_json
 
 __all__ = [
+    "ErrorClass",
+    "ErrorSignal",
+    "IncidentRecord",
+    "Severity",
+    "apply_incident",
+    "apply_incident_metadata",
+    "build_incident",
+    "classify_exception",
+    "classify_validation_failure",
+    "recovery_decision",
     "validate_workflow",
     "validate_json",
 ]

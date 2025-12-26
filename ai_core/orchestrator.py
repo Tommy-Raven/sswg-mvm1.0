@@ -30,7 +30,14 @@ import logging
 from typing import Iterable, List, Optional
 
 from ai_monitoring.structured_logger import log_event
-from ai_validation import validate_workflow
+from ai_validation import (
+    apply_incident_metadata,
+    build_incident,
+    classify_exception,
+    classify_validation_failure,
+    recovery_decision,
+    validate_workflow,
+)
 
 from .module_registry import ModuleRegistry
 from .phase_controller import PhaseController
@@ -158,6 +165,10 @@ class Orchestrator:
                     "Type": "deterministic_failure",
                     "message": str(e),
                 }
+                signal = classify_exception(e, source="phase_execution")
+                decision = recovery_decision(signal.error_class, signal.severity)
+                incident = build_incident(wf_id, signal)
+                apply_incident_metadata(workflow.metadata, incident, decision)
                 logger.error("Phase %s failed: %s", phase_id, e)
                 phase_status[phase_id] = {
                     "status": "failed",
@@ -213,6 +224,10 @@ class Orchestrator:
                     wf_id,
                     len(errors or []),
                 )
+                signal = classify_validation_failure(len(errors or []))
+                decision = recovery_decision(signal.error_class, signal.severity)
+                incident = build_incident(wf_id, signal, remediation="block_promotion")
+                apply_incident_metadata(workflow.metadata, incident, decision)
                 log_event(
                     "orchestrator.validation_failed",
                     {

@@ -396,3 +396,298 @@ As mvm (software), the system should:
 - require evaluation checkpoints after changes,
 - block promotion when triggers fired but evidence of improvement is absent,
 - escalate to human review when triggers persist or plateau is detected.
+
+---
+
+## ✅ Remediation 15 — Enhance Error-Handling and Recovery Protocols (Expanded)
+
+### Why this remediation matters
+
+A recursive system will inevitably produce failures: malformed artifacts, contradictory outputs, missing prerequisites, incompatible merges, or “improvements” that actually regress quality. The difference between a fragile recursive generator and a durable evolving system is whether it can detect failure early, isolate damage, recover cleanly, and learn from the incident without corrupting its own lineage.
+
+Error-handling is not merely catching exceptions; it is governance for failure. Recovery protocols are what keep iterative evolution from turning into iterative decay.
+
+---
+
+### A. Failure Modes if Ignored (Expanded)
+
+#### 1) Silent corruption of the knowledge lineage
+
+**What this looks like**
+
+- A flawed iteration is promoted because it “looks fine,” then becomes the new baseline.
+- Future iterations inherit contradictions or missing constraints.
+- Errors compound across generations until the system becomes incoherent.
+
+**Why it happens**
+
+- No robust validation gates.
+- Errors are detected late (or not at all).
+- No quarantine state for suspicious outputs.
+
+**What it breaks**
+
+- Trust and auditability.
+- Long-term coherence of the domain knowledge base.
+
+---
+
+#### 2) Cascading failures across dependent artifacts
+
+**What this looks like**
+
+- One broken definition causes many tasks/modules to become inconsistent.
+- Fix attempts introduce more breakage because dependencies weren’t considered during recovery.
+- A small defect becomes a system-wide incident.
+
+**Why it happens**
+
+- No dependency-aware impact analysis during recovery.
+- No staged rollback: changes are applied broadly and quickly.
+
+**What it breaks**
+
+- Maintainability and performance.
+- The ability to iterate safely at scale.
+
+---
+
+#### 3) Overcorrection and thrash
+
+**What this looks like**
+
+- The system responds to a local error with a global rewrite.
+- Multiple recovery attempts oscillate without converging.
+- The system “fights itself”: fixes undo prior fixes.
+
+**Why it happens**
+
+- No root-cause diagnosis step.
+- No bounded recovery actions tied to error type and severity.
+- No “cooldown” or escalation threshold after repeated failures.
+
+**What it breaks**
+
+- Efficiency and stability.
+- Confidence in promotion decisions.
+
+---
+
+#### 4) Human escalation overload
+
+**What this looks like**
+
+- Every small issue asks for human review.
+- Humans become the error handler, not the system.
+- The system never develops autonomy because it never learns to self-recover.
+
+**Why it happens**
+
+- No severity model distinguishing blockers from nuisances.
+- No automatic remediation pathways for common faults.
+
+**What it breaks**
+
+- Operational viability.
+- Scalability and adoption.
+
+---
+
+### B. What “Good” Looks Like (Expanded)
+
+#### 1) Early detection with explicit error taxonomy
+
+The system should recognize and label failures as specific classes, not generic “something went wrong.”
+
+**Common error classes**
+
+- Structural: malformed format, missing required fields, invalid ordering.
+- Semantic: contradictions, term collisions, missing prerequisites.
+- Behavioral: poor evaluation outcomes, low usability, high intervention.
+- Safety/compliance: policy violations, privacy risks, disallowed content.
+- Operational: resource missing, dependency mismatch, incompatible versions.
+
+**Outcome**
+
+Recovery becomes targeted and reliable instead of guesswork.
+
+---
+
+#### 2) Quarantine and containment: unsafe outputs never become baseline
+
+A mature system treats suspicious iterations as quarantined until proven safe.
+
+**What “good” means**
+
+- New outputs enter a sandbox/quarantine state by default.
+- Promotion requires passing validation + evaluation gates.
+- Any safety/compliance flags trigger mandatory review or auto-rejection.
+
+**Outcome**
+
+The lineage remains clean. Failures become experiments, not infections.
+
+---
+
+#### 3) Root-cause analysis before remediation
+
+Good recovery starts with diagnosis, not reaction.
+
+**What “good” means**
+
+The system attempts to localize:
+
+- where the fault originates (module/task/definition/constraint)
+- what dependencies are implicated
+- which change introduced it (diff-aware)
+
+It distinguishes symptoms from causes (e.g., “users fail step 5” may be caused by missing prerequisite in step 2).
+
+**Outcome**
+
+Fixes become smaller, safer, and faster. Repeated error loops diminish over time.
+
+---
+
+#### 4) Bounded recovery playbooks per error type
+
+For each error class, the system has a preferred recovery strategy.
+
+**What “good” means**
+
+- Structural errors: repair formatting/required fields; revalidate.
+- Semantic errors: resolve contradictions by re-anchoring definitions; rerun coherence checks.
+- Behavioral regressions: rollback to last stable; branch an experimental variant for further work.
+- Safety flags: immediate quarantine; strip/replace risky segments; escalate if unclear.
+- Operational errors: degrade gracefully (fallback resources, alternate tasks) or fail fast with clear diagnostics.
+
+**Outcome**
+
+Recovery is predictable and auditable. Humans intervene only when the system genuinely cannot resolve ambiguity.
+
+---
+
+#### 5) Rollback is first-class and fast
+
+Recovery requires the ability to revert cleanly.
+
+**What “good” means**
+
+- Every iteration is versioned and reversible.
+- The system can revert to last known-good on threshold violations.
+- The failed version is preserved as an artifact for analysis, not deleted.
+
+**Outcome**
+
+The system can experiment aggressively without risking permanent degradation.
+
+---
+
+#### 6) Learning from failures: incident-to-improvement loop
+
+Failures should update system behavior so they recur less often.
+
+**What “good” means**
+
+Each failure produces:
+
+- a short incident record (what happened, where, severity)
+- root-cause hypothesis
+- applied fix
+- prevention rule (new validation check, new trigger threshold, new constraint)
+
+Frequent failures create “guardrails” automatically (or propose them for review).
+
+**Outcome**
+
+Over time, the system’s failure rate drops and its autonomy rises.
+
+---
+
+### C. Practical Framing: A Recovery Protocol as a Controlled Sequence
+
+Error-handling works best when it is staged and repeatable.
+
+A clean mental model is:
+
+1. Detect (identify error signals)
+2. Classify (assign error taxonomy class + severity)
+3. Contain (quarantine; prevent promotion)
+4. Diagnose (root cause localization + dependency impact)
+5. Remediate (bounded fix playbook)
+6. Re-validate (structural + semantic checks)
+7. Re-evaluate (quality metrics + regression guards)
+8. Decide (promote, rollback, branch, or escalate)
+9. Record (incident log + prevention update)
+
+This prevents chaotic, ad hoc “fixing.”
+
+---
+
+### D. Severity Model (the missing spine in most systems)
+
+Recovery protocols need severity tiers to avoid over-escalation.
+
+**Typical tiers**
+
+- Critical: safety/compliance violation, core contradictions, corrupted schema → immediate quarantine + rollback.
+- Major: significant regression in key metrics, broken prerequisites → rollback or targeted fix, re-evaluate.
+- Minor: stylistic issues, small clarity dips within tolerance → adjust next iteration; no rollback needed.
+- Informational: warnings, non-blocking inconsistencies → log and monitor.
+
+Good systems treat severity as a routing mechanism: it determines whether to fix locally, rollback, branch, or escalate.
+
+---
+
+### E. Concrete Examples (Conceptual)
+
+**Example 1: Semantic contradiction appears after refinement**
+
+- Detection: contradiction signal > threshold
+- Containment: quarantine version
+- Diagnosis: identify conflicting definitions introduced in last diff
+- Remediation: re-anchor to canonical glossary; update dependent tasks
+- Re-validation: contradiction count returns to zero
+- Decision: promote if metrics stable; else branch
+
+**Example 2: Evaluation regression despite structural validity**
+
+- Detection: clarity score drops below guard
+- Containment: block promotion
+- Diagnosis: locate tasks with highest failure rate
+- Remediation: revert that task to prior stable variant; keep experimental rewrite in branch
+- Decision: mainline remains stable; branch continues iteration
+
+**Example 3: Resource missing / operational failure**
+
+- Detection: resource resolution fails
+- Remediation: degrade gracefully to alternate resource or generated substitute
+- If substitution affects quality: mark as “provisional,” require review before promotion
+
+---
+
+### Minimum viable model (MVM) — the mental model
+
+The Minimum viable model (MVM) for error-handling and recovery protocols is:
+
+1. Error taxonomy + severity tiers (structural/semantic/behavioral/safety/operational + critical/major/minor).
+2. Quarantine by default for new iterations; promotion requires passing gates.
+3. Rollback to last known-good for critical/major regressions.
+4. Bounded playbooks: one preferred recovery action per error class.
+5. Incident record stored with the version: what failed, why, what was done.
+
+This MVM makes the system durable immediately without heavy overhead.
+
+---
+
+### mvm — the software posture (how it should behave)
+
+As mvm (software), the system should:
+
+- treat every generated artifact as untrusted until validated,
+- classify errors and route recovery automatically,
+- quarantine unsafe iterations,
+- rollback rapidly on regression guards,
+- preserve failed variants for learning,
+- update prevention checks based on repeated incidents,
+- escalate to humans only when severity is high or ambiguity is irreducible.

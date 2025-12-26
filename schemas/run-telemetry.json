@@ -8,6 +8,8 @@
     "anchor",
     "run_id",
     "phase_durations",
+    "artifact_sizes",
+    "budget_status",
     "gate_results",
     "failure_counts",
     "determinism_status",
@@ -32,6 +34,38 @@
     "phase_durations": {
       "type": "object",
       "additionalProperties": { "type": "number", "minimum": 0 }
+    },
+    "artifact_sizes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artifact_class", "paths", "size_bytes", "max_size_bytes", "pass"],
+        "properties": {
+          "artifact_class": { "type": "string" },
+          "paths": { "type": "array", "items": { "type": "string" } },
+          "size_bytes": { "type": "number", "minimum": 0 },
+          "max_size_bytes": { "type": "number", "minimum": 0 },
+          "pass": { "type": "boolean" }
+        }
+      }
+    },
+    "budget_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "phase_budgets", "artifact_budgets", "total_budget"],
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail"] },
+        "phase_budgets": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "enum": ["pass", "fail"] }
+        },
+        "artifact_budgets": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "enum": ["pass", "fail"] }
+        },
+        "total_budget": { "type": "string", "enum": ["pass", "fail"] }
+      }
     },
     "gate_results": {
       "type": "object",

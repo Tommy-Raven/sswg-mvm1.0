@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -14,6 +16,13 @@ from generator.determinism import (
     write_determinism_report,
 )
 from generator.failure_emitter import FailureEmitter, FailureLabel, validate_failure_label
+from generator.agent_policy import (
+    build_policy_manifest,
+    detect_working_tree_changes,
+    policy_state,
+)
+from generator.audit_bundle import build_bundle, load_audit_spec, validate_bundle
+from generator.budgeting import collect_artifact_sizes, evaluate_budgets, load_budget_spec
 from generator.pdl_validator import PDLValidationError, validate_pdl_file_with_report
 from generator.phase_io import build_phase_io_manifest, detect_phase_collapse, load_pdl, write_manifest
 from generator.anchor_registry import AnchorRegistry, enforce_anchor
@@ -25,6 +34,8 @@ from generator.overlay_governance import (
     detect_overlay_ambiguity,
     validate_overlay_descriptor,
 )
+from generator.secret_scanner import load_allowlist, scan_paths
+from generator.sanitizer import sanitize_payload
 
 
 def _parse_args() -> argparse.Namespace:
@@ -115,6 +126,37 @@ def _parse_args() -> argparse.Namespace:
         help="Release track for promotion gating.",
     )
     parser.add_argument(
+        "--budget-spec",
+        type=Path,
+        default=Path("governance/budget_spec.json"),
+        help="Budget specification path.",
+    )
+    parser.add_argument(
+        "--allowlist-path",
+        type=Path,
+        default=Path("governance/secret_allowlist.json"),
+        help="Secret allowlist path.",
+    )
+    parser.add_argument(
+        "--audit-spec",
+        type=Path,
+        default=Path("governance/audit_bundle_spec.json"),
+        help="Audit bundle spec path.",
+    )
+    parser.add_argument(
+        "--repo-mode",
+        type=str,
+        choices=["qa-readonly", "edit-permitted"],
+        default="edit-permitted",
+        help="Repository mode for policy enforcement.",
+    )
+    parser.add_argument(
+        "--runbook-path",
+        type=Path,
+        default=Path("docs/runbook.json"),
+        help="Runbook path for docs reproducibility checks.",
+    )
+    parser.add_argument(
         "--experiment-scope",
         type=Path,
         default=Path("experiments/exp_scope.json"),
@@ -159,6 +201,37 @@ def main() -> int:
     evidence_dir = args.evidence_dir / args.run_id
     evidence_dir.mkdir(parents=True, exist_ok=True)
     failure_emitter = FailureEmitter(evidence_dir / "failures")
+    repo_root = Path(".")
+    root_agents = repo_root / "AGENTS.md"
+    if not root_agents.exists():
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="tool_mismatch",
+                message="Root AGENTS.md missing from repository",
+                phase_id="validate",
+                evidence={"path": str(root_agents)},
+            ),
+        )
+    if args.repo_mode == "qa-readonly":
+        changes = detect_working_tree_changes(repo_root)
+        if changes:
+            return _gate_failure(
+                failure_emitter,
+                args.run_id,
+                FailureLabel(
+                    Type="tool_mismatch",
+                    message="QA mode forbids working tree modifications",
+                    phase_id="validate",
+                    evidence={"changes": changes},
+                ),
+            )
+    policy = policy_state(repo_root, args.repo_mode)
+    policy_manifest = build_policy_manifest(policy, effective_scope=root_agents)
+    policy_manifest_path = Path("artifacts/policy/policy_manifest.json")
+    policy_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    policy_manifest_path.write_text(json.dumps(policy_manifest, indent=2), encoding="utf-8")
 
     try:
         validate_pdl_file_with_report(
@@ -482,43 +555,6 @@ def main() -> int:
     log_report_path = evidence_dir / "log_phase_report.json"
     log_report_path.write_text(json.dumps(env_report, indent=2), encoding="utf-8")
 
-    telemetry_payload = {
-        "anchor": {
-            "anchor_id": "run_telemetry",
-            "anchor_version": "1.0.0",
-            "scope": "run",
-            "owner": "scripts.run_promotion_readiness",
-            "status": "draft",
-        },
-        "run_id": args.run_id,
-        "phase_durations": {
-            phase: 0.0 for phase in ["ingest", "normalize", "parse", "analyze", "generate", "validate", "compare", "interpret", "log"]
-        },
-        "gate_results": env_report.get("phase_status", {}),
-        "failure_counts": {
-            "deterministic_failure": 0,
-            "schema_failure": 0,
-            "io_failure": 0,
-            "tool_mismatch": 0,
-            "reproducibility_failure": 0,
-        },
-        "determinism_status": {
-            phase: "pass" for phase in ["normalize", "analyze", "validate", "compare"]
-        },
-        "overlay_chain": [
-            {
-                "overlay_id": overlay.get("overlay_id"),
-                "overlay_version": overlay.get("overlay_version"),
-            }
-            for overlay in overlays
-        ],
-        "inputs_hash": hash_data({"pdl": pdl_obj, "overlays": overlays}),
-        "emitted_at": datetime.now(timezone.utc).isoformat(),
-    }
-    telemetry_path = Path("artifacts/telemetry/run_telemetry.json")
-    telemetry_path.parent.mkdir(parents=True, exist_ok=True)
-    telemetry_path.write_text(json.dumps(telemetry_payload, indent=2), encoding="utf-8")
-
     compare_output_path = None
     if "compare" in phase_outputs:
         compare_output = {
@@ -611,12 +647,248 @@ def main() -> int:
     provenance_target.parent.mkdir(parents=True, exist_ok=True)
     provenance_target.write_text(json.dumps(provenance_manifest, indent=2), encoding="utf-8")
 
+    if not args.budget_spec.exists():
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Budget specification missing",
+                phase_id="validate",
+                evidence={"path": str(args.budget_spec)},
+            ),
+        )
+    budget_spec = load_budget_spec(args.budget_spec)
+    telemetry_payload = {
+        "anchor": {
+            "anchor_id": "run_telemetry",
+            "anchor_version": "1.0.0",
+            "scope": "run",
+            "owner": "scripts.run_promotion_readiness",
+            "status": "draft",
+        },
+        "run_id": args.run_id,
+        "phase_durations": {
+            phase: 0.0
+            for phase in [
+                "ingest",
+                "normalize",
+                "parse",
+                "analyze",
+                "generate",
+                "validate",
+                "compare",
+                "interpret",
+                "log",
+            ]
+        },
+        "artifact_sizes": [],
+        "budget_status": {
+            "status": "pass",
+            "phase_budgets": {},
+            "artifact_budgets": {},
+            "total_budget": "pass",
+        },
+        "gate_results": env_report.get("phase_status", {}),
+        "failure_counts": {
+            "deterministic_failure": 0,
+            "schema_failure": 0,
+            "io_failure": 0,
+            "tool_mismatch": 0,
+            "reproducibility_failure": 0,
+        },
+        "determinism_status": {
+            phase: "pass" for phase in ["normalize", "analyze", "validate", "compare"]
+        },
+        "overlay_chain": [
+            {
+                "overlay_id": overlay.get("overlay_id"),
+                "overlay_version": overlay.get("overlay_version"),
+            }
+            for overlay in overlays
+        ],
+        "inputs_hash": hash_data({"pdl": pdl_obj, "overlays": overlays}),
+        "emitted_at": datetime.now(timezone.utc).isoformat(),
+    }
+    telemetry_path = Path("artifacts/telemetry/run_telemetry.json")
+    telemetry_path.parent.mkdir(parents=True, exist_ok=True)
+    telemetry_path.write_text(
+        json.dumps(sanitize_payload(telemetry_payload), indent=2),
+        encoding="utf-8",
+    )
+
+    artifact_sizes = collect_artifact_sizes(budget_spec.get("artifact_budgets", []))
+    budget_report = evaluate_budgets(
+        budget_spec=budget_spec,
+        phase_durations=telemetry_payload["phase_durations"],
+        artifact_sizes=artifact_sizes,
+    )
+    budget_report_payload = {
+        "anchor": {
+            "anchor_id": "budget_report",
+            "anchor_version": "1.0.0",
+            "scope": "run",
+            "owner": "scripts.run_promotion_readiness",
+            "status": "draft",
+        },
+        "run_id": args.run_id,
+        **budget_report,
+    }
+    budget_report_path = Path("artifacts/budgets/budget_report.json")
+    budget_report_path.parent.mkdir(parents=True, exist_ok=True)
+    budget_report_path.write_text(json.dumps(budget_report_payload, indent=2), encoding="utf-8")
+    if budget_report_payload.get("status") != "pass":
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Budget validation failed",
+                phase_id="validate",
+                evidence={"violations": budget_report_payload.get("violations", [])},
+            ),
+        )
+
+    telemetry_payload["artifact_sizes"] = [
+        {
+            "artifact_class": entry.get("artifact_class"),
+            "paths": entry.get("paths", []),
+            "size_bytes": entry.get("size_bytes", 0),
+            "max_size_bytes": entry.get("max_size_bytes", 0),
+            "pass": entry.get("pass", False),
+        }
+        for entry in budget_report_payload.get("artifact_results", [])
+    ]
+    telemetry_payload["budget_status"] = {
+        "status": budget_report_payload.get("status"),
+        "phase_budgets": {
+            entry.get("phase"): "pass" if entry.get("pass") else "fail"
+            for entry in budget_report_payload.get("phase_results", [])
+        },
+        "artifact_budgets": {
+            entry.get("artifact_class"): "pass" if entry.get("pass") else "fail"
+            for entry in budget_report_payload.get("artifact_results", [])
+        },
+        "total_budget": "pass"
+        if budget_report_payload.get("total_duration_sec", 0)
+        <= budget_report_payload.get("max_total_duration_sec", 0)
+        else "fail",
+    }
+    telemetry_path.write_text(
+        json.dumps(sanitize_payload(telemetry_payload), indent=2),
+        encoding="utf-8",
+    )
+
+    docs_proc = subprocess.run(
+        [
+            sys.executable,
+            "scripts/docs_repro_check.py",
+            "--runbook-path",
+            str(args.runbook_path),
+            "--run-id",
+            args.run_id,
+        ],
+        check=False,
+    )
+    if docs_proc.returncode != 0:
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Docs reproducibility check failed",
+                phase_id="validate",
+                evidence={"runbook_path": str(args.runbook_path)},
+            ),
+        )
+
+    if not args.audit_spec.exists():
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Audit bundle spec missing",
+                phase_id="validate",
+                evidence={"path": str(args.audit_spec)},
+            ),
+        )
+    audit_spec = load_audit_spec(args.audit_spec)
+    audit_manifest_path = Path("artifacts/audit/audit_bundle_manifest.json")
+    audit_manifest = build_bundle(
+        spec=audit_spec,
+        run_id=args.run_id,
+        bundle_dir=Path("artifacts/audit") / args.run_id,
+        manifest_path=audit_manifest_path,
+    )
+    audit_validation = validate_bundle(audit_manifest)
+    if audit_validation["status"] != "pass":
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Audit bundle validation failed",
+                phase_id="validate",
+                evidence={"errors": audit_validation.get("errors", [])},
+            ),
+        )
+    audit_certificate = {
+        "anchor": {
+            "anchor_id": "audit_certificate",
+            "anchor_version": "1.0.0",
+            "scope": "run",
+            "owner": "scripts.run_promotion_readiness",
+            "status": "draft",
+        },
+        "run_id": args.run_id,
+        "bundle_hash": audit_manifest.get("bundle_hash"),
+        "coverage": {
+            "bundle_complete": True,
+            "hash_integrity": True,
+            "consistency_checks": True,
+        },
+        "gating_summary": {
+            "audit_readiness_validation": "pass",
+        },
+    }
+    audit_certificate_path = Path("artifacts/audit/audit_certificate.json")
+    audit_certificate_path.write_text(json.dumps(audit_certificate, indent=2), encoding="utf-8")
+
+    allowlist = load_allowlist(args.allowlist_path)
+    secret_scan = scan_paths(
+        [
+            Path("artifacts"),
+            Path("data"),
+            Path("docs"),
+            Path("overlays"),
+            Path("config/anchor_registry.json"),
+        ],
+        allowlist=allowlist,
+    )
+    if secret_scan["violations"] or secret_scan["allowlist_errors"]:
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Secret scanning gate detected sensitive content",
+                phase_id="validate",
+                evidence=secret_scan,
+            ),
+        )
+
     for path in [
         overlay_manifest_path,
         overlay_report_path,
         eval_report_path,
         variance_path,
         log_report_path,
+        telemetry_path,
+        budget_report_path,
+        policy_manifest_path,
+        audit_manifest_path,
+        audit_certificate_path,
         provenance_path,
     ]:
         anchor_failure = enforce_anchor(

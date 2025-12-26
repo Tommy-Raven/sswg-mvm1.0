@@ -1,0 +1,39 @@
+{
+  "$id": "https://schemas.sswg.local/audit-bundle-manifest.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg audit bundle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["anchor", "run_id", "bundle_dir", "entries", "bundle_hash"],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sandbox", "canonical", "archived"] }
+      }
+    },
+    "run_id": { "type": "string" },
+    "bundle_dir": { "type": "string" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["component_id", "source_path", "bundle_path", "content_hash"],
+        "properties": {
+          "component_id": { "type": "string" },
+          "source_path": { "type": "string" },
+          "bundle_path": { "type": "string" },
+          "content_hash": { "type": "string" }
+        }
+      }
+    },
+    "bundle_hash": { "type": "string" }
+  }
+}

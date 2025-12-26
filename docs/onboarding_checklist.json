@@ -1,0 +1,18 @@
+{
+  "anchor": {
+    "anchor_id": "onboarding_checklist",
+    "anchor_version": "1.0.0",
+    "scope": "docs",
+    "owner": "documentation.onboarding",
+    "status": "draft"
+  },
+  "checklist_id": "core_onboarding",
+  "checklist_version": "1.0.0",
+  "items": [
+    "Run PDL validation using generator.pdl_validator.",
+    "Confirm budget_validation gate passes with current telemetry.",
+    "Verify secrets_redaction_validation gate passes on artifacts/data/docs.",
+    "Review audit bundle manifest and certificate outputs.",
+    "Update artifact glossary and schema overlay map when outputs change."
+  ]
+}

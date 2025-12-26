@@ -1,0 +1,34 @@
+{
+  "$id": "https://schemas.sswg.local/policy-manifest.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg policy manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "anchor",
+    "effective_agents_scope",
+    "policy_hash",
+    "prohibited_commands",
+    "repo_mode",
+    "agents_paths"
+  ],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sandbox", "canonical", "archived"] }
+      }
+    },
+    "effective_agents_scope": { "type": "string" },
+    "policy_hash": { "type": "string" },
+    "prohibited_commands": { "type": "array", "items": { "type": "string" } },
+    "repo_mode": { "type": "string" },
+    "agents_paths": { "type": "array", "items": { "type": "string" } }
+  }
+}

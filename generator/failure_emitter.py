@@ -4,9 +4,10 @@ import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Iterable, Mapping, Optional
+from typing import Any, Dict, Optional
 
 from generator.hashing import hash_data
+from generator.sanitizer import sanitize_payload
 
 ALLOWED_FAILURE_TYPES = {
     "deterministic_failure",
@@ -15,8 +16,6 @@ ALLOWED_FAILURE_TYPES = {
     "tool_mismatch",
     "reproducibility_failure",
 }
-
-REDACT_KEYS = ("password", "secret", "token", "api_key", "credential")
 
 
 @dataclass(frozen=True)
@@ -35,29 +34,6 @@ class FailureLabel:
         if self.evidence is not None:
             payload["evidence"] = self.evidence
         return payload
-
-
-def _redact_mapping(data: Mapping[str, Any]) -> Dict[str, Any]:
-    sanitized: Dict[str, Any] = {}
-    for key, value in data.items():
-        key_lower = key.lower()
-        if any(token in key_lower for token in REDACT_KEYS):
-            sanitized[key] = "[REDACTED]"
-        else:
-            sanitized[key] = sanitize_evidence(value)
-    return sanitized
-
-
-def _redact_iterable(values: Iterable[Any]) -> list[Any]:
-    return [sanitize_evidence(value) for value in values]
-
-
-def sanitize_evidence(value: Any) -> Any:
-    if isinstance(value, Mapping):
-        return _redact_mapping(value)
-    if isinstance(value, (list, tuple)):
-        return _redact_iterable(value)
-    return value
 
 
 def validate_failure_label(label: FailureLabel) -> None:
@@ -86,7 +62,7 @@ class FailureEmitter:
             Type=label.Type,
             message=label.message,
             phase_id=label.phase_id,
-            evidence=sanitize_evidence(label.evidence) if label.evidence else None,
+            evidence=sanitize_payload(label.evidence) if label.evidence else None,
         )
         payload: Dict[str, Any] = {
             "run_id": run_id,
@@ -94,7 +70,7 @@ class FailureEmitter:
             "label": sanitized_label.as_dict(),
         }
         if context is not None:
-            payload["context"] = sanitize_evidence(context)
+            payload["context"] = sanitize_payload(context)
         payload["inputs_hash"] = hash_data(payload["label"])
         filename = f"failure_{payload['inputs_hash']}.json"
         path = self.output_dir / filename

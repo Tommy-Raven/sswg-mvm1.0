@@ -1,0 +1,26 @@
+{
+  "$id": "https://schemas.sswg.local/audit-certificate.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg audit certificate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["anchor", "run_id", "bundle_hash", "coverage", "gating_summary"],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sandbox", "canonical", "archived"] }
+      }
+    },
+    "run_id": { "type": "string" },
+    "bundle_hash": { "type": "string" },
+    "coverage": { "type": "object" },
+    "gating_summary": { "type": "object" }
+  }
+}

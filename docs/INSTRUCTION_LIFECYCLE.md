@@ -24,11 +24,14 @@ Instruction artifacts (schemas, prompts, workflows, playbooks, or policies) shou
 
 - **Draft → Tested**
   - Minimum: schema validation passes, scope is stable, and acceptance criteria are written.
+  - Explainability: produce an MVM explainability layer (assumptions + scope, invariants, major decision rationale, evidence summary, failure map).
   - Evidence: attach at least one reproducible run (logs, metrics, or rendered artifacts) demonstrating the intended behavior.
   - Ownership: a maintainer or domain lead accepts stewardship for the test window.
 
 - **Tested → Canonical**
   - Reliability: two consecutive green runs in representative environments; failure cases documented.
+  - Explainability: validate that explainability fields are complete, tagged (verified / empirical / heuristic / speculative), and include provenance + confidence.
+  - Transfer checks: complete at least one transfer or debug test with a downstream agent to confirm scope and invariant interpretation.
   - Review: peer review for clarity, safety, and alignment with platform constraints (schemas, recursion controls, evaluation harnesses).
   - Traceability: assign a version ID, update cross-references (schemas, CLI help, docs), and note any deprecated predecessors.
 
@@ -40,6 +43,29 @@ Instruction artifacts (schemas, prompts, workflows, playbooks, or policies) shou
   - Trigger: a superior instruction reaches **Canonical** or the previous guidance is unsafe/obsolete.
   - Action: mark the old canonical as **Archived**, annotate the successor link, and remove it from defaults and templates.
   - Preservation: archive retains metadata (author, version, dates, decision record) and referenced artifacts.
+
+## Cross-agent explainability requirements (MVM)
+
+Explainability must be treated as a first-class artifact for instruction promotion and reuse. Each Tested or Canonical instruction must include a minimal, structured explainability layer with the following fields:
+
+- **Assumptions + scope:** state the intended context, required tools/resources, and explicit non-applicability boundaries.
+- **Invariants:** list constraints that must remain true after adaptation (e.g., safety checks, ordering, evaluation gates).
+- **Decision rationale:** capture major choices with drivers, tradeoffs, and triggers (conditions that would change the decision).
+- **Evidence summary:** list evaluation signals, provenance, confidence tags, and last-validated version/timestamp.
+- **Failure map:** typical failure modes, detection signals, likely causes, and remediation/escalation steps.
+
+Optional explainability layers can add deeper causal chains, alternative architectures, or historical evolution narratives, but must never replace the minimal layer above.
+
+## Explainability evaluation
+
+Explainability quality is assessed with agent-centered tests:
+
+- **Transfer test:** can a downstream agent adapt the artifact to a new domain without breaking invariants?
+- **Debug test:** can a downstream agent diagnose a seeded failure using the explainability layer alone?
+- **Scope test:** can a downstream agent correctly state where the method should not be used?
+- **Consistency test:** do multiple agents interpret core constraints the same way?
+
+If these tests fail, the instruction remains in **Draft** or **Tested** until the explainability layer is repaired.
 
 ## Change management workflow
 
@@ -61,10 +87,13 @@ Instruction artifacts (schemas, prompts, workflows, playbooks, or policies) shou
 - **Before promoting to Tested:**
   - [ ] Scope and acceptance criteria written
   - [ ] Schema validation clean
+  - [ ] MVM explainability layer drafted (assumptions/scope, invariants, rationale, evidence, failure map)
   - [ ] Reproducible run captured with metrics
 
 - **Before promoting to Canonical:**
   - [ ] Two consecutive green runs
+  - [ ] Explainability tags include provenance, confidence, and validation timestamp
+  - [ ] Transfer or debug test completed with a downstream agent
   - [ ] Peer review complete
   - [ ] Version ID assigned and references updated
 

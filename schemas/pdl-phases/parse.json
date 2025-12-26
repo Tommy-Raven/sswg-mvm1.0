@@ -1,0 +1,30 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/parse.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: parse",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "parse" },
+            "type": { "const": "parse" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "schema_binding_required": { "type": "boolean", "const": true },
+                "no_generation": { "type": "boolean", "const": true }
+              },
+              "required": ["schema_binding_required", "no_generation"]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

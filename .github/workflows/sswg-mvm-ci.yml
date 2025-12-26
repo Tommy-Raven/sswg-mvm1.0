@@ -3,6 +3,13 @@ name: SSWG MVM CI & Validation
 on:
   push:
     paths:
+      - "sswg.yaml"
+      - "mvm.yaml"
+      - "execution_policy.yaml"
+      - "governance.yaml"
+      - "invariants.yaml"
+      - "root_contract.yaml"
+      - "ai_system_prompt.txt"
       - "data/templates/**"
       - "ai_validation/**"
       - "schemas/**"
@@ -13,6 +20,13 @@ on:
       - ".github/workflows/sswg-mvm-ci.yml"
   pull_request:
     paths:
+      - "sswg.yaml"
+      - "mvm.yaml"
+      - "execution_policy.yaml"
+      - "governance.yaml"
+      - "invariants.yaml"
+      - "root_contract.yaml"
+      - "ai_system_prompt.txt"
       - "data/templates/**"
       - "ai_validation/**"
       - "schemas/**"
@@ -51,6 +65,15 @@ jobs:
       - name: Schema validation (example workflows)
         run: |
           python -c "from ai_validation.schema_validator import validate_workflow; import json; import sys; wf=json.load(open('data/templates/campfire_workflow.json')); ok, errs=validate_workflow(wf); sys.exit(1 if not ok else 0)"
+
+      - name: PDL validation (example phase set)
+        run: |
+          python -m generator.pdl_validator pdl/example_full_9_phase.yaml
+
+      - name: Root contract validation
+        run: |
+          python scripts/validate_root_contracts.py
+          python scripts/lint_casing.py
 
       - name: Run tests
         run: |

@@ -16,6 +16,15 @@ from ai_evaluation.semantic_analysis import SemanticAnalyzer
 from ai_memory.feedback_integrator import FeedbackIntegrator
 from ai_memory.memory_store import MemoryStore
 from ai_monitoring.structured_logger import log_event
+from ai_validation import (
+    ErrorClass,
+    ErrorSignal,
+    Severity,
+    apply_incident,
+    build_incident,
+    classify_exception,
+    recovery_decision,
+)
 from ai_recursive.version_diff_engine import compute_diff_summary
 from modules.llm_adapter import (
     RefinementContract,
@@ -265,6 +274,12 @@ class RecursionManager:
             )
         except Exception as exc:  # pylint: disable=broad-exception-caught
             logger.warning("LLM-driven refinement failed; preserving workflow. %s", exc)
+            signal = classify_exception(exc, source="refinement")
+            decision = recovery_decision(signal.error_class, signal.severity)
+            incident = build_incident(
+                str(refined_workflow.get("workflow_id", "unnamed")), signal
+            )
+            apply_incident(refined_workflow, incident, decision)
             recursion_metadata.update(
                 {
                     "depth": depth,
@@ -331,6 +346,30 @@ class RecursionManager:
         )
 
         final_workflow = candidate if regenerate else workflow_data
+        if score_delta < 0:
+            severity = (
+                Severity.MAJOR
+                if score_delta <= -self.policy.min_improvement
+                else Severity.MINOR
+            )
+            regression_signal = ErrorSignal(
+                message="Quality regression detected after refinement.",
+                error_class=ErrorClass.BEHAVIORAL,
+                severity=severity,
+                source="recursion_evaluation",
+                context={
+                    "score_delta": score_delta,
+                    "baseline_score": baseline_report["quality"]["overall_score"],
+                    "candidate_score": candidate_report["quality"]["overall_score"],
+                },
+            )
+            decision = recovery_decision(
+                regression_signal.error_class, regression_signal.severity
+            )
+            incident = build_incident(
+                str(final_workflow.get("workflow_id", "unnamed")), regression_signal
+            )
+            apply_incident(final_workflow, incident, decision)
         plot_path = self._render_metric_plot(
             baseline_report, candidate_report, semantic_delta
         )

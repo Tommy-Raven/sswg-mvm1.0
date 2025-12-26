@@ -1,0 +1,6 @@
+{
+  "$id": "https://schemas.sswg.local/pdl.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl schema wrapper",
+  "$ref": "pdl-phase-set.json#"
+}

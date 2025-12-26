@@ -1,0 +1,30 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/ingest.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: ingest",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "ingest" },
+            "type": { "const": "data" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "no_interpretation": { "type": "boolean", "const": true },
+                "no_mutation_of_canonical": { "type": "boolean", "const": true }
+              },
+              "required": ["no_interpretation", "no_mutation_of_canonical"]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

@@ -95,6 +95,7 @@ Outputs are stable, regenerable, and lineage-tracked.
     └── schemas/                      → Canonical JSON schemas
 
 - **System Overview:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- **Agent Roles & Handoffs:** [docs/AGENT_ROLES.md](docs/AGENT_ROLES.md)
 
 ---
 
@@ -104,10 +105,11 @@ Outputs are stable, regenerable, and lineage-tracked.
 - Recursive refinement engine  
 - Strict schema validation (Draft 2020-12)  
 - Dependency graph construction & autocorrection  
-- JSON + Markdown artifact exporters  
-- Mermaid diagram generation  
-- Version history + lineage tracking  
-- CI/CD workflow automation (tests, PRs, docs)  
+- JSON + Markdown artifact exporters
+- Mermaid diagram generation
+- Version history + lineage tracking
+- CI/CD workflow automation (tests, PRs, docs)
+- Role-separated agents with documented creator/critic/curator hand-offs
 
 ---
 

@@ -13,11 +13,37 @@ New MVM-style scalar metrics:
 - coverage_metric(workflow)    -> float
 - coherence_metric(workflow)   -> float
 - specificity_metric(workflow) -> float
+- completeness_metric(workflow) -> float
+- intent_alignment_metric(workflow) -> float
+- usability_metric(workflow) -> float
 """
 
 from __future__ import annotations
 
 from typing import Any, Dict, List
+
+_STOP_WORDS = {
+    "a",
+    "an",
+    "and",
+    "the",
+    "of",
+    "to",
+    "in",
+    "for",
+    "with",
+    "on",
+    "by",
+    "as",
+    "at",
+    "is",
+    "are",
+    "be",
+    "from",
+    "or",
+    "that",
+    "this",
+}
 
 from .semantic_analysis import SemanticAnalyzer
 
@@ -139,4 +165,107 @@ def specificity_metric(wf: Dict[str, Any]) -> float:
     blocks: List[str] = _analyzer.extract_text_blocks(wf)
     avg_len = _analyzer.average_length(blocks)
     return max(0.0, min(1.0, avg_len / 500.0))
+
+
+def completeness_metric(wf: Dict[str, Any]) -> float:
+    """
+    Completeness proxy based on presence of phases, tasks, and task contracts.
+
+    Combines:
+    - fraction of phases that contain at least one task
+    - fraction of tasks that declare both prerequisites and expected outputs
+    """
+    phases = [p for p in wf.get("phases", []) or [] if isinstance(p, dict)]
+    if not phases:
+        return 0.0
+
+    phase_with_tasks = 0
+    total_tasks = 0
+    task_with_contract = 0
+
+    for phase in phases:
+        tasks = phase.get("tasks", []) or []
+        if tasks:
+            phase_with_tasks += 1
+        for task in tasks:
+            if not isinstance(task, dict):
+                continue
+            total_tasks += 1
+            prerequisites = task.get("prerequisites") or task.get("inputs")
+            expected_outputs = task.get("expected_outputs") or task.get("outputs")
+            if prerequisites is not None and expected_outputs is not None:
+                task_with_contract += 1
+
+    if total_tasks == 0:
+        task_score = 0.0
+    else:
+        task_score = task_with_contract / total_tasks
+
+    phase_score = phase_with_tasks / len(phases)
+    return (phase_score + task_score) / 2.0
+
+
+def intent_alignment_metric(wf: Dict[str, Any]) -> float:
+    """
+    Intent alignment proxy based on token overlap between workflow intent
+    (metadata purpose/description) and phase/task descriptions.
+    """
+    metadata = wf.get("metadata", {}) or {}
+    intent_text = " ".join(
+        [
+            str(metadata.get("purpose", "")),
+            str(metadata.get("description", "")),
+            str(metadata.get("title", "")),
+        ]
+    ).strip()
+    if not intent_text:
+        return 0.0
+
+    def _tokens(text: str) -> set[str]:
+        return {
+            token
+            for token in "".join(
+                [ch.lower() if ch.isalnum() else " " for ch in text]
+            ).split()
+            if token and token not in _STOP_WORDS
+        }
+
+    intent_tokens = _tokens(intent_text)
+    if not intent_tokens:
+        return 0.0
+
+    blocks: List[str] = _analyzer.extract_text_blocks(wf)
+    content_tokens: set[str] = set()
+    for block in blocks:
+        content_tokens |= _tokens(block)
+
+    if not content_tokens:
+        return 0.0
+
+    overlap = intent_tokens.intersection(content_tokens)
+    return len(overlap) / len(intent_tokens)
+
+
+def usability_metric(wf: Dict[str, Any]) -> float:
+    """
+    Usability proxy based on tasks declaring prerequisites and expected outputs.
+    """
+    tasks: List[Dict[str, Any]] = []
+    for phase in wf.get("phases", []) or []:
+        if not isinstance(phase, dict):
+            continue
+        tasks.extend([t for t in phase.get("tasks", []) or [] if isinstance(t, dict)])
+
+    if not tasks:
+        return 0.0
+
+    usable = 0
+    for task in tasks:
+        prerequisites = task.get("prerequisites") or task.get("inputs")
+        expected_outputs = task.get("expected_outputs") or task.get("outputs")
+        description = task.get("description") or task.get("action")
+        if prerequisites is not None and expected_outputs is not None and description:
+            usable += 1
+
+    return usable / len(tasks)
 # End of ai_evaluation/quality_metrics.py

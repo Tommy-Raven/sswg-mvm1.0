@@ -42,9 +42,13 @@ def _register_default_metrics() -> None:
         return  # already initialized
 
     candidates = {
+        "clarity": getattr(qm, "clarity_metric", None),
         "coverage": getattr(qm, "coverage_metric", None),
         "coherence": getattr(qm, "coherence_metric", None),
+        "completeness": getattr(qm, "completeness_metric", None),
+        "intent_alignment": getattr(qm, "intent_alignment_metric", None),
         "specificity": getattr(qm, "specificity_metric", None),
+        "usability": getattr(qm, "usability_metric", None),
     }
 
     _METRICS = {name: func for name, func in candidates.items() if callable(func)}

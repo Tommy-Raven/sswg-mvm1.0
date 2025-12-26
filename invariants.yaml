@@ -1,0 +1,17 @@
+invariants:
+  - id: deterministic_measurement
+    rule: >
+      Any output used for measurement, indexing, or comparison must be
+      produced by a deterministic process.
+
+  - id: bijective_identifiers
+    rule: >
+      Identifiers used for labeling must be unique, gap-free, and reproducible.
+
+  - id: artifacts_not_canonical
+    rule: >
+      Generated artifacts must not redefine or overwrite canonical structures.
+
+  - id: validation_required
+    rule: >
+      Outputs that fail validation must not be promoted or reused.

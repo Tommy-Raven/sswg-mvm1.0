@@ -1,0 +1,28 @@
+governance:
+  repository_role: canonical_sswg_repo
+
+  directories:
+    immutable:
+      - generator/
+      - cli/
+      - pdl/
+      - reproducibility/
+    additive_only:
+      - artifacts/
+      - data/
+      - docs/
+
+  change_control:
+    required:
+      - branch_or_fork
+      - validation_pass
+      - review
+    forbidden:
+      - direct_main_mutation
+      - artifact_rewrites
+
+  validation_gates:
+    pre_merge:
+      - schema_validation
+      - phase_validation
+      - reproducibility_validation

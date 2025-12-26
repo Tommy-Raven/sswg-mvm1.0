@@ -1,46 +1,35 @@
 mvm:
   system_name: mvm
-  version: v0.0.9mvm
   description: >
-    mvm defines the minimum acceptable completeness for sswg software.
-    workflows and tooling are invalid unless the 9-phase pipeline is supported.
+    mvm defines the minimum acceptable completeness for software produced
+    under sswg. Code or workflows below this threshold are invalid.
 
-  required_pipeline:
-    canonical_set: full_9_phase
-    phases_must_exist:
-      - ingest
-      - normalize
-      - parse
-      - analyze
-      - generate
-      - validate
-      - compare
-      - interpret
-      - log
-
-  minimum_artifacts:
+  requirements:
     must_include:
-      - schemas/
-      - pdl/
-      - validation_entrypoints
+      - schemas
+      - phase_definitions
+      - validation_paths
       - logging_outputs
-    must_validate:
-      - pdl_phase_set_schema
-      - phase_level_schemas
+    must_exhibit:
+      - deterministic_behavior
+      - reproducibility_from_clean_env
+      - explicit_configuration
 
-  minimum_behaviors:
-    deterministic:
-      required_for_phases: [normalize, analyze, validate, compare]
-    audit_ready_outputs:
-      must_support:
-        - bijective_identifiers
-        - replayable_runs
-        - delta_comparisons
+  exclusions:
+    not_equivalent_to:
+      - mvp
+      - prototype
+      - proof_of_concept
+
+  extension_model:
+    allowed:
+      - additive_modules
+      - stricter_validation
+      - new_phases_with_pdl
+    forbidden:
+      - weakening_constraints
+      - bypassing_validation
+      - redefining_existing_fields
 
   enforcement:
     failure_behavior: stop_execution
-    required_failure_label:
-      Type: deterministic_failure
-    rule: >
-      if any deterministic requirement is violated, execution must halt and
-      the failing phase must emit Type: deterministic_failure.

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/governance_schema.json",
+  "title": "governance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["governance"],
+  "properties": {
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository_role", "directories", "change_control", "validation_gates"],
+      "properties": {
+        "repository_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "directories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["immutable", "additive_only"],
+          "properties": {
+            "immutable": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "additive_only": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "change_control": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required", "forbidden"],
+          "properties": {
+            "required": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "forbidden": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "validation_gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pre_merge"],
+          "properties": {
+            "pre_merge": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

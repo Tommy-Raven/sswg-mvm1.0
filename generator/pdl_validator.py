@@ -7,6 +7,7 @@ emits deterministic failure labels on schema or IO errors.
 
 from __future__ import annotations
 
+import argparse
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -108,3 +109,32 @@ def validate_pdl_file(path: Path, schema_name: str = "pdl.json") -> None:
         ) from exc
 
     validate_pdl_object(pdl_obj, schema_name=schema_name)
+
+
+def _parse_args() -> Path:
+    parser = argparse.ArgumentParser(
+        description="Validate a PDL YAML file against the PDL schema.",
+    )
+    parser.add_argument(
+        "pdl_path",
+        type=Path,
+        help="Path to the PDL YAML file to validate.",
+    )
+    args = parser.parse_args()
+    return args.pdl_path
+
+
+def _main() -> int:
+    pdl_path = _parse_args()
+    try:
+        validate_pdl_file(pdl_path)
+    except PDLValidationError as exc:
+        label = exc.label.as_dict()
+        print(f"PDL validation failed: {label}")
+        return 1
+    print(f"PDL validation passed: {pdl_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())

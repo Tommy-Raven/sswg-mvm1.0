@@ -3,9 +3,15 @@
   "title": "Task Schema",
   "description": "An instructional task within a phase.",
   "type": "object",
-  "required": ["description"],
+  "required": [],
   "properties": {
     "id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "task_ref": {
       "type": "string"
     },
     "title": {
@@ -17,11 +23,22 @@
     "description": {
       "type": "string"
     },
+    "action": {
+      "type": "string"
+    },
     "inputs": {
       "type": "array",
       "items": { "type": "string" }
     },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "outputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_outputs": {
       "type": "array",
       "items": { "type": "string" }
     },
@@ -31,15 +48,86 @@
     "human_actionable": {
       "type": "boolean"
     },
+    "task_type": {
+      "type": "string"
+    },
+    "origin": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source_task_id": {
+          "type": "string"
+        }
+      },
+      "required": ["domain", "version"],
+      "additionalProperties": false
+    },
     "success_criteria": {
       "type": "string"
     },
     "notes": {
       "type": "string"
     },
+    "reuse": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["inline", "reference", "copy"]
+        },
+        "source_task_id": {
+          "type": "string"
+        },
+        "justification": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "version": {
+      "type": "string"
+    },
      "metadata": {
       "$ref": "task_schema.json"
     }
   },
+  "anyOf": [
+    {
+      "required": ["task_ref"]
+    },
+    {
+      "allOf": [
+        {
+          "anyOf": [
+            { "required": ["id"] },
+            { "required": ["task_id"] }
+          ]
+        },
+        {
+          "anyOf": [
+            { "required": ["description"] },
+            { "required": ["action"] }
+          ]
+        },
+        {
+          "anyOf": [
+            { "required": ["prerequisites"] },
+            { "required": ["inputs"] }
+          ]
+        },
+        {
+          "anyOf": [
+            { "required": ["expected_outputs"] },
+            { "required": ["outputs"] }
+          ]
+        }
+      ]
+    }
+  ],
   "additionalProperties": false
 }

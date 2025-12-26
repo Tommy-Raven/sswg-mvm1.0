@@ -64,6 +64,10 @@ class Workflow:
         self.outputs: List[Dict[str, Any]] = []
         self.evaluation: Dict[str, Any] = {}
         self.recursion: Dict[str, Any] = {}
+        self.dependency_graph: Dict[str, Any] = {}
+        self.dependency_index: Dict[str, Any] = {}
+        self.causal_ledger: List[Dict[str, Any]] = []
+        self.inheritance: Dict[str, Any] = {}
         self.context: Dict[str, Any] = {}
 
         if args and isinstance(args[0], dict):
@@ -103,6 +107,10 @@ class Workflow:
         self.outputs = data.get("outputs", []) or []
         self.evaluation = data.get("evaluation", {}) or {}
         self.recursion = data.get("recursion", {}) or {}
+        self.dependency_graph = data.get("dependency_graph", {}) or {}
+        self.dependency_index = data.get("dependency_index", {}) or {}
+        self.causal_ledger = data.get("causal_ledger", []) or []
+        self.inheritance = data.get("inheritance", {}) or {}
 
         # Execution context can be stored in multiple places; we prefer a
         # dedicated field if present, otherwise we start empty.
@@ -222,6 +230,10 @@ class Workflow:
             "outputs": self.outputs,
             "evaluation": self.evaluation,
             "recursion": self.recursion,
+            "dependency_graph": self.dependency_graph,
+            "dependency_index": self.dependency_index,
+            "causal_ledger": self.causal_ledger,
+            "inheritance": self.inheritance,
             "context": self.context,
             "results": self.results,
             "params": self.params,

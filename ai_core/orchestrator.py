@@ -128,6 +128,7 @@ class Orchestrator:
         phases_to_run: List[str] = list(
             phases or workflow.get_default_phases()
         )
+        phase_status: dict[str, dict[str, object]] = {}
 
         logger.info("Starting orchestration for workflow %s", wf_id)
         log_event(
@@ -148,26 +149,50 @@ class Orchestrator:
             )
 
             success = True
+            failure_details = None
             try:
                 self.phase_controller.run_phase(workflow, phase_id)
             except Exception as e:
                 success = False
+                failure_details = {
+                    "Type": "deterministic_failure",
+                    "message": str(e),
+                }
                 logger.error("Phase %s failed: %s", phase_id, e)
+                phase_status[phase_id] = {
+                    "status": "failed",
+                    "failure": failure_details,
+                }
                 log_event(
                     "orchestrator.phase.error",
-                    {"workflow_id": wf_id, "phase": phase_id, "error": str(e)},
+                    {
+                        "workflow_id": wf_id,
+                        "phase": phase_id,
+                        "error": str(e),
+                        "phase_status": {
+                            phase_id: phase_status[phase_id]
+                        },
+                    },
                 )
                 self.telemetry.record(
                     "phase_error",
                     {"workflow_id": wf_id, "phase": phase_id, "error": str(e)},
                 )
 
+            if success:
+                phase_status[phase_id] = {"status": "success"}
+
             self.dashboard.record_phase(phase_id, success=success)
             self.dashboard.record_cycle(success=success)
 
             log_event(
                 "orchestrator.phase.completed",
-                {"workflow_id": wf_id, "phase": phase_id, "success": success},
+                {
+                    "workflow_id": wf_id,
+                    "phase": phase_id,
+                    "success": success,
+                    "phase_status": dict(phase_status),
+                },
             )
             self.telemetry.record(
                 "phase_end",
@@ -217,7 +242,11 @@ class Orchestrator:
 
         log_event(
             "orchestrator.run.completed",
-            {"workflow_id": wf_id, "phases": phases_to_run},
+            {
+                "workflow_id": wf_id,
+                "phases": phases_to_run,
+                "phase_status": dict(phase_status),
+            },
         )
         self.telemetry.record(
             "workflow_complete",

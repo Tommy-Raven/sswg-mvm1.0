@@ -18,13 +18,50 @@ from __future__ import annotations
 
 import logging
 from collections import defaultdict, deque
+from pathlib import Path
 from typing import Any, Dict, List, Iterable
+
+import yaml
 
 logger = logging.getLogger("ai_graph.dependency_graph")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
 logger.addHandler(handler)
+
+GRAPH_LIMITS_PATH = Path("config/graph_limits.yml")
+DEFAULT_GRAPH_LIMITS = {
+    "max_nodes": 1000,
+    "max_edges": 5000,
+    "enforce": True,
+}
+
+
+def _load_graph_limits(path: Path = GRAPH_LIMITS_PATH) -> Dict[str, Any]:
+    if not path.exists():
+        logger.warning("Graph limits config missing at %s; using defaults.", path)
+        return dict(DEFAULT_GRAPH_LIMITS)
+
+    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("graph_limits.yml must contain a mapping at the top level.")
+
+    limits = payload.get("graph_limits", {})
+    if not isinstance(limits, dict):
+        raise ValueError("graph_limits must be a mapping.")
+
+    max_nodes = limits.get("max_nodes", DEFAULT_GRAPH_LIMITS["max_nodes"])
+    max_edges = limits.get("max_edges", DEFAULT_GRAPH_LIMITS["max_edges"])
+    enforce = limits.get("enforce", DEFAULT_GRAPH_LIMITS["enforce"])
+
+    if not isinstance(max_nodes, int) or max_nodes <= 0:
+        raise ValueError("graph_limits.max_nodes must be a positive integer.")
+    if not isinstance(max_edges, int) or max_edges <= 0:
+        raise ValueError("graph_limits.max_edges must be a positive integer.")
+    if not isinstance(enforce, bool):
+        raise ValueError("graph_limits.enforce must be a boolean.")
+
+    return {"max_nodes": max_nodes, "max_edges": max_edges, "enforce": enforce}
 
 
 class DependencyGraph:
@@ -39,11 +76,30 @@ class DependencyGraph:
 
     def __init__(self, modules: Iterable[Dict[str, Any]]):
         self.modules: Dict[str, Dict[str, Any]] = {m["module_id"]: m for m in modules}
+        self._graph_limits = _load_graph_limits()
+        self._enforce_graph_limits()
         self.adj = defaultdict(list)  # reverse adjacency: dep -> [dependents]
         for mid, m in self.modules.items():
             deps = m.get("dependencies", []) or []
             for d in deps:
                 self.adj[d].append(mid)
+
+    def _enforce_graph_limits(self) -> None:
+        if not self._graph_limits.get("enforce", True):
+            return
+
+        node_count = len(self.modules)
+        edge_count = sum(
+            len(m.get("dependencies", []) or []) for m in self.modules.values()
+        )
+        max_nodes = self._graph_limits["max_nodes"]
+        max_edges = self._graph_limits["max_edges"]
+
+        if node_count > max_nodes or edge_count > max_edges:
+            raise ValueError(
+                "Dependency graph exceeds limits: "
+                f"nodes {node_count}/{max_nodes}, edges {edge_count}/{max_edges}."
+            )
 
     # ------------------------------------------------------------------ #
     # Core Graph Checks

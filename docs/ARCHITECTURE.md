@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: architecture_doc
+  anchor_version: "1.0.1"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 Version: 1.0 (Canonical Architecture)
 Last Updated: 2025-05-19
 Applies to: (sswg: minimum viable model) sswg-mvm-1.x
@@ -96,6 +105,9 @@ Resolves dependencies, recursive flows, and semantic relationships between workf
 - [ai_graph/dependency_mapper.py](../ai_graph/dependency_mapper.py)
 - [ai_graph/recursive_flow_graph.py](../ai_graph/recursive_flow_graph.py)
 - [ai_graph/semantic_network.py](../ai_graph/semantic_network.py)
+
+Graph growth limits (max nodes/edges) are defined in [config/graph_limits.yml](../config/graph_limits.yml)
+and enforced during graph construction in `ai_graph/dependency_mapper.py`.
 
 ---
 

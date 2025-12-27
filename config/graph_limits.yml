@@ -1,0 +1,11 @@
+anchor:
+  anchor_id: graph_limits_config
+  anchor_version: "1.0.0"
+  scope: config
+  owner: sswg
+  status: draft
+
+graph_limits:
+  max_nodes: 1000
+  max_edges: 5000
+  enforce: true

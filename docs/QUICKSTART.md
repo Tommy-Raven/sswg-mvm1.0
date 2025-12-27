@@ -10,7 +10,7 @@ This Quickstart is intentionally minimal: it gets you from clone â†’ first 
 
 ## ðŸš€ Getting Started
 
-**Canonical run guide:** `docs/RUNBOOK.md`
+**Canonical run guide:** [docs/RUNBOOK.md](RUNBOOK.md)
 
 ### 1. Clone the Canonical Repository
 

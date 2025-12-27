@@ -1,5 +1,5 @@
 """
-conftest.py — SSWG–MVM Global Test Fixtures
+test_config.py — SSWG–MVM Config Tests
 """
 
 import json
@@ -52,8 +52,8 @@ def output_dir(tmp_path_factory):
 @pytest.fixture(scope="session")
 def template_dir():
     return Path("data/templates").absolute()
-Tests configuration loading + template resolution.
-"""
+
+# Tests configuration loading + template resolution.
 
 from data.data_parsing import load_template
 

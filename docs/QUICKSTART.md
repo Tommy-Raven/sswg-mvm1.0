@@ -100,7 +100,9 @@ This document defines:
 - recursion and feedback loops,
 - evaluation metrics,
 - demo pipeline structure,
-- and governance guarantees.
+- and governance invariants.
+
+Canonical invariants (including schema validation invariants) are defined in [invariants.yaml](../invariants.yaml) and detailed in [root_contract.yaml](../root_contract.yaml).
 
 ---
 

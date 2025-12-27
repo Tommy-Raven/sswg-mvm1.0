@@ -8,7 +8,7 @@ Licensing: Raven Recordings ©️ see: *LICENSE.md*
 # 🏛 System Architecture
 ### SSWG-MVM — Synthetic Synthesist of Workflow Generation
 
-SSWG-MVM organizes itself as a **layered modular architecture**, balancing strict schema-driven control with dynamic recursive refinement.
+sswg-mvm organizes itself as a **layered modular architecture**, balancing strict schema-driven control with dynamic recursive refinement.
 
 ---
 
@@ -64,10 +64,12 @@ SSWG-MVM organizes itself as a **layered modular architecture**, balancing stric
 # ⚙ Design Principles
 
 ### **1. Deterministic core**
-Valid workflows must always meet schema guarantees:  
+Valid workflows must always meet schema validation invariants:  
 - metadata correctness  
 - phase order  
 - dependency graph validity  
+
+Canonical invariants are defined in [invariants.yaml](../../invariants.yaml) and expanded in [root_contract.yaml](../../root_contract.yaml).
 
 ### **2. Recursive refinement**
 The MVM includes a *minimal recursion engine* designed to:
@@ -87,7 +89,7 @@ schemas/workflow_schema.json
 This enables:
 
 - automated testing  
-- validation guarantees  
+- schema validation invariants  
 - version bump automation in CI  
 
 ### **4. Minimal external dependencies**  

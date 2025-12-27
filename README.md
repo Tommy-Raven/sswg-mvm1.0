@@ -70,7 +70,7 @@ Author: **Tommy Raven (Thomas Byers)**
 Workflows become seeds for subsequent generations.
 
 ### Schema Integrity  
-Strict JSON schema validation guarantees reproducibility.
+Strict JSON schema validation enforces schema validation invariants that support reproducibility. See the canonical definitions in [invariants.yaml](invariants.yaml) and [root_contract.yaml](root_contract.yaml).
 
 ### Modularity  
 Phases → tasks → dependencies → evaluation → refinement.

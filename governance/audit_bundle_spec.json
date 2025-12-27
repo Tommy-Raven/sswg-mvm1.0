@@ -34,6 +34,14 @@
       "path_template": "artifacts/evidence_pack/{run_id}/determinism_report.json"
     },
     {
+      "component_id": "invariant_coverage_report",
+      "path_template": "artifacts/evidence_pack/{run_id}/invariant_coverage_report.json"
+    },
+    {
+      "component_id": "phase_evidence_bundle",
+      "path_template": "artifacts/evidence_pack/{run_id}/phase_evidence_bundle.json"
+    },
+    {
       "component_id": "log_phase_report",
       "path_template": "artifacts/evidence_pack/{run_id}/log_phase_report.json"
     },

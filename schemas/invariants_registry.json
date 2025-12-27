@@ -1,0 +1,43 @@
+{
+  "anchor": {
+    "anchor_id": "invariants_registry",
+    "anchor_version": "1.0.0",
+    "scope": "repo",
+    "owner": "schemas",
+    "status": "draft"
+  },
+  "invariants": [
+    {
+      "id": "deterministic_measurement",
+      "description": "Any output used for measurement, indexing, or comparison must be produced by a deterministic process.",
+      "applies_to_phases": ["normalize", "analyze", "validate", "compare"],
+      "enforced_by": ["generator.determinism", "scripts/replay_determinism_gate"],
+      "failure_type": "deterministic_failure",
+      "documented_in": ["docs/INVARIANTS.md", "docs/OUTPUT_GUARANTEES.md"]
+    },
+    {
+      "id": "bijective_identifiers",
+      "description": "Identifiers must be unique, gap-free, and reproducible.",
+      "applies_to_phases": ["analyze", "compare", "validate"],
+      "enforced_by": ["generator.determinism", "scripts/run_promotion_readiness"],
+      "failure_type": "deterministic_failure",
+      "documented_in": ["docs/INVARIANTS.md", "docs/OUTPUT_GUARANTEES.md"]
+    },
+    {
+      "id": "artifacts_not_canonical",
+      "description": "Generated artifacts must not redefine or overwrite canonical structures.",
+      "applies_to_phases": ["generate", "validate", "log"],
+      "enforced_by": ["generator.anchor_registry", "scripts/run_promotion_readiness"],
+      "failure_type": "schema_failure",
+      "documented_in": ["docs/INVARIANTS.md", "docs/OUTPUT_GUARANTEES.md"]
+    },
+    {
+      "id": "validation_required",
+      "description": "Outputs that fail validation must not be promoted or reused.",
+      "applies_to_phases": ["validate", "compare", "log"],
+      "enforced_by": ["generator.pdl_validator", "scripts/run_promotion_readiness"],
+      "failure_type": "schema_failure",
+      "documented_in": ["docs/INVARIANTS.md", "docs/OUTPUT_GUARANTEES.md"]
+    }
+  ]
+}

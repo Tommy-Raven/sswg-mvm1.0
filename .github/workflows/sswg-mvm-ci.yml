@@ -75,6 +75,10 @@ jobs:
           python scripts/validate_root_contracts.py
           python scripts/lint_casing.py
 
+      - name: Invariant coverage gate
+        run: |
+          python scripts/validate_invariant_coverage.py --run-id ci-run
+
       - name: PDL schema validation gate
         run: |
           python scripts/validate_pdl_artifacts.py --pdl-dir pdl --schema-dir schemas --report-dir artifacts/validation --run-id ci-run

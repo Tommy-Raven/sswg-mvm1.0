@@ -88,7 +88,10 @@ def replay_determinism_check(
                 Type="deterministic_failure",
                 message="Deterministic replay mismatch detected",
                 phase_id=phase_id,
-                evidence={"mismatch": mismatch},
+                evidence={
+                    "mismatch": mismatch,
+                    "invariant_ids": ["deterministic_measurement"],
+                },
             ),
             report,
         )
@@ -107,7 +110,7 @@ def bijectivity_check(ids: Iterable[str]) -> Optional[FailureLabel]:
             Type="deterministic_failure",
             message="Measurement identifiers are not bijective",
             phase_id="analyze",
-            evidence={"collisions": collisions},
+            evidence={"collisions": collisions, "invariant_ids": ["bijective_identifiers"]},
         )
     return None
 
@@ -124,6 +127,7 @@ def write_bijectivity_report(path: Path, ids: Iterable[str], failure: Optional[F
         "ids": list(ids),
         "result": "fail" if failure else "pass",
         "collisions": failure.evidence.get("collisions", []) if failure else [],
+        "invariant_ids": failure.evidence.get("invariant_ids", []) if failure else [],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")

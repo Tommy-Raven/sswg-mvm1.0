@@ -15,6 +15,7 @@ from generator.determinism import (
     write_bijectivity_report,
     write_determinism_report,
 )
+from generator.autopsy_report import build_autopsy_report, write_autopsy_report
 from generator.failure_emitter import FailureEmitter, FailureLabel, validate_failure_label
 from generator.agent_policy import (
     build_policy_manifest,
@@ -29,11 +30,18 @@ from generator.anchor_registry import AnchorRegistry, enforce_anchor
 from generator.environment import check_environment_drift, environment_fingerprint
 from generator.evaluation_spec import validate_evaluation_spec
 from generator.hashing import hash_data
+from generator.invariant_registry import (
+    build_coverage_report,
+    load_invariants_yaml,
+    load_registry,
+    validate_registry,
+)
 from generator.overlay_governance import (
     build_overlay_promotion_report,
     detect_overlay_ambiguity,
     validate_overlay_descriptor,
 )
+from generator.phase_evidence import build_phase_evidence_bundle, write_phase_evidence_bundle
 from generator.secret_scanner import load_allowlist, scan_paths
 from generator.sanitizer import sanitize_payload
 
@@ -57,6 +65,18 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("schemas"),
         help="Schema directory.",
+    )
+    parser.add_argument(
+        "--invariants-path",
+        type=Path,
+        default=Path("invariants.yaml"),
+        help="Invariant declarations path.",
+    )
+    parser.add_argument(
+        "--invariants-registry",
+        type=Path,
+        default=Path("schemas/invariants_registry.json"),
+        help="Invariant registry path.",
     )
     parser.add_argument(
         "--phase-outputs",
@@ -165,7 +185,21 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _gate_failure(emitter: FailureEmitter, run_id: str, failure: FailureLabel) -> int:
+def _gate_failure(
+    emitter: FailureEmitter,
+    run_id: str,
+    failure: FailureLabel,
+    *,
+    autopsy_dir: Path | None = None,
+    invariants_registry: dict | None = None,
+) -> int:
+    if autopsy_dir and invariants_registry is not None:
+        report = build_autopsy_report(
+            run_id=run_id,
+            failure=failure,
+            invariants_registry=invariants_registry,
+        )
+        write_autopsy_report(autopsy_dir / "autopsy_report.json", report)
     emitter.emit(failure, run_id=run_id)
     print(f"Promotion readiness gate failed: {failure.as_dict()}")
     return 1
@@ -233,6 +267,85 @@ def main() -> int:
     policy_manifest_path.parent.mkdir(parents=True, exist_ok=True)
     policy_manifest_path.write_text(json.dumps(policy_manifest, indent=2), encoding="utf-8")
 
+    if not args.invariants_path.exists():
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="io_failure",
+                message="Invariant declarations missing",
+                phase_id="validate",
+                evidence={"path": str(args.invariants_path)},
+            ),
+        )
+    if not args.invariants_registry.exists():
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="io_failure",
+                message="Invariant registry missing",
+                phase_id="validate",
+                evidence={"path": str(args.invariants_registry)},
+            ),
+        )
+
+    declared_invariants = load_invariants_yaml(args.invariants_path)
+    invariants_registry = load_registry(args.invariants_registry)
+    registry_errors = validate_registry(invariants_registry)
+    if registry_errors:
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="schema_failure",
+                message="Invariant registry validation failed",
+                phase_id="validate",
+                evidence={"errors": registry_errors},
+            ),
+            autopsy_dir=evidence_dir,
+            invariants_registry=invariants_registry,
+        )
+
+    coverage_report = build_coverage_report(
+        declared_invariants=declared_invariants,
+        registry_payload=invariants_registry,
+        repo_root=repo_root,
+    )
+    invariant_coverage_path = evidence_dir / "invariant_coverage_report.json"
+    invariant_coverage_path.write_text(
+        json.dumps(coverage_report, indent=2), encoding="utf-8"
+    )
+    if coverage_report.get("status") != "pass":
+        missing_ids = [
+            entry.get("id") for entry in coverage_report.get("missing_enforcement", [])
+        ]
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="schema_failure",
+                message="Invariant enforcement coverage failed",
+                phase_id="validate",
+                evidence={
+                    "missing_registry": coverage_report.get("missing_registry", []),
+                    "missing_enforcement": coverage_report.get("missing_enforcement", []),
+                    "invariant_ids": [item for item in missing_ids if item],
+                },
+            ),
+            autopsy_dir=evidence_dir,
+            invariants_registry=invariants_registry,
+        )
+
+    def gate_failure(failure: FailureLabel) -> int:
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            failure,
+            autopsy_dir=evidence_dir,
+            invariants_registry=invariants_registry,
+        )
+
     try:
         validate_pdl_file_with_report(
             pdl_path=args.pdl_path,
@@ -247,7 +360,7 @@ def main() -> int:
             phase_id="validate",
             evidence=exc.label.evidence,
         )
-        return _gate_failure(failure_emitter, args.run_id, failure)
+        return gate_failure(failure)
 
     validation_reports = list((evidence_dir / "validation").glob("pdl_validation_*.json"))
     if validation_reports:
@@ -259,14 +372,14 @@ def main() -> int:
             registry=AnchorRegistry(args.anchor_registry),
         )
         if anchor_failure:
-            return _gate_failure(failure_emitter, args.run_id, anchor_failure)
+            return gate_failure(anchor_failure)
 
     pdl_obj = load_pdl(args.pdl_path)
     observed = json.loads(args.observed_io.read_text(encoding="utf-8"))
     manifest = build_phase_io_manifest(pdl_obj, observed)
     collapse = detect_phase_collapse(manifest, pdl_obj)
     if collapse:
-        return _gate_failure(failure_emitter, args.run_id, collapse)
+        return gate_failure(collapse)
     write_manifest(evidence_dir / "phase_io_manifest.json", manifest)
 
     phase_outputs = json.loads(args.phase_outputs.read_text(encoding="utf-8"))
@@ -277,7 +390,7 @@ def main() -> int:
     )
     write_determinism_report(evidence_dir / "determinism_report.json", determinism_report)
     if failure:
-        return _gate_failure(failure_emitter, args.run_id, failure)
+        return gate_failure(failure)
     measurement_ids = json.loads(args.measurement_ids.read_text(encoding="utf-8"))
     id_failure = bijectivity_check(measurement_ids.get("ids", []))
     write_bijectivity_report(
@@ -286,7 +399,17 @@ def main() -> int:
         id_failure,
     )
     if id_failure:
-        return _gate_failure(failure_emitter, args.run_id, id_failure)
+        return gate_failure(id_failure)
+
+    phase_evidence_bundle = build_phase_evidence_bundle(
+        run_id=args.run_id,
+        pdl_obj=pdl_obj,
+        observed_io=observed,
+        phase_outputs=phase_outputs,
+        invariants_registry=invariants_registry,
+    )
+    phase_evidence_path = evidence_dir / "phase_evidence_bundle.json"
+    write_phase_evidence_bundle(phase_evidence_path, phase_evidence_bundle)
 
     registry = AnchorRegistry(args.anchor_registry)
     registry_data = registry.load()
@@ -337,9 +460,7 @@ def main() -> int:
     overlay_report_path.write_text(json.dumps(overlay_report, indent=2), encoding="utf-8")
 
     if overlay_lint_errors or ambiguity_errors:
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="schema_failure",
                 message="Overlay governance validation failed",
@@ -361,9 +482,7 @@ def main() -> int:
             for overlay in global_overrides:
                 notes = overlay.get("precedence", {}).get("notes", "")
                 if "exp-approved" not in notes.lower():
-                    return _gate_failure(
-                        failure_emitter,
-                        args.run_id,
+                    return gate_failure(
                         FailureLabel(
                             Type="schema_failure",
                             message="Experimental overlays cannot target global scope without explicit approval",
@@ -372,9 +491,7 @@ def main() -> int:
                         ),
                     )
         if not args.experiment_scope.exists():
-            return _gate_failure(
-                failure_emitter,
-                args.run_id,
+            return gate_failure(
                 FailureLabel(
                     Type="schema_failure",
                     message="Experiment scope declaration missing",
@@ -390,9 +507,7 @@ def main() -> int:
             key=lambda e: e.path,
         )
         if exp_errors:
-            return _gate_failure(
-                failure_emitter,
-                args.run_id,
+            return gate_failure(
                 FailureLabel(
                     Type="schema_failure",
                     message="Experiment scope validation failed",
@@ -410,9 +525,7 @@ def main() -> int:
                 ),
             )
         if not exp_scope.get("graduation_ready"):
-            return _gate_failure(
-                failure_emitter,
-                args.run_id,
+            return gate_failure(
                 FailureLabel(
                     Type="schema_failure",
                     message="Experiment scope exit criteria not met for graduation",
@@ -422,9 +535,7 @@ def main() -> int:
             )
 
     if not args.eval_spec.exists():
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Evaluation spec is missing",
@@ -440,9 +551,7 @@ def main() -> int:
         spec_path=args.eval_spec,
     )
     if eval_errors:
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="schema_failure",
                 message="Evaluation spec validation failed",
@@ -452,9 +561,7 @@ def main() -> int:
         )
     rollback_artifact = eval_spec.get("rollback_plan", {}).get("artifact")
     if rollback_artifact and not Path(rollback_artifact).exists():
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Evaluation rollback plan artifact is missing",
@@ -519,9 +626,7 @@ def main() -> int:
     variance_path.write_text(json.dumps(variance_payload, indent=2), encoding="utf-8")
 
     if not candidate_checkpoint.passed and not override_used:
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Evaluation checkpoint failed",
@@ -532,7 +637,7 @@ def main() -> int:
 
     env_failure = check_environment_drift(args.lock_path)
     if env_failure:
-        return _gate_failure(failure_emitter, args.run_id, env_failure)
+        return gate_failure(env_failure)
 
     env_report = {
         "anchor": {
@@ -548,6 +653,7 @@ def main() -> int:
             "schema_validation": "pass",
             "phase_schema_validation": "pass",
             "invariants_validation": "pass",
+            "invariant_coverage": coverage_report.get("status", "pass"),
             "reproducibility_validation": "pass",
         },
         "environment": environment_fingerprint(args.lock_path),
@@ -600,6 +706,8 @@ def main() -> int:
         evidence_dir / "determinism_report.json",
         evidence_dir / "bijectivity_report.json",
         evidence_dir / "phase_io_manifest.json",
+        invariant_coverage_path,
+        phase_evidence_path,
     ]
     if compare_output_path:
         artifact_paths.append(compare_output_path)
@@ -648,9 +756,7 @@ def main() -> int:
     provenance_target.write_text(json.dumps(provenance_manifest, indent=2), encoding="utf-8")
 
     if not args.budget_spec.exists():
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Budget specification missing",
@@ -738,9 +844,7 @@ def main() -> int:
     budget_report_path.parent.mkdir(parents=True, exist_ok=True)
     budget_report_path.write_text(json.dumps(budget_report_payload, indent=2), encoding="utf-8")
     if budget_report_payload.get("status") != "pass":
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Budget validation failed",
@@ -791,9 +895,7 @@ def main() -> int:
         check=False,
     )
     if docs_proc.returncode != 0:
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Docs reproducibility check failed",
@@ -803,9 +905,7 @@ def main() -> int:
         )
 
     if not args.audit_spec.exists():
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Audit bundle spec missing",
@@ -823,9 +923,7 @@ def main() -> int:
     )
     audit_validation = validate_bundle(audit_manifest)
     if audit_validation["status"] != "pass":
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Audit bundle validation failed",
@@ -867,9 +965,7 @@ def main() -> int:
         allowlist=allowlist,
     )
     if secret_scan["violations"] or secret_scan["allowlist_errors"]:
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="reproducibility_failure",
                 message="Secret scanning gate detected sensitive content",
@@ -897,7 +993,7 @@ def main() -> int:
             registry=registry,
         )
         if anchor_failure:
-            return _gate_failure(failure_emitter, args.run_id, anchor_failure)
+            return gate_failure(anchor_failure)
     if compare_output_path:
         compare_anchor_failure = enforce_anchor(
             artifact_path=compare_output_path,
@@ -905,7 +1001,7 @@ def main() -> int:
             registry=registry,
         )
         if compare_anchor_failure:
-            return _gate_failure(failure_emitter, args.run_id, compare_anchor_failure)
+            return gate_failure(compare_anchor_failure)
 
     try:
         validate_failure_label(
@@ -916,9 +1012,7 @@ def main() -> int:
             )
         )
     except ValueError as exc:
-        return _gate_failure(
-            failure_emitter,
-            args.run_id,
+        return gate_failure(
             FailureLabel(
                 Type="tool_mismatch",
                 message=str(exc),

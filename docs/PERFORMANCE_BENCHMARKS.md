@@ -21,6 +21,26 @@ This document tracks memory usage, recursion time, module reuse, and throughput 
 * CLI dashboard and visualization tools display performance trends.
 * Metrics support adaptive optimization, such as caching strategies, async execution, and semantic delta stopping.
 
+## 📌 Profiling Snapshots (2025-12-27)
+
+**Methodology**
+
+* Workloads: `campfire_workflow.json` and `technical_procedure_template.json` from `data/templates/`.
+* Phases measured: load workflow, normalize task packaging, inheritance checks, schema validation, dependency graph build, mermaid render, evaluation scoring, meta metrics, and export artifacts.
+* Timing: `time.perf_counter()` per phase.
+* Memory: `tracemalloc` per phase (reported in KiB; captures Python allocation peaks).
+* Schema validation attempts may include remote `$ref` resolution; the snapshot records any validation exception text.
+
+**Artifacts**
+
+* Snapshot JSON: [`data/profiling/workflow_profiling_2025-12-27.json`](../data/profiling/workflow_profiling_2025-12-27.json)
+* Campfire outputs:
+  * [`data/profiling/campfire_workflow/campfire_workflow.json`](../data/profiling/campfire_workflow/campfire_workflow.json)
+  * [`data/profiling/campfire_workflow/campfire_workflow.md`](../data/profiling/campfire_workflow/campfire_workflow.md)
+* Technical procedure outputs:
+  * [`data/profiling/technical_procedure_template/unnamed_workflow.json`](../data/profiling/technical_procedure_template/unnamed_workflow.json)
+  * [`data/profiling/technical_procedure_template/unnamed_workflow.md`](../data/profiling/technical_procedure_template/unnamed_workflow.md)
+
 ## ⚡ Optimization Integration
 
 * Core stability and exception handling minimize runtime errors and infinite loops.

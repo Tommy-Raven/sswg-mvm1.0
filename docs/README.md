@@ -8,6 +8,15 @@ The system combines deterministic pipeline execution with semantic evaluation, r
 
 ---
 
+## Canonical Runbook
+
+**Primary entrypoint (how to run + expected outputs):**  
+RUNBOOK.md
+
+Other docs are secondary/overview and should defer to this canonical runbook to avoid drift.
+
+---
+
 ## What This Repository Is
 
 This repository serves as the **canonical skeleton** for SSWG-MVM.
@@ -76,7 +85,11 @@ This repository exists to:
 
 2. Explore the folder structure and documentation under docs/.
 
-3. Run or inspect the demo pipeline described in:
+3. Follow the canonical run guide:
+
+   docs/RUNBOOK.md
+
+4. Run or inspect the demo pipeline described in:
 
    docs/ARCHITECTURE.md  
    docs/QUICKSTART.md

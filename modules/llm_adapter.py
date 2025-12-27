@@ -1,167 +1,137 @@
-<<<<<<< HEAD
+"""Lightweight refinement adapter with deterministic defaults."""
 """LLM adapter for recursion-aware refinement.
 
-This module defines the contract for LLM-in-the-loop refinement and exposes
-helpers for building prompts and parsing responses.
-"""
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import json
-import logging
-from dataclasses import dataclass
-from typing import Any, Callable, Dict, Iterable, Mapping, Optional
-
-logger = logging.getLogger("modules.llm_adapter")
+from textwrap import dedent
+from typing import Any, Callable, Dict
 
 
-@dataclass(frozen=True)
-class RefinementContract:
-    """Structured contract for LLM-driven refinement outputs.
+def generate_text(prompt: str) -> str:
+    """
+    Produce a deterministic, prompt-aware suggestion string.
 
-    The contract is intentionally strict so downstream consumers can rely on
-    deterministic keys and formats.
-
-    Fields expected from the model:
-    - ``decision``: one of ``{"accept", "revise", "stop"}``
-    - ``refined_workflow``: JSON object representing workflow deltas or a fully
-      rewritten workflow. Must be an object/dict.
-    - ``reasoning``: short natural-language explanation of the decision.
-    - ``confidence``: numeric confidence score (0-1 range recommended).
-    - ``score_delta``: numeric delta describing expected improvement.
+    This keeps the demo pipeline self-contained while still surfacing the
+    prompt context that triggered regeneration.
     """
 
-    version: str = "2024-06"
-    required_fields: tuple[str, ...] = (
+    cleaned = " ".join(prompt.split())
+    return dedent(
+        f"""
+        Improvement requested based on: {cleaned}\n
+        - Clarify ambiguous steps with concrete inputs and outputs.
+        - Add explicit owner + success criteria for each phase.
+        - Tighten module dependencies and ensure evaluation hooks run.
+        """
+    ).strip()
+
+
+@dataclass
+class RefinementContract:
+    """Contract for parsing LLM-driven refinement payloads."""
+
+    version: str = "1.0"
+    allowed_decisions: tuple = ("accept", "revise", "stop")
+    required_fields: tuple = (
         "decision",
         "refined_workflow",
         "reasoning",
         "confidence",
         "score_delta",
     )
-    allowed_decisions: tuple[str, ...] = ("accept", "revise", "stop")
-    format: str = "json"
-
-    @property
-    def system_prompt(self) -> str:
-        """System prompt describing the response contract."""
-
-        return (
-            "You are a workflow refinement model. Respond strictly with JSON that "
-            "matches the contract fields: decision (accept|revise|stop), "
-            "refined_workflow (object), reasoning (string), confidence (number), "
-            "and score_delta (number). Do not include any extra keys or prose."
-        )
-
-    def describe(self) -> str:
-        """Render a short description of the contract."""
-
-        required = ", ".join(self.required_fields)
-        decisions = ", ".join(self.allowed_decisions)
-        return (
-            f"Contract v{self.version} expects JSON with fields [{required}] "
-            f"and decision in {{{decisions}}}."
-        )
-
-
-def build_refinement_prompt(
-    workflow_data: Mapping[str, Any],
-    evaluation_report: Mapping[str, Any],
-    depth: int,
-    contract: Optional[RefinementContract] = None,
-) -> str:
-    """Build a compact prompt for the refinement LLM.
-
-    The prompt contains:
-    - Current recursion depth
-    - Workflow summary
-    - Latest evaluation findings
-    - Explicit JSON contract reminder
-    """
-
-    active_contract = contract or RefinementContract()
-    workflow_summary = json.dumps(workflow_data, indent=2)
-    evaluation_summary = json.dumps(evaluation_report, indent=2)
-
-    return (
-        f"Recursion depth: {depth}.\n"
-        f"Workflow to refine (JSON):\n{workflow_summary}\n\n"
-        f"Latest evaluation (JSON):\n{evaluation_summary}\n\n"
-        f"Respond with JSON matching: {active_contract.describe()}"
+    field_validators: Dict[str, Callable[[Any], bool]] = field(
+        default_factory=lambda: {
+            "decision": lambda value: isinstance(value, str),
+            "refined_workflow": lambda value: isinstance(value, dict),
+            "reasoning": lambda value: isinstance(value, str),
+            "confidence": lambda value: isinstance(value, (int, float)),
+            "score_delta": lambda value: isinstance(value, (int, float)),
+        }
     )
+
+    def validate(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        for field_name in self.required_fields:
+            if field_name not in payload:
+                raise ValueError(f"Missing required field: {field_name}")
+            validator = self.field_validators.get(field_name, lambda _: True)
+            if not validator(payload[field_name]):
+                raise ValueError(f"Invalid type for field: {field_name}")
+
+        decision = payload.get("decision")
+        if decision not in self.allowed_decisions:
+            raise ValueError(f"Unsupported decision: {decision}")
+        return payload
 
 
 def parse_refinement_response(
-    raw_response: str, contract: Optional[RefinementContract] = None
+    raw_response: str, contract: RefinementContract
 ) -> Dict[str, Any]:
-    """Parse and validate the LLM refinement response.
-
-    Raises ``ValueError`` if parsing fails or required fields are missing.
-    """
-
-    active_contract = contract or RefinementContract()
+    """Parse and validate an LLM refinement response."""
 
     try:
-        payload: Dict[str, Any] = json.loads(raw_response)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"LLM response is not valid JSON: {exc}") from exc
+        payload = json.loads(raw_response)
+    except json.JSONDecodeError as exc:  # pylint: disable=broad-exception-caught
+        raise ValueError("LLM response is not valid JSON") from exc
 
-    missing: Iterable[str] = [
-        field for field in active_contract.required_fields if field not in payload
-    ]
-    if missing:
-        raise ValueError(f"LLM response missing required fields: {sorted(missing)}")
+    return contract.validate(payload)
 
-    decision = payload.get("decision")
-    if decision not in active_contract.allowed_decisions:
-        raise ValueError(
-            f"Invalid decision '{decision}'. Expected one of {active_contract.allowed_decisions}."
-        )
 
-    refined_workflow = payload.get("refined_workflow")
-    if not isinstance(refined_workflow, dict):
-        raise ValueError("refined_workflow must be a JSON object/dict")
+def _default_llm_generate(prompt: str) -> str:
+    """Fallback generator that wraps :func:`generate_text` in a contract payload."""
 
-    return payload
+    suggestion = generate_text(prompt)
+    response = {
+        "decision": "revise",
+        "refined_workflow": {"recursion_hint": suggestion},
+        "reasoning": "Offline refinement stub based on deterministic adapter.",
+        "confidence": 0.0,
+        "score_delta": 0.0,
+    }
+    return json.dumps(response)
 
 
 def generate_refinement(
-    workflow_data: Mapping[str, Any],
-    evaluation_report: Mapping[str, Any],
+    workflow_data: Dict[str, Any],
+    evaluation_report: Dict[str, Any],
     depth: int,
-    llm_generate: Callable[..., str],
-    contract: Optional[RefinementContract] = None,
+    *,
+    llm_generate: Callable[[str], str] | None = None,
+    contract: RefinementContract | None = None,
 ) -> Dict[str, Any]:
-    """Invoke the LLM with the refinement prompt and parse the result."""
+    """Generate and parse an LLM-backed workflow refinement."""
 
-    active_contract = contract or RefinementContract()
-    prompt = build_refinement_prompt(workflow_data, evaluation_report, depth, contract)
+    contract = contract or RefinementContract()
+    generator = llm_generate or _default_llm_generate
 
-    # Consumers can pass a callable with any signature that accepts a prompt and
-    # returns a string. Keyword arguments are not mandated to keep the adapter
-    # flexible across providers.
-    raw_response = llm_generate(prompt)
-    parsed = parse_refinement_response(raw_response, active_contract)
-    parsed["contract_version"] = active_contract.version
+    prompt = dedent(
+        f"""
+        You are refining a workflow (depth={depth}).
+        Workflow snippet: {json.dumps(workflow_data)[:1200]}
+        Evaluation snapshot: {evaluation_report}
+
+        Respond with JSON fields: decision (accept|revise|stop), refined_workflow (object),
+        reasoning (string), confidence (number), score_delta (number).
+        """
+    ).strip()
+
+    raw_response = generator(prompt)
+    parsed = parse_refinement_response(raw_response, contract)
+    parsed["contract_version"] = contract.version
     return parsed
 
 
-# NOTE: ``generate_text`` remains the lightweight adapter entry point for
-# environments that expose a global LLM generator. It intentionally raises an
-# informative error by default to encourage explicit wiring via ``llm_generate``
-# when used in RecursionManager.
-def generate_text(prompt: str, **_: Any) -> str:  # pragma: no cover - passthrough
-    """Default generate_text placeholder.
-
-    Replace this with the actual LLM provider hook (e.g., OpenAI client) or
-    supply a custom ``llm_generate`` function to ``generate_refinement``.
-    """
-
+__all__ = [
+    "generate_text",
+    "RefinementContract",
+    "parse_refinement_response",
+    "generate_refinement",
+]
     raise RuntimeError(
         "No LLM backend configured. Provide llm_generate to generate_refinement "
         "or monkey-patch modules.llm_adapter.generate_text."
     )
-=======
->>>>>>> 87c21bd0107edebdcdc02a51a06674b9e2920722
 """
 modules/llm_adapter.py — lightweight text generator shim.
 

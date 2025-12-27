@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from ai_monitoring.structured_logger import get_logger, log_event
 
@@ -24,6 +24,68 @@ class BenchmarkRecord:
     score: float
     timestamp: str
     metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class BenchmarkDefinition:
+    """
+    Defines a benchmark dataset and acceptance criteria.
+    """
+
+    name: str
+    dataset_description: str
+    metric_name: str
+    expected_range: Tuple[float, float]
+    acceptance_criteria: str
+    unit: str = "score"
+
+
+CALIBRATION_BENCHMARKS: Dict[str, BenchmarkDefinition] = {
+    "calibration.clarity.core_v1": BenchmarkDefinition(
+        name="calibration.clarity.core_v1",
+        dataset_description=(
+            "50 curated workflow prompts spanning ingest→log, balanced across"
+            " new and existing module patterns."
+        ),
+        metric_name="clarity",
+        expected_range=(0.82, 0.94),
+        acceptance_criteria="Median ≥ 0.86 and p10 ≥ 0.80.",
+        unit="score",
+    ),
+    "calibration.expandability.core_v1": BenchmarkDefinition(
+        name="calibration.expandability.core_v1",
+        dataset_description=(
+            "30 modularization exercises covering adapter swaps, schema overlays,"
+            " and phase extension patterns."
+        ),
+        metric_name="expandability",
+        expected_range=(0.74, 0.90),
+        acceptance_criteria="Median ≥ 0.78 and p10 ≥ 0.70.",
+        unit="score",
+    ),
+    "calibration.translatability.core_v1": BenchmarkDefinition(
+        name="calibration.translatability.core_v1",
+        dataset_description=(
+            "24 workflows rendered across Markdown/JSON/API forms, verifying"
+            " fidelity of conversion."
+        ),
+        metric_name="translatability",
+        expected_range=(0.80, 0.95),
+        acceptance_criteria="Median ≥ 0.85 and p10 ≥ 0.78.",
+        unit="score",
+    ),
+    "calibration.recursive_alignment.core_v1": BenchmarkDefinition(
+        name="calibration.recursive_alignment.core_v1",
+        dataset_description=(
+            "20 multi-iteration recursion runs with lineage checkpoints and"
+            " phase-boundary compliance."
+        ),
+        metric_name="recursive_alignment",
+        expected_range=(0.75, 0.92),
+        acceptance_criteria="Median ≥ 0.80 and p10 ≥ 0.72.",
+        unit="score",
+    ),
+}
 
 
 class BenchmarkTracker:
@@ -108,3 +170,9 @@ class BenchmarkTracker:
             }
             for name, record in self._best.items()
         }
+
+    def get_definitions(self) -> Dict[str, BenchmarkDefinition]:
+        """
+        Return the known calibration benchmark definitions.
+        """
+        return dict(CALIBRATION_BENCHMARKS)

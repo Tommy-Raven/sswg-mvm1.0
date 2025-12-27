@@ -1,5 +1,16 @@
-[(Developer's Certificate of Origin 1.1)
-[https://developercertificate.org/]
+---
+anchor:
+  anchor_id: developers_certificate_of_origin
+  anchor_version: "1.0.0"
+  scope: governance
+  owner: sswg
+  status: draft
+---
+
+# Developer's Certificate of Origin 1.1
+
+This repository uses the Developer's Certificate of Origin (DCO) version 1.1
+(see https://developercertificate.org/).
 
 By making a contribution to this project, I certify that:
 
@@ -24,3 +35,15 @@ By making a contribution to this project, I certify that:
     personal information I submit with it, including my sign-off) is
     maintained indefinitely and may be redistributed consistent with
     this project or the open source license(s) involved.
+
+## Sign-off requirement
+
+All commits MUST include a DCO sign-off. Use:
+
+```
+git commit -s
+```
+
+This requirement applies to all contributions alongside the governance and
+compliance rules in AGENTS.md, governance.yaml, and the broader sswg/mvm
+repository policies.

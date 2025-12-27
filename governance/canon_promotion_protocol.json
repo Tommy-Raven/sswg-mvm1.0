@@ -1,0 +1,30 @@
+{
+  "anchor": {
+    "anchor_id": "canon_promotion_protocol",
+    "anchor_version": "1.0.0",
+    "scope": "governance",
+    "owner": "governance.canon_promotion",
+    "status": "draft"
+  },
+  "protocol_id": "canon_promotion_v1",
+  "protocol_version": "1.0.0",
+  "required_approvers": {
+    "schema": ["schema_lead"],
+    "determinism": ["determinism_lead"],
+    "trs": ["trs_lead"],
+    "artifacts": ["artifact_lead"],
+    "governance": ["governance_lead"]
+  },
+  "required_evidence": [
+    "evaluation_report",
+    "provenance_manifest",
+    "determinism_report",
+    "compatibility_matrix_report",
+    "run_telemetry",
+    "trs_certificate"
+  ],
+  "blocking_conditions": {
+    "non_waivable": ["schema_validation", "phase_schema_validation", "invariants_validation", "reproducibility_validation"],
+    "waivable": ["performance_regression", "non_critical_doc_gap"]
+  }
+}

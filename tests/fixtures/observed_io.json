@@ -1,0 +1,47 @@
+{
+  "ingest": {
+    "inputs": ["raw_payload"],
+    "outputs": ["ingested_payload"],
+    "actions": ["ingest"]
+  },
+  "normalize": {
+    "inputs": ["ingested_payload"],
+    "outputs": ["normalized_payload"],
+    "actions": ["normalize"]
+  },
+  "parse": {
+    "inputs": ["normalized_payload"],
+    "outputs": ["parsed_payload"],
+    "actions": ["parse"]
+  },
+  "analyze": {
+    "inputs": ["parsed_payload"],
+    "outputs": ["analysis_metrics"],
+    "actions": ["analyze"]
+  },
+  "generate": {
+    "inputs": ["analysis_metrics"],
+    "outputs": ["draft_output"],
+    "actions": ["generate"]
+  },
+  "validate": {
+    "inputs": ["draft_output"],
+    "outputs": ["validated_output"],
+    "actions": ["validate"]
+  },
+  "compare": {
+    "inputs": ["validated_output"],
+    "outputs": ["comparison_report"],
+    "actions": ["compare"]
+  },
+  "interpret": {
+    "inputs": ["comparison_report"],
+    "outputs": ["interpretation_summary"],
+    "actions": ["interpret"]
+  },
+  "log": {
+    "inputs": ["interpretation_summary"],
+    "outputs": ["audit_log"],
+    "actions": ["log"]
+  }
+}

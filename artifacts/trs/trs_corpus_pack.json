@@ -1,0 +1,24 @@
+{
+  "anchor": {
+    "anchor_id": "trs_corpus_pack",
+    "anchor_version": "1.0.0",
+    "scope": "trs",
+    "owner": "artifacts.trs",
+    "status": "draft"
+  },
+  "trs_major": "v1",
+  "corpus_id": "trs_corpus_v1",
+  "corpus_version": "1.0.0",
+  "compatibility_baseline": "pdl/example_full_9_phase.yaml",
+  "compatibility_candidate": "pdl/example_full_9_phase.yaml",
+  "compatibility_phase_outputs": "tests/fixtures/phase_outputs.json",
+  "cases": [
+    {
+      "case_id": "baseline_full_9_phase",
+      "pdl_path": "pdl/example_full_9_phase.yaml",
+      "phase_outputs_path": "tests/fixtures/phase_outputs.json",
+      "measurement_ids_path": "tests/fixtures/measurement_ids.json",
+      "compare_output_hash": "42cdc26b44bb8189b4e5dcc73100d905a9d6b738dfdea50fbc47966a5e717d2a"
+    }
+  ]
+}

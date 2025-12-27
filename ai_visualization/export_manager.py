@@ -126,20 +126,3 @@ def export_workflow(wf: dict, export_mode: str = "json") -> dict:
     return results
 
 
-# ---------------------- Example Execution ---------------------- #
-
-if __name__ == "__main__":
-    # Demo placeholder workflow
-    wf_demo = {
-        "workflow_id": "demo_workflow",
-        "version": "1.0",
-        "metadata": {"purpose": "Testing export manager", "audience": "Developers"},
-        "phases": [
-            {"title": "Phase 1: Initialization", "tasks": ["Collect user inputs", "Load template"]},
-            {"title": "Phase 2: Generation", "tasks": ["Assemble structure", "Export results"]}
-        ],
-        "dependency_graph": {"nodes": ["Init", "Generate"], "edges": [["Init", "Generate"]]}
-    }
-
-    exported = export_workflow(wf_demo, export_mode="both")
-    print("Export complete:", exported)

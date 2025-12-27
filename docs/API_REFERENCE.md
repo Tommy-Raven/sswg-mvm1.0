@@ -7,6 +7,11 @@ Licensing: Raven Recordings ©️ see: *LICENSE.md*
 
 # API Reference — SSWG-MVM
 
+**Primary entrypoint (how to run + expected outputs):**  
+RUNBOOK.md
+
+Other docs are secondary/overview and should defer to the canonical runbook above.
+
 ## Overview
 
 The API provides programmatic access to the **SSWG-MVM** workflow generation, evaluation, recursion, and memory systems. It enables developers to initiate workflows, evaluate their quality, recursively refine outputs, and interact with stored workflow histories. The API is designed to support both human-readable and machine-readable outputs and integrates seamlessly with safety, constitution, and risk pipelines while ensuring the SSWG target remains stable through iterations.
@@ -61,4 +66,3 @@ save(expanded_wf)
 * Integrate **Safety Stack** checks (`safety_classifier`, `sandbox_simulator`) for untrusted inputs.
 * Leverage versioning from `ai_recursive.registry` to maintain traceable workflow history.
 * Combine evaluation scores with feedback loops to guide recursive improvements.
-

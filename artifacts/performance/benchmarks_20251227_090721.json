@@ -1,0 +1,62 @@
+{
+  "anchor": {
+    "anchor_id": "performance_benchmark_results",
+    "anchor_version": "1.0.0",
+    "scope": "benchmarking",
+    "owner": "performance_benchmark_script",
+    "status": "draft"
+  },
+  "run": {
+    "timestamp_utc": "2025-12-27T09:07:21Z",
+    "working_directory": "/workspace/SSWG-mvm1.0"
+  },
+  "environment": {
+    "os": "Linux-6.12.13-x86_64-with-glibc2.39",
+    "kernel": "6.12.13",
+    "machine": "x86_64",
+    "cpu_model": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "cpu_count": 3,
+    "memory_bytes": 19253211136,
+    "python_version": "3.11.12"
+  },
+  "dataset": {
+    "path": "/workspace/SSWG-mvm1.0/pdl/example_full_9_phase.yaml",
+    "bytes": 3678,
+    "lines": 135,
+    "sha256": "452e1190af820d3f9a552a4adc6535e1db7b15694b0d0ede290816c0e06c2acc"
+  },
+  "configuration": {
+    "io_read_iterations": 2000,
+    "io_write_iterations": 500,
+    "phase_iterations": 200,
+    "recursion_iterations": 50
+  },
+  "throughput": {
+    "io_read_mb_s": 557.2960566614081,
+    "io_write_mb_s": 28.56600344708367,
+    "io_read_seconds": 0.012587973999870883,
+    "io_write_seconds": 0.06139490500027023
+  },
+  "phase_timings_seconds": {
+    "normalize_total": 0.00263888900008169,
+    "normalize_avg": 1.319444500040845e-05,
+    "parse_total": 1.6685305320006592,
+    "parse_avg": 0.008342652660003296,
+    "analyze_total": 0.00016536799921595957,
+    "analyze_avg": 8.268399960797978e-07,
+    "generate_total": 0.0012928109999847948,
+    "generate_avg": 6.464054999923974e-06,
+    "validate_total": 1.3269139599997288,
+    "validate_avg": 0.0066345697999986445,
+    "compare_total": 2.333799966436345e-05,
+    "compare_avg": 1.1668999832181725e-07,
+    "interpret_total": 6.682799994450761e-05,
+    "interpret_avg": 3.3413999972253805e-07,
+    "log_total": 0.007980115000464139,
+    "log_avg": 3.9900575002320695e-05
+  },
+  "recursion_timings_seconds": {
+    "total": 0.7292253699997673,
+    "avg_per_iteration": 0.014584507399995346
+  }
+}

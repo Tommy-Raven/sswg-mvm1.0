@@ -1,0 +1,33 @@
+{
+  "$id": "https://schemas.sswg.local/compatibility-contract.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg compatibility contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["compatibility", "supported_base_versions"],
+  "properties": {
+    "compatibility": {
+      "type": "string",
+      "enum": ["backward", "forward", "breaking"]
+    },
+    "supported_base_versions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "migration_plan_ref": { "type": "string" },
+    "rollback_plan_ref": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "compatibility": { "const": "breaking" }
+        }
+      },
+      "then": {
+        "required": ["migration_plan_ref", "rollback_plan_ref"]
+      }
+    }
+  ]
+}

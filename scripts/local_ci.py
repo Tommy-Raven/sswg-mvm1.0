@@ -123,6 +123,22 @@ def task_template_regression_tests() -> TaskResult:
     )
 
 
+def task_root_contract_validation() -> TaskResult:
+    """Validate root contracts and casing rules."""
+    return run_command(
+        "root contract validation",
+        [sys.executable, "scripts/validate_root_contracts.py"],
+    )
+
+
+def task_root_casing_lint() -> TaskResult:
+    """Lint casing rules for root contracts."""
+    return run_command(
+        "root contract casing lint",
+        [sys.executable, "scripts/lint_casing.py"],
+    )
+
+
 def task_recursive_benchmark() -> TaskResult:
     """
     Run recursive benchmark / memory tracker.
@@ -146,6 +162,8 @@ def run_sswg_ci_suite() -> List[TaskResult]:
     """Run SSWG CI-style checks: lint + validation regressions."""
     results: List[TaskResult] = []
     results.append(task_lint_sswg())
+    results.append(task_root_contract_validation())
+    results.append(task_root_casing_lint())
     results.append(task_regression_tests())
     results.append(task_template_regression_tests())
     return results

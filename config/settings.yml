@@ -1,0 +1,77 @@
+sswg:
+  system_name: sswg
+  version: v0.0.9mvm
+  description: >
+    sswg is a phase-driven workflow generation and validation system.
+    this repo enforces the full 9-phase pipeline for auditability and
+    deterministic measurement outputs.
+
+  pipeline:
+    canonical_set: full_9_phase
+    phases:
+      ordered: true
+      required:
+        - ingest
+        - normalize
+        - parse
+        - analyze
+        - generate
+        - validate
+        - compare
+        - interpret
+        - log
+
+  phase_separation:
+    enforced: true
+    rule: >
+      each phase must be declared explicitly and validated against its
+      phase-specific schema; phase behaviors must not be collapsed.
+
+  determinism:
+    required_for:
+      - normalize
+      - analyze
+      - validate
+      - compare
+    measurement_keys:
+      bijective_required: true
+      disallow_generative_tooling: true
+
+  failure_labeling:
+    required: true
+    label_schema:
+      required_fields: [Type, message, phase_id]
+      allowed_types:
+        - deterministic_failure
+        - schema_failure
+        - io_failure
+        - tool_mismatch
+        - reproducibility_failure
+    rule: >
+      when any phase fails a required invariant, the phase must emit a
+      failure label with Type: deterministic_failure (or other matching type)
+      and hard-fail execution.
+
+  artifact_policy:
+    canonical_layers:
+      immutable:
+        - generator/
+        - cli/
+        - pdl/
+        - reproducibility/
+    generated_layers:
+      additive_only:
+        - artifacts/
+        - data/
+        - docs/
+
+  validation_gates:
+    required:
+      - schema_validation
+      - phase_schema_validation
+      - invariants_validation
+      - reproducibility_validation
+
+  authority:
+    precedence: highest
+    violation_policy: hard_fail

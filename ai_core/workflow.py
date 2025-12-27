@@ -64,6 +64,10 @@ class Workflow:
         self.outputs: List[Dict[str, Any]] = []
         self.evaluation: Dict[str, Any] = {}
         self.recursion: Dict[str, Any] = {}
+        self.dependency_graph: Dict[str, Any] = {}
+        self.dependency_index: Dict[str, Any] = {}
+        self.causal_ledger: List[Dict[str, Any]] = []
+        self.inheritance: Dict[str, Any] = {}
         self.context: Dict[str, Any] = {}
 
         if args and isinstance(args[0], dict):
@@ -98,11 +102,36 @@ class Workflow:
         self.schema_version = str(data.get("schema_version", "1.0.0"))
 
         self.metadata = data.get("metadata", {}) or {}
+        if "title" not in self.metadata:
+            self.metadata["title"] = data.get("title") or "Untitled Workflow"
+        if "description" not in self.metadata:
+            self.metadata["description"] = data.get("description") or "Generated workflow."
+
         self.phases = data.get("phases", []) or []
+        if not self.phases:
+            self.phases = [
+                {
+                    "id": "P1",
+                    "title": "Initialization",
+                    "description": "Initialize workflow context and inputs.",
+                    "tasks": [
+                        {
+                            "id": "T1",
+                            "description": "Initialize workflow inputs.",
+                            "inputs": ["seed"],
+                            "outputs": ["initialized_context"],
+                        }
+                    ],
+                }
+            ]
         self.modules = data.get("modules", []) or []
         self.outputs = data.get("outputs", []) or []
         self.evaluation = data.get("evaluation", {}) or {}
         self.recursion = data.get("recursion", {}) or {}
+        self.dependency_graph = data.get("dependency_graph", {}) or {}
+        self.dependency_index = data.get("dependency_index", {}) or {}
+        self.causal_ledger = data.get("causal_ledger", []) or []
+        self.inheritance = data.get("inheritance", {}) or {}
 
         # Execution context can be stored in multiple places; we prefer a
         # dedicated field if present, otherwise we start empty.
@@ -212,18 +241,34 @@ class Workflow:
 
         This is what exporters / validators should consume.
         """
-        return {
+        payload: Dict[str, Any] = {
             "workflow_id": self.workflow_id,
             "version": self.version,
             "schema_version": self.schema_version,
             "metadata": self.metadata,
             "phases": self.phases,
-            "modules": self.modules,
-            "outputs": self.outputs,
-            "evaluation": self.evaluation,
-            "recursion": self.recursion,
-            "context": self.context,
-            "results": self.results,
-            "params": self.params,
         }
+        if self.modules:
+            payload["modules"] = self.modules
+        if self.outputs:
+            payload["outputs"] = self.outputs
+        if self.evaluation:
+            payload["evaluation"] = self.evaluation
+        if self.recursion:
+            payload["recursion"] = self.recursion
+        if self.dependency_graph:
+            payload["dependency_graph"] = self.dependency_graph
+        if self.dependency_index:
+            payload["dependency_index"] = self.dependency_index
+        if self.causal_ledger:
+            payload["causal_ledger"] = self.causal_ledger
+        if self.inheritance:
+            payload["inheritance"] = self.inheritance
+        if self.context:
+            payload["context"] = self.context
+        if self.results:
+            payload["results"] = self.results
+        if self.params:
+            payload["params"] = self.params
+        return payload
 # ---------------------------------------------------------------------- #

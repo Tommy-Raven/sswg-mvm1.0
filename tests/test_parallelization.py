@@ -11,5 +11,5 @@ def test_parallel_generation_emulation():
     workflows = [orch.run({"purpose": f"Batch {i}"}) for i in range(3)]
 
     assert len(workflows) == 3
-    ids = [wf["workflow_id"] for wf in workflows]
+    ids = [wf.to_dict()["workflow_id"] for wf in workflows]
     assert len(set(ids)) == 3, "Workflow IDs should be unique"

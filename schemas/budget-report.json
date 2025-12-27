@@ -1,0 +1,40 @@
+{
+  "$id": "https://schemas.sswg.local/budget-report.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg budget report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "anchor",
+    "run_id",
+    "status",
+    "phase_results",
+    "artifact_results",
+    "total_duration_sec",
+    "max_total_duration_sec",
+    "violations",
+    "inputs_hash"
+  ],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sandbox", "canonical", "archived"] }
+      }
+    },
+    "run_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["pass", "fail"] },
+    "phase_results": { "type": "array" },
+    "artifact_results": { "type": "array" },
+    "total_duration_sec": { "type": "number", "minimum": 0 },
+    "max_total_duration_sec": { "type": "number", "minimum": 0 },
+    "violations": { "type": "array" },
+    "inputs_hash": { "type": "string" }
+  }
+}

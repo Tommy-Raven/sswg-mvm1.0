@@ -11,6 +11,7 @@ Public surface (MVM level):
 
 from __future__ import annotations
 
+from .checkpoints import EvaluationCheckpoint, EvaluationCheckpointer
 from .evaluation_engine import evaluate_workflow_quality
 from .semantic_analysis import SemanticAnalyzer
 from .scoring_adapter import ScoreAdapter
@@ -19,6 +20,8 @@ __all__ = [
     "evaluate_workflow_quality",
     "SemanticAnalyzer",
     "ScoreAdapter",
+    "EvaluationCheckpoint",
+    "EvaluationCheckpointer",
 ]
 
 

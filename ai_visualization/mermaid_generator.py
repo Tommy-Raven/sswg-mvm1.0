@@ -75,22 +75,4 @@ def mermaid_from_workflow(workflow: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-if __name__ == "__main__":
-    # Minimal manual test example; safe to delete if you don't want it
-    example = {
-        "workflow_id": "wf_example",
-        "modules": [
-            {
-                "module_id": "m1",
-                "name": "Start",
-                "dependencies": []
-            },
-            {
-                "module_id": "m2",
-                "name": "Next step",
-                "dependencies": ["m1"]
-            },
-        ],
-    }
-    print(mermaid_from_workflow(example))
 # End of ai_visualization/mermaid_generator.py

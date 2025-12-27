@@ -26,7 +26,7 @@ from typing import Any, Dict, Optional
 
 from .workflow import Workflow
 from .module_registry import ModuleRegistry
-from .orchestrator import Orchestrator
+from .orchestrator import Orchestrator, RunContext
 
 
 def parse_args(argv: Optional[list] = None) -> argparse.Namespace:
@@ -83,10 +83,13 @@ def main(argv: Optional[list] = None) -> int:
 
     # If phases are provided, the orchestrator should accept a subset;
     # at MVM this can be a hint the implementation can ignore.
-    orchestrator.run(workflow, phases=args.phases)
+    context = RunContext(workflow_source=workflow, phases=args.phases)
+    result = orchestrator.run_mvm(context)
 
     # Optional: print a short summary
-    print(f"Workflow {workflow.id} executed via ai_core.Orchestrator.")
+    print(
+        f"Workflow {result.workflow.id} executed via ai_core.Orchestrator."
+    )
     return 0
 
 

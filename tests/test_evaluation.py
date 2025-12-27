@@ -1,3 +1,5 @@
+"""Tests for evaluation metric helpers."""
+
 from ai_evaluation.quality_metrics import evaluate_clarity
 
 def test_evaluate_clarity_scores_valid():

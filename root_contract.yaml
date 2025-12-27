@@ -1,0 +1,214 @@
+root_contract:
+  sswg:
+    system_name: sswg
+    description: >
+      sswg is a phase-driven workflow generation and validation system.
+      This file defines mandatory execution rules, constraints, and
+      interoperability requirements for all tooling operating in this repository.
+
+    execution_model:
+      phases:
+        ordered: true
+        canonical:
+          - ingest
+          - parse
+          - generate
+          - output
+          - validate
+          - log
+      rules:
+        - phases_must_be_explicit
+        - phases_must_define_inputs_and_outputs
+        - phases_must_be_independently_executable
+
+    artifact_policy:
+      canonical_layers:
+        - generator/
+        - cli/
+        - pdl/
+        - reproducibility/
+      generated_layers:
+        - artifacts/
+        - data/
+        - docs/
+      rules:
+        - generated_layers_are_additive_only
+        - canonical_layers_must_not_be_mutated_by_generators
+
+    determinism:
+      required_for:
+        - measurement
+        - labeling
+        - indexing
+        - comparison
+      forbidden_tools_for_determinism:
+        - generative_image_models
+        - stochastic_labeling
+
+    validation:
+      mandatory:
+        - schema_validation
+        - phase_integrity_validation
+        - reproducibility_check
+
+    authority:
+      precedence: highest
+      violation_policy: hard_fail
+
+  mvm:
+    system_name: mvm
+    description: >
+      mvm defines the minimum acceptable completeness for software produced
+      under sswg. Code or workflows below this threshold are invalid.
+
+    requirements:
+      must_include:
+        - schemas
+        - phase_definitions
+        - validation_paths
+        - logging_outputs
+      must_exhibit:
+        - deterministic_behavior
+        - reproducibility_from_clean_env
+        - explicit_configuration
+
+    exclusions:
+      not_equivalent_to:
+        - mvp
+        - prototype
+        - proof_of_concept
+
+    extension_model:
+      allowed:
+        - additive_modules
+        - stricter_validation
+        - new_phases_with_pdl
+      forbidden:
+        - weakening_constraints
+        - bypassing_validation
+        - redefining_existing_fields
+
+    enforcement:
+      failure_behavior: stop_execution
+    error_handling:
+      taxonomy:
+        - structural
+        - semantic
+        - behavioral
+        - safety
+        - operational
+      severity_tiers:
+        - critical
+        - major
+        - minor
+        - informational
+      quarantine_policy:
+        default_state: untrusted
+        promotion_requires:
+          - validation_pass
+          - evaluation_pass
+        safety_flags:
+          action: quarantine_and_escalate
+      recovery_protocol:
+        required_steps:
+          - detect
+          - classify
+          - contain
+          - diagnose
+          - remediate
+          - revalidate
+          - reevaluate
+          - decide
+          - record
+        rollback_on:
+          - critical
+          - major
+      incident_logging:
+        required_fields:
+          - workflow_id
+          - error_class
+          - severity
+          - source
+          - decision
+
+  execution_policy:
+    measurement:
+      rules:
+        - measurement_steps_must_be_deterministic
+        - measurement_outputs_must_be_reproducible
+        - measurement_keys_must_be_bijective
+
+    interpretation:
+      allowed_only_if:
+        - measurement_completed
+        - interpretation_outputs_labeled_non_deterministic
+      forbidden_if:
+        - replacing_missing_data
+        - influencing_measurement_steps
+
+    randomness:
+      allowed_when:
+        - explicitly_logged
+        - used_as_sampling_input
+      forbidden_when:
+        - used_in_identifiers
+        - used_in_measurement_outputs
+
+    tooling:
+      selection_rules:
+        - tool_must_meet_output_guarantees
+        - convenience_does_not_override_correctness
+      mismatch_policy: invalidate_tool
+
+  governance:
+    repository_role: canonical_sswg_repo
+
+    directories:
+      immutable:
+        - generator/
+        - cli/
+        - pdl/
+        - reproducibility/
+      additive_only:
+        - artifacts/
+        - data/
+        - docs/
+
+    change_control:
+      required:
+        - branch_or_fork
+        - validation_pass
+        - review
+      forbidden:
+        - direct_main_mutation
+        - artifact_rewrites
+
+    validation_gates:
+      pre_merge:
+        - schema_validation
+        - phase_validation
+        - reproducibility_validation
+
+  invariants_source: invariants.yaml
+
+  invariants:
+    - id: deterministic_measurement
+      rule: >
+        Any output used for measurement, indexing, or comparison must be
+        produced by a deterministic process.
+
+    - id: bijective_identifiers
+      rule: >
+        Identifiers used for labeling must be unique, gap-free, and reproducible.
+
+    - id: artifacts_not_canonical
+      rule: >
+        Generated artifacts must not redefine or overwrite canonical structures.
+
+    - id: validation_required
+      rule: >
+        Outputs that fail validation must not be promoted or reused.
+    - id: quarantine_on_failure
+      rule: >
+        Workflows with critical or major incidents must remain quarantined
+        until recovery steps complete and validation passes.

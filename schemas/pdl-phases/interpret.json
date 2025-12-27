@@ -1,0 +1,33 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/interpret.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: interpret",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "interpret" },
+            "type": { "const": "interpretation" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "must_reference_measured_artifacts": { "type": "boolean", "const": true },
+                "output_must_be_labeled_nondeterministic": { "type": "boolean", "const": true }
+              },
+              "required": [
+                "must_reference_measured_artifacts",
+                "output_must_be_labeled_nondeterministic"
+              ]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

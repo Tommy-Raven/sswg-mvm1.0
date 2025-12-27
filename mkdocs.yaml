@@ -94,6 +94,7 @@ nav:
       - Module Reference: dev/modules.md
       - Testing: dev/testing.md
       - CI/CD: dev/cicd.md
+      - Instruction Lifecycle: INSTRUCTION_LIFECYCLE.md
       - Versioning Rules: dev/versioning.md
 
   - Visualization:

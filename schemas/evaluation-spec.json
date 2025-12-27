@@ -1,0 +1,90 @@
+{
+  "$id": "https://schemas.sswg.local/evaluation-spec.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg evaluation spec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "anchor",
+    "eval_id",
+    "eval_version",
+    "scope",
+    "owner",
+    "success_criteria",
+    "metrics",
+    "regression_definition",
+    "rollback_plan"
+  ],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "sandbox", "canonical", "archived"]
+        }
+      }
+    },
+    "eval_id": { "type": "string" },
+    "eval_version": { "type": "string" },
+    "scope": { "type": "string" },
+    "owner": { "type": "string" },
+    "success_criteria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["qualitative", "quantitative"],
+      "properties": {
+        "qualitative": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "quantitative": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "threshold", "direction"],
+        "properties": {
+          "name": { "type": "string" },
+          "threshold": { "type": "number" },
+          "direction": { "type": "string", "enum": ["min", "max"] }
+        }
+      }
+    },
+    "regression_definition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tolerance", "description"],
+      "properties": {
+        "tolerance": { "type": "number", "minimum": 0 },
+        "description": { "type": "string" }
+      }
+    },
+    "rollback_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "steps"],
+      "properties": {
+        "artifact": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

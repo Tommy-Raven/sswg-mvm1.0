@@ -1,0 +1,33 @@
+execution_policy:
+  measurement:
+    rules:
+      - measurement_steps_must_be_deterministic
+      - measurement_outputs_must_be_reproducible
+      - measurement_keys_must_be_bijective
+
+  interpretation:
+    allowed_only_if:
+      - measurement_completed
+      - interpretation_outputs_labeled_non_deterministic
+    forbidden_if:
+      - replacing_missing_data
+      - influencing_measurement_steps
+
+  randomness:
+    allowed_when:
+      - explicitly_logged
+      - used_as_sampling_input
+    forbidden_when:
+      - used_in_identifiers
+      - used_in_measurement_outputs
+
+  tooling:
+    selection_rules:
+      - tool_must_meet_output_guarantees
+      - convenience_does_not_override_correctness
+    guarantees_ref: guarantees.yaml
+    required_output_guarantees:
+      - deterministic_output
+      - reproducible_output
+      - bijective_keys
+    mismatch_policy: invalidate_tool

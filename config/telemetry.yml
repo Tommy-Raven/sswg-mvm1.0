@@ -1,0 +1,4 @@
+# Placeholder configuration for telemetry settings.
+telemetry:
+  enabled: false
+  endpoint: ""

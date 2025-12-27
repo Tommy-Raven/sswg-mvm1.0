@@ -130,7 +130,7 @@ def validate_workflow_file(path: Path) -> ValidationSummary:
     """
     obj = _load_json(path)
     ok, errors = validate_workflow(obj)
-    error_count = len(errors or [])
+    error_count = 1 if errors else 0
     return ValidationSummary(path=path, kind="workflow", ok=ok, error_count=error_count)
 
 

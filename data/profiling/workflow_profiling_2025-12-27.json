@@ -1,0 +1,150 @@
+{
+  "anchor": {
+    "anchor_id": "performance_profiling_snapshot",
+    "anchor_version": "1.0",
+    "scope": "profiling",
+    "owner": "scripts.profile_workflows",
+    "status": "draft"
+  },
+  "timestamp_utc": "2025-12-27T09:09:12.405379+00:00",
+  "environment": {
+    "python_version": "3.11.12",
+    "platform": "Linux-6.12.13-x86_64-with-glibc2.39"
+  },
+  "workloads": [
+    {
+      "workflow_path": "data/templates/campfire_workflow.json",
+      "workflow_id": "campfire_workflow",
+      "phases": {
+        "load_workflow": {
+          "duration_sec": 0.0006994900004428928,
+          "memory_current_kib": 11.4599609375,
+          "memory_peak_kib": 16.37890625
+        },
+        "normalize_task_packaging": {
+          "duration_sec": 9.857999430096243e-06,
+          "memory_current_kib": 0.0,
+          "memory_peak_kib": 0.046875
+        },
+        "inheritance_checks": {
+          "duration_sec": 6.985999789321795e-06,
+          "memory_current_kib": 0.0,
+          "memory_peak_kib": 0.1171875
+        },
+        "schema_validation": {
+          "duration_sec": 0.07824746799997229,
+          "memory_current_kib": 627.712890625,
+          "memory_peak_kib": 855.271484375,
+          "details": {
+            "ok": false,
+            "error_count": 0,
+            "exception": "<urlopen error Tunnel connection failed: 403 Forbidden>"
+          }
+        },
+        "dependency_graph": {
+          "duration_sec": 0.0013248420000309125,
+          "memory_current_kib": 1.6171875,
+          "memory_peak_kib": 5.9765625
+        },
+        "mermaid_render": {
+          "duration_sec": 3.809500049101189e-05,
+          "memory_current_kib": 0.4560546875,
+          "memory_peak_kib": 1.4931640625,
+          "details": {
+            "mermaid_length": 418
+          }
+        },
+        "evaluation_scoring": {
+          "duration_sec": 0.0013348229995244765,
+          "memory_current_kib": 0.40625,
+          "memory_peak_kib": 16.6416015625,
+          "details": {
+            "overall_score": 0.5387210884353741
+          }
+        },
+        "meta_metrics": {
+          "duration_sec": 0.0004424460003065178,
+          "memory_current_kib": 7.64453125,
+          "memory_peak_kib": 8.8818359375
+        },
+        "export_artifacts": {
+          "duration_sec": 0.004237729000124091,
+          "memory_current_kib": 8.1025390625,
+          "memory_peak_kib": 48.4892578125
+        }
+      },
+      "totals": {
+        "duration_sec": 0.0863417370001116,
+        "peak_memory_kib": 855.271484375
+      },
+      "name": "campfire_workflow"
+    },
+    {
+      "workflow_path": "data/templates/technical_procedure_template.json",
+      "workflow_id": null,
+      "phases": {
+        "load_workflow": {
+          "duration_sec": 0.0003071179999096785,
+          "memory_current_kib": 3.1728515625,
+          "memory_peak_kib": 7.8935546875
+        },
+        "normalize_task_packaging": {
+          "duration_sec": 1.2782999874616507e-05,
+          "memory_current_kib": 0.09375,
+          "memory_peak_kib": 0.1875
+        },
+        "inheritance_checks": {
+          "duration_sec": 4.998999429517426e-06,
+          "memory_current_kib": 0.046875,
+          "memory_peak_kib": 0.1171875
+        },
+        "schema_validation": {
+          "duration_sec": 0.07811084399963875,
+          "memory_current_kib": 91.462890625,
+          "memory_peak_kib": 145.880859375,
+          "details": {
+            "ok": false,
+            "error_count": 13,
+            "exception": null
+          }
+        },
+        "dependency_graph": {
+          "duration_sec": 0.00028105300043534953,
+          "memory_current_kib": 0.2265625,
+          "memory_peak_kib": 3.53125
+        },
+        "mermaid_render": {
+          "duration_sec": 6.524999662360642e-06,
+          "memory_current_kib": 0.0234375,
+          "memory_peak_kib": 0.0546875,
+          "details": {
+            "mermaid_length": 12
+          }
+        },
+        "evaluation_scoring": {
+          "duration_sec": 0.0001921519997267751,
+          "memory_current_kib": 0.390625,
+          "memory_peak_kib": 1.587890625,
+          "details": {
+            "overall_score": 0.21685714285714286
+          }
+        },
+        "meta_metrics": {
+          "duration_sec": 0.00032097199982672464,
+          "memory_current_kib": 0.7841796875,
+          "memory_peak_kib": 1.642578125
+        },
+        "export_artifacts": {
+          "duration_sec": 0.0027081130001533893,
+          "memory_current_kib": 3.3544921875,
+          "memory_peak_kib": 24.5927734375
+        }
+      },
+      "totals": {
+        "duration_sec": 0.08194455899865716,
+        "peak_memory_kib": 145.880859375
+      },
+      "name": "technical_procedure_template"
+    }
+  ]
+}

@@ -8,6 +8,15 @@ This document provides a **high-level map** of all public interfaces.
 
 ---
 
+# Canonical Runbook
+
+**Primary entrypoint (how to run + expected outputs):**  
+../docs/RUNBOOK.md
+
+Other docs are secondary/overview and should defer to the canonical runbook above.
+
+---
+
 # 🏗 Core Architectural Layers
 
 ```

@@ -1,0 +1,96 @@
+pipeline_profile: full_9_phase
+phases:
+  - name: ingest
+    type: data
+    enabled: true
+    description: "Collect raw inputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.ingest
+    constraints:
+      no_interpretation: true
+      no_mutation_of_canonical: true
+  - name: parse
+    type: parse
+    enabled: true
+    description: "Incorrect order: parse before normalize."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.parse
+    constraints:
+      schema_binding_required: true
+      no_generation: true
+  - name: normalize
+    type: normalize
+    enabled: true
+    description: "Normalize inputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.normalize
+    constraints:
+      deterministic_required: true
+      alignment_rules_required: true
+  - name: analyze
+    type: analysis
+    enabled: true
+    description: "Analyze inputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.analyze
+    constraints:
+      deterministic_required: true
+      bijective_ids_required: true
+      no_generative_tools_for_measurement: true
+  - name: generate
+    type: generation
+    enabled: true
+    description: "Generate outputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.generate
+    constraints:
+      outputs_must_be_declarative: true
+      no_measurement_keys_generated_stochastically: true
+  - name: validate
+    type: validation
+    enabled: true
+    description: "Validate outputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.validate
+    constraints:
+      schema_validation_required: true
+      invariants_required: true
+      bijectivity_check_required: true
+  - name: compare
+    type: comparison
+    enabled: true
+    description: "Compare outputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.compare
+    constraints:
+      deterministic_required: true
+      overlap_metrics_allowed:
+        - iou
+  - name: interpret
+    type: interpretation
+    enabled: true
+    description: "Interpret outputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.interpret
+    constraints:
+      must_reference_measured_artifacts: true
+      output_must_be_labeled_nondeterministic: true
+  - name: log
+    type: logging
+    enabled: true
+    description: "Log outputs."
+    inputs: []
+    outputs: []
+    handler: pdl.handlers.log
+    constraints:
+      run_id_required: true
+      inputs_hash_required: true
+      phase_status_required: true

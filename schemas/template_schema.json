@@ -5,6 +5,14 @@
   "type": "object",
   "required": ["template_id", "title", "description", "phases", "metadata"],
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional JSON Schema identifier for the template payload."
+    },
+    "$id": {
+      "type": "string",
+      "description": "Optional unique identifier for the template payload."
+    },
     "template_id": {
       "type": "string",
       "description": "Slug-like identifier used to reference this template (e.g., 'meta_reflection', 'training_curriculum').",

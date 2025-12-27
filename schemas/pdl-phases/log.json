@@ -1,0 +1,35 @@
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/log.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: log",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "log" },
+            "type": { "const": "logging" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "run_id_required": { "type": "boolean", "const": true },
+                "inputs_hash_required": { "type": "boolean", "const": true },
+                "phase_status_required": { "type": "boolean", "const": true }
+              },
+              "required": [
+                "run_id_required",
+                "inputs_hash_required",
+                "phase_status_required"
+              ]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

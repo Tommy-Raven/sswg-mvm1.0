@@ -95,6 +95,23 @@ This ties into `generator/history.py` for persistent lineage.
 
 ---
 
+### 6. `recursion_manager.py`
+
+**Role:** Enforce runtime guardrails for recursive refinement.
+
+Responsibilities:
+
+- Track depth, child counts, and cost budgets per recursion root.
+- Require explicit termination conditions for every recursive call.
+- Trigger external checkpoints as limits approach and halt on denial.
+- Emit immutable audit snapshots (depth, parent id, budget remaining,
+  termination condition, timestamp) for post-mortems.
+
+Use `RecursionManager.prepare_call(...)` before spawning new children to
+receive a `RecursionSnapshot` and ensure hard-stop enforcement.
+
+---
+
 ## MVM Philosophy for Recursion
 
 - **Safety first:** recursion should not infinitely loop or mutate in
@@ -103,3 +120,28 @@ This ties into `generator/history.py` for persistent lineage.
   parent and diff-able.
 - **Pluggability:** actual generative “brain” can be swapped in later
   (LLMs, heuristic rules, etc.), but the infrastructure remains stable.
+
+## Formal Safety Constraints
+
+To prevent runaway recursion, enforce the following guardrails at every
+call site and within `recursion_manager.py`:
+
+- **Depth ceilings:** hard-stop after a fixed recursion depth (e.g.,
+  `max_depth=3`) or total generated children per root. Attempting to
+  exceed the ceiling must raise a blocking error, not a warning.
+- **Cost/complexity budgets:** track cumulative token/compute cost per
+  recursion tree and halt once a configured budget is exhausted. Apply a
+  complexity penalty (score decay) to each additional depth level to
+  discourage overexpansion when selecting variants to keep.
+- **External checkpoints:** require explicit approval from an external
+  controller (human or orchestration layer) before spawning a new
+  generation when thresholds are approached (e.g., within 80% of depth
+  or cost limits). Checkpoints must log the current lineage snapshot and
+  receive an explicit "continue" signal.
+- **Termination proofs:** every recursive call must register a
+  termination condition (depth reached, cost ceiling, or quality
+  plateau) before execution. Calls lacking a verifiable termination
+  criterion are rejected.
+- **Audit trails:** record per-call metadata (depth, parent id, budget
+  remaining, chosen termination condition). Logs must be immutable for
+  the recursion window to enable post-mortem analysis and rollback.

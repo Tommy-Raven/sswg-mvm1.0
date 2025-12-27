@@ -71,7 +71,8 @@ def run_regression_suite(base_dir: Path = DEFAULT_TEST_DIR) -> Tuple[int, int]:
             print(f"  ✓ {wf_id} ({path})")
             passed += 1
         else:
-            print(f"  ✗ {wf_id} ({path}) — {len(errors or [])} schema issue(s)")
+            error_count = 1 if errors else 0
+            print(f"  ✗ {wf_id} ({path}) — {error_count} schema issue(s)")
             failed += 1
 
     print(

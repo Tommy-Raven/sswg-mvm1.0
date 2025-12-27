@@ -1,0 +1,104 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Tommy-Raven/SSWG-mvm1.0/main/schemas/template_schema.json",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/data/templates/technical_procedure_template.json",
+  "template_id": "technical_procedure",
+  "title": "Technical Procedure Workflow Blueprint",
+  "description": "Outlines a process for designing, verifying, and documenting a reproducible technical operation or engineering process.",
+  "phases": [
+    {
+      "id": "P1",
+      "title": "Specification and Scope Definition",
+      "tasks": [
+        "Clarify operational objectives and constraints",
+        "Gather system requirements and environmental parameters",
+        "Determine necessary tools, materials, and personnel"
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Procedure Drafting and Sequencing",
+      "tasks": [
+        "Draft step-by-step operational instructions",
+        "Sequence dependencies logically and ensure safety compliance",
+        "Include fallback procedures for potential failure states"
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Testing, Validation, and Documentation",
+      "tasks": [
+        "Run pilot tests and record observations",
+        "Validate each step against technical specifications",
+        "Finalize procedural document and archive results"
+      ]
+    }
+  ],
+  "metadata": {
+    "category": "Engineering",
+    "author": "Grimoire v4.5",
+    "version": "1.0"
+  },
+  "dependency_graph": {
+    "nodes": [],
+    "edges": []
+  },
+  "dependency_index": {
+    "upstream": {},
+    "downstream": {}
+  },
+  "evaluation": {
+    "quality": {
+      "overall_score": 0.21685714285714286,
+      "metrics": {
+        "clarity": 0.0,
+        "coverage": 0.0,
+        "coherence": 1.0,
+        "completeness": 0.5,
+        "intent_alignment": 0.0,
+        "specificity": 0.018,
+        "usability": 0.0
+      }
+    },
+    "meta_metrics": {
+      "timestamp": "2025-12-27T09:09:12.579353+00:00",
+      "scores": {
+        "clarity": 0.0,
+        "coverage": 0.0,
+        "coherence": 1.0,
+        "completeness": 0.5,
+        "intent_alignment": 0.0,
+        "specificity": 0.018,
+        "usability": 0.0
+      },
+      "overall_score": 0.21685714285714286,
+      "baseline": {
+        "status": "missing",
+        "overall_score": null,
+        "scores": null
+      },
+      "deltas": {
+        "overall_score": null,
+        "metrics": {}
+      },
+      "thresholds": {
+        "promotion_threshold": 0.02,
+        "regression_guard": -0.05,
+        "guard_metrics": [
+          "clarity",
+          "coherence",
+          "completeness",
+          "intent_alignment",
+          "usability"
+        ]
+      },
+      "decision": {
+        "promotion_eligible": false,
+        "regression_guard_passed": true
+      },
+      "evidence_notes": [
+        "Core metrics computed on the current workflow snapshot.",
+        "Baseline compared against latest stored workflow version."
+      ]
+    }
+  }
+}

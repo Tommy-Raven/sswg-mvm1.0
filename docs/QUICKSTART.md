@@ -10,6 +10,8 @@ This Quickstart is intentionally minimal: it gets you from clone â†’ first 
 
 ## ðŸš€ Getting Started
 
+**Canonical run guide:** [docs/RUNBOOK.md](RUNBOOK.md)
+
 ### 1. Clone the Canonical Repository
 
 ```bash
@@ -100,7 +102,9 @@ This document defines:
 - recursion and feedback loops,
 - evaluation metrics,
 - demo pipeline structure,
-- and governance guarantees.
+- and governance invariants.
+
+Canonical invariants (including schema validation invariants) are defined in [invariants.yaml](../invariants.yaml) and detailed in [root_contract.yaml](../root_contract.yaml).
 
 ---
 

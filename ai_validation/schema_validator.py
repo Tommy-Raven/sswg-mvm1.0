@@ -68,17 +68,22 @@ def _get_validator(schema_name: str) -> Draft202012Validator:
 
 
 def validate_workflow(
-    workflow_obj: Dict[str, Any],
+    workflow_obj: Any,
     schema_name: str = "workflow_schema.json",
-) -> Tuple[bool, Optional[List[ValidationError]]]:
+) -> Tuple[bool, Optional[str]]:
     """
     Validate a workflow dict against the workflow schema.
 
     Returns:
         (ok, errors)
         ok: bool — True if validation passed (no errors, or schema missing)
-        errors: list[ValidationError] or None if no schema / no errors
+        errors: formatted error message or None if no schema / no errors
     """
+    if hasattr(workflow_obj, "to_dict"):
+        workflow_obj = workflow_obj.to_dict()
+    if not isinstance(workflow_obj, dict):
+        raise TypeError("workflow_obj must be a dict or support to_dict()")
+
     try:
         validator = _get_validator(schema_name)
     except FileNotFoundError as e:
@@ -90,7 +95,8 @@ def validate_workflow(
     if errors:
         for e in errors:
             logger.warning("Schema validation error: %s at %s", e.message, list(e.path))
-        return False, errors
+        message = "; ".join(f"{e.message} at {list(e.path)}" for e in errors)
+        return False, message
 
     logger.info(
         "Schema validation passed for workflow_id=%s",

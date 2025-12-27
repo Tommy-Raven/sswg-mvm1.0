@@ -99,12 +99,3 @@ def import_markdown(md_path: str, out_dir: str = "./data/workflows") -> str:
     print(f"🪶 Imported Markdown workflow saved as JSON → {out_path}")
     return out_path
 
-
-# ---------------------- Example Execution ---------------------- #
-
-if __name__ == "__main__":
-    demo_md = "./build/workflow_demo.md"
-    if os.path.exists(demo_md):
-        import_markdown(demo_md)
-    else:
-        print("No demo Markdown file found. Run export_manager first.")

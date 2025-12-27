@@ -1,0 +1,20 @@
+{
+  "anchor": {
+    "anchor_id": "experiment_scope",
+    "anchor_version": "1.0.0",
+    "scope": "experiment",
+    "owner": "docs.experiments",
+    "status": "draft"
+  },
+  "exp_id": "example_exp",
+  "exp_version": "1.0.0",
+  "anchor_family": "sswg v1",
+  "owner": "experiments",
+  "scope": ["modules/", "schemas/"],
+  "exit_criteria": [
+    "Evaluation checkpoint passes against the baseline.",
+    "Provenance manifest is complete and anchored.",
+    "Reproducibility replay gate passes in clean environment."
+  ],
+  "graduation_ready": false
+}

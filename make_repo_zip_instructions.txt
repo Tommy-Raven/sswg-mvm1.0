@@ -1,0 +1,1 @@
+Placeholder: run the approved packaging workflow to create a repository zip. This file will be replaced with the canonical instructions once finalized.

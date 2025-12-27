@@ -1,0 +1,12 @@
+{
+  "anchor": {
+    "anchor_id": "canonical_artifact",
+    "anchor_version": "1.0.0",
+    "scope": "artifact",
+    "owner": "tests.fixture",
+    "status": "canonical"
+  },
+  "payload": {
+    "field": "value"
+  }
+}

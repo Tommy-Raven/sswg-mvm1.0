@@ -1,0 +1,44 @@
+{
+  "$id": "https://schemas.sswg.local/rollback-plan.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg rollback plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["anchor", "plan_id", "plan_version", "target_schema_ref", "rollback_overlay", "operations"],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "sandbox", "canonical", "archived"]
+        }
+      }
+    },
+    "plan_id": { "type": "string" },
+    "plan_version": { "type": "string" },
+    "target_schema_ref": { "type": "string" },
+    "rollback_overlay": { "type": "string" },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["op", "path"],
+        "properties": {
+          "op": { "type": "string", "enum": ["add", "override", "deprecate"] },
+          "path": { "type": "string" },
+          "value": {}
+        }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}

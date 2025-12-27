@@ -1,0 +1,6 @@
+{
+  "normalize": {"payload": "normalized"},
+  "analyze": {"metrics": {"id": "metric-1", "value": 1}},
+  "validate": {"status": "ok"},
+  "compare": {"diff": "none"}
+}

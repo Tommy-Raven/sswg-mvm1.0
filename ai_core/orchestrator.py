@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 ai_core/orchestrator.py — Core workflow orchestrator for SSWG MVM.
 
@@ -25,11 +26,21 @@ where `workflow` is an ai_core.Workflow instance.
 
 from __future__ import annotations
 
+import json
 import logging
-from typing import Iterable, List, Optional
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 from ai_monitoring.structured_logger import log_event
-from ai_validation import validate_workflow
+from ai_validation import (
+    apply_incident_metadata,
+    build_incident,
+    classify_exception,
+    classify_validation_failure,
+    recovery_decision,
+    validate_workflow,
+)
 
 from .module_registry import ModuleRegistry
 from .phase_controller import PhaseController
@@ -72,6 +83,22 @@ except Exception:  # pragma: no cover - defensive stub
             pass
 
 
+@dataclass(frozen=True)
+class RunContext:
+    workflow_source: Union[Workflow, Dict[str, Any], Path]
+    phases: Optional[Iterable[str]] = None
+    validate_after: bool = True
+    runner: Optional[Callable[..., Any]] = None
+    runner_kwargs: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class RunResult:
+    workflow: Workflow
+    workflow_data: Optional[Dict[str, Any]]
+    phase_status: Dict[str, Dict[str, object]]
+
+
 class Orchestrator:
     """
     High-level conductor for multi-phase workflow execution.
@@ -100,13 +127,63 @@ class Orchestrator:
         self.memory = MemoryStore()
         self.dashboard = CLIDashboard()
         self.telemetry = TelemetryLogger()
+        self.last_phase_status: Dict[str, Dict[str, object]] = {}
+        self._workflow_counter = 0
+
+    def _load_workflow_source(
+        self,
+        workflow_source: Union[Workflow, Dict[str, Any], Path],
+    ) -> Workflow:
+        if isinstance(workflow_source, Workflow):
+            return workflow_source
+        if isinstance(workflow_source, Path):
+            if not workflow_source.exists():
+                raise FileNotFoundError(
+                    f"Workflow JSON not found: {workflow_source}"
+                )
+            data = json.loads(workflow_source.read_text(encoding="utf-8"))
+            return Workflow(data)
+        return Workflow(workflow_source)
+
+    def run_mvm(self, context: RunContext) -> RunResult:
+        if context.runner is not None:
+            result = context.runner(
+                context.workflow_source, **context.runner_kwargs
+            )
+            if isinstance(result, Workflow):
+                workflow_obj = result
+                workflow_data = result.to_dict()
+            elif isinstance(result, dict):
+                workflow_data = result
+                workflow_obj = Workflow(result)
+            else:
+                workflow_data = None
+                workflow_obj = self._load_workflow_source(context.workflow_source)
+            return RunResult(
+                workflow=workflow_obj,
+                workflow_data=workflow_data,
+                phase_status=dict(self.last_phase_status),
+            )
+
+        workflow = self._load_workflow_source(context.workflow_source)
+        workflow = self.run(
+            workflow,
+            phases=context.phases,
+            validate_after=context.validate_after,
+        )
+        workflow_data = workflow.to_dict()
+        return RunResult(
+            workflow=workflow,
+            workflow_data=workflow_data,
+            phase_status=dict(self.last_phase_status),
+        )
 
     # ------------------------------------------------------------------ #
     # Public API
     # ------------------------------------------------------------------ #
     def run(
         self,
-        workflow: Workflow,
+        workflow: Workflow | dict[str, Any],
         phases: Optional[Iterable[str]] = None,
         validate_after: bool = True,
     ) -> Workflow:
@@ -123,10 +200,20 @@ class Orchestrator:
             The same Workflow instance, potentially mutated with outputs,
             evaluation results, etc.
         """
+        if isinstance(workflow, dict):
+            if not workflow.get("workflow_id") and not workflow.get("id"):
+                self._workflow_counter += 1
+                workflow = {
+                    **workflow,
+                    "workflow_id": f"workflow_{self._workflow_counter}",
+                }
+            workflow = Workflow(workflow)
+
         wf_id = workflow.id
         phases_to_run: List[str] = list(
             phases or workflow.get_default_phases()
         )
+        phase_status: dict[str, dict[str, object]] = {}
 
         logger.info("Starting orchestration for workflow %s", wf_id)
         log_event(
@@ -147,26 +234,54 @@ class Orchestrator:
             )
 
             success = True
+            failure_details = None
             try:
                 self.phase_controller.run_phase(workflow, phase_id)
             except Exception as e:
                 success = False
+                failure_details = {
+                    "Type": "deterministic_failure",
+                    "message": str(e),
+                }
+                signal = classify_exception(e, source="phase_execution")
+                decision = recovery_decision(signal.error_class, signal.severity)
+                incident = build_incident(wf_id, signal)
+                apply_incident_metadata(workflow.metadata, incident, decision)
                 logger.error("Phase %s failed: %s", phase_id, e)
+                phase_status[phase_id] = {
+                    "status": "failed",
+                    "failure": failure_details,
+                }
                 log_event(
                     "orchestrator.phase.error",
-                    {"workflow_id": wf_id, "phase": phase_id, "error": str(e)},
+                    {
+                        "workflow_id": wf_id,
+                        "phase": phase_id,
+                        "error": str(e),
+                        "phase_status": {
+                            phase_id: phase_status[phase_id]
+                        },
+                    },
                 )
                 self.telemetry.record(
                     "phase_error",
                     {"workflow_id": wf_id, "phase": phase_id, "error": str(e)},
                 )
 
+            if success:
+                phase_status[phase_id] = {"status": "success"}
+
             self.dashboard.record_phase(phase_id, success=success)
             self.dashboard.record_cycle(success=success)
 
             log_event(
                 "orchestrator.phase.completed",
-                {"workflow_id": wf_id, "phase": phase_id, "success": success},
+                {
+                    "workflow_id": wf_id,
+                    "phase": phase_id,
+                    "success": success,
+                    "phase_status": dict(phase_status),
+                },
             )
             self.telemetry.record(
                 "phase_end",
@@ -183,20 +298,26 @@ class Orchestrator:
             valid, errors = validate_workflow(wf_dict)
             if not valid:
                 logger.error(
-                    "Schema validation failed for workflow %s (%d issue(s)).",
+                    "Schema validation failed for workflow %s: %s",
                     wf_id,
-                    len(errors or []),
+                    errors or "Unknown schema error.",
                 )
+                error_count = 1 if errors else 0
+                signal = classify_validation_failure(error_count)
+                decision = recovery_decision(signal.error_class, signal.severity)
+                incident = build_incident(wf_id, signal, remediation="block_promotion")
+                apply_incident_metadata(workflow.metadata, incident, decision)
                 log_event(
                     "orchestrator.validation_failed",
                     {
                         "workflow_id": wf_id,
-                        "error_count": len(errors or []),
+                        "error_count": error_count,
+                        "error": errors,
                     },
                 )
                 self.telemetry.record(
                     "validation_error",
-                    {"workflow_id": wf_id, "errors": [str(e) for e in errors or []]},
+                    {"workflow_id": wf_id, "errors": errors},
                 )
                 # MVM decision: raise, but this could be downgraded later.
                 raise ValueError(f"Invalid workflow schema for {wf_id}")
@@ -216,12 +337,18 @@ class Orchestrator:
 
         log_event(
             "orchestrator.run.completed",
-            {"workflow_id": wf_id, "phases": phases_to_run},
+            {
+                "workflow_id": wf_id,
+                "phases": phases_to_run,
+                "phase_status": dict(phase_status),
+            },
         )
         self.telemetry.record(
             "workflow_complete",
             {"workflow_id": wf_id, "phases": phases_to_run},
         )
+
+        self.last_phase_status = dict(phase_status)
 
         logger.info("Workflow orchestration complete for %s", wf_id)
         return workflow

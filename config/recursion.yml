@@ -1,0 +1,4 @@
+# Placeholder configuration for recursion settings.
+recursion:
+  enabled: false
+  max_depth: 0

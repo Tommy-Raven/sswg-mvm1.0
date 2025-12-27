@@ -1,0 +1,8 @@
+{
+  "anchor_id": "profiling_artifact",
+  "anchor_version": "1.0",
+  "scope": "profiling",
+  "owner": "scripts.profile_workflows",
+  "status": "draft",
+  "artifact_path": "data/profiling/technical_procedure_template/unnamed_workflow.json"
+}

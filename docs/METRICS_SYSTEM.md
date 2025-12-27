@@ -5,6 +5,12 @@ Author: Tommy Raven
 Licensing: Raven Recordings ©️ see: *LICENSE.md*
 (Document) Purpose: Describe the metrics surfaces that keep the SSWG-MVM accountable and observable. Highlight how evaluation, memory, and recursion layers report progress while maintaining the SSWG topic base multiplier through refinements. Point readers to the root [README](../README.md) and [docs/README.md](./README.md) for related workflows and entrypoints.
 
+anchor_id: metrics_system_docs
+anchor_version: v1
+scope: docs
+owner: metrics-team
+status: draft
+
 # Metrics System — SSWG-MVM
 
 ## Overview
@@ -73,6 +79,23 @@ results = aggregate_metrics(workflow_id="WF-20251130-001")
 from ai_memory.metrics import record_metrics
 record_metrics(workflow_id="WF-20251130-001", metrics=results)
 ```
+
+---
+
+## Calibration Benchmarks
+
+Calibration benchmarks define the expected metric ranges that gate promotion decisions. Operators should review the dataset descriptions, expected ranges, and acceptance criteria in [Performance Benchmarks](./PERFORMANCE_BENCHMARKS.md#calibration-benchmarks) before running calibrations.
+
+### How to run calibration
+
+1. Run the metric evaluators across the calibration datasets described in the benchmark table.
+2. Record scores in `ai_memory/benchmark_tracker.py` using the benchmark names (for example, `calibration.clarity.core_v1`).
+3. Compare median and p10 results against the acceptance criteria. If any benchmark fails, investigate metric drift before promotion.
+
+### Interpreting results
+
+- Scores inside the expected range with acceptance criteria met indicate the metric is calibrated.
+- Scores outside the expected range, or failing median/p10 thresholds, require review of the metric implementation and dataset composition.
 
 ---
 

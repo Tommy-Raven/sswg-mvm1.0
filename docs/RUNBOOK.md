@@ -60,6 +60,7 @@ python generator/main.py \
 - [ ] `data/outputs/workflow_001.md`
 
 ### Benchmark / profiling artifacts
+- [ ] `artifacts/performance/benchmarks_20251227_090721.json` (benchmark results)
 - [ ] `data/profiling/workflow_profiling_2025-12-27.json` (profiling summary)
 - [ ] `data/profiling/campfire_workflow/` (profiling run directory)
 - [ ] `data/profiling/technical_procedure_template/` (profiling run directory)

@@ -35,6 +35,28 @@ These calibration benchmarks establish expected metric ranges for quality scorin
 - Evaluate distributions, not just point estimates. Use median and p10 to reduce sensitivity to outliers.
 - Any benchmark falling below the acceptance criteria requires investigation before promotion.
 - Expected ranges are guardrails, not deterministic requirements; they help detect metric drift.
+
+## Reproduce this run
+
+Use the same benchmark command used by local CI:
+
+```bash
+python scripts/local_ci.py bench
+```
+
+Or run the benchmark tracker directly:
+
+```bash
+python -m ai_memory.benchmark_tracker
+```
+
+For calibration guidance and how to interpret expected ranges, see
+[docs/METRICS_SYSTEM.md](METRICS_SYSTEM.md). Benchmark definitions and expected
+ranges live in [`ai_memory/benchmark_tracker.py`](../ai_memory/benchmark_tracker.py).
+
+Environment references (hardware + software baselines, container specs) live
+under [`reproducibility/`](../reproducibility/) to align the run context.
+
 ## ✅ Latest Measured Results (2025-12-27T09:07:21Z)
 
 **Raw results:** [`artifacts/performance/benchmarks_20251227_090721.json`](../artifacts/performance/benchmarks_20251227_090721.json)

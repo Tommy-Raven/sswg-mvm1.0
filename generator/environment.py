@@ -1,28 +1,32 @@
+"""Environment lock loading and drift detection utilities."""
+
 from __future__ import annotations
 
 import json
 import platform
 import subprocess
 import sys
+from importlib import metadata
 from pathlib import Path
 from typing import Any, Dict, List
-
-from importlib import metadata
 
 from generator.failure_emitter import FailureLabel
 from generator.hashing import hash_data
 
 
 def load_environment_lock(lock_path: Path) -> Dict[str, Any]:
+    """Load the environment lock file."""
     return json.loads(lock_path.read_text(encoding="utf-8"))
 
 
 def compute_lock_hash(lock_path: Path) -> str:
+    """Compute a content hash for the environment lock."""
     payload = load_environment_lock(lock_path)
     return hash_data(payload)
 
 
 def get_git_commit() -> str:
+    """Return the current git commit SHA or 'unknown' if unavailable."""
     result = subprocess.run(
         ["git", "rev-parse", "HEAD"],
         check=False,
@@ -34,7 +38,10 @@ def get_git_commit() -> str:
     return result.stdout.strip() or "unknown"
 
 
-def environment_fingerprint(lock_path: Path, container_tag: str | None = None) -> Dict[str, Any]:
+def environment_fingerprint(
+    lock_path: Path, container_tag: str | None = None
+) -> Dict[str, Any]:
+    """Build a deterministic environment fingerprint."""
     return {
         "os": platform.system(),
         "arch": platform.machine(),
@@ -46,6 +53,7 @@ def environment_fingerprint(lock_path: Path, container_tag: str | None = None) -
 
 
 def check_environment_drift(lock_path: Path) -> FailureLabel | None:
+    """Return a failure label when environment drift is detected."""
     lock = load_environment_lock(lock_path)
     runtime = lock.get("runtime", {})
     expected_python = runtime.get("python_version")

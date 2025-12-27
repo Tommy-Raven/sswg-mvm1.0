@@ -1,3 +1,5 @@
+"""Failure label creation and persistence helpers."""
+
 from __future__ import annotations
 
 import json
@@ -19,13 +21,16 @@ ALLOWED_FAILURE_TYPES = {
 
 
 @dataclass(frozen=True)
-class FailureLabel:
+class FailureLabel:  # pylint: disable=invalid-name
+    """Structured failure label payload."""
+
     Type: str
     message: str
     phase_id: str
     evidence: Optional[Dict[str, Any]] = None
 
     def as_dict(self) -> Dict[str, Any]:
+        """Return the label as a serializable dictionary."""
         payload: Dict[str, Any] = {
             "Type": self.Type,
             "message": self.message,
@@ -37,6 +42,7 @@ class FailureLabel:
 
 
 def validate_failure_label(label: FailureLabel) -> None:
+    """Validate the failure label contents against allowed types."""
     if label.Type not in ALLOWED_FAILURE_TYPES:
         raise ValueError(f"Unknown failure Type: {label.Type}")
     if not label.message:
@@ -45,8 +51,11 @@ def validate_failure_label(label: FailureLabel) -> None:
         raise ValueError("Failure label phase_id must be non-empty")
 
 
-class FailureEmitter:
+class FailureEmitter:  # pylint: disable=too-few-public-methods
+    """Emit failure label payloads to disk."""
+
     def __init__(self, output_dir: Path) -> None:
+        """Initialize the emitter output directory."""
         self.output_dir = output_dir
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -57,6 +66,7 @@ class FailureEmitter:
         run_id: str,
         context: Optional[Dict[str, Any]] = None,
     ) -> Path:
+        """Write a failure label payload to disk and return its path."""
         validate_failure_label(label)
         sanitized_label = FailureLabel(
             Type=label.Type,

@@ -1,8 +1,10 @@
+"""Phase IO manifest utilities."""
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 import yaml
 
@@ -10,6 +12,7 @@ from generator.failure_emitter import FailureLabel
 
 
 def load_pdl(path: Path) -> Dict[str, Any]:
+    """Load a PDL YAML file into a mapping."""
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError("PDL YAML must parse to a mapping object")
@@ -20,6 +23,7 @@ def build_phase_io_manifest(
     pdl_obj: Dict[str, Any],
     observed: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
+    """Build a manifest of declared and observed IO for each phase."""
     observed = observed or {}
     phases = []
     for phase in pdl_obj.get("phases", []):
@@ -47,7 +51,10 @@ def build_phase_io_manifest(
     }
 
 
-def detect_phase_collapse(manifest: Dict[str, Any], pdl_obj: Dict[str, Any]) -> Optional[FailureLabel]:
+def detect_phase_collapse(
+    manifest: Dict[str, Any], pdl_obj: Dict[str, Any]
+) -> Optional[FailureLabel]:
+    """Detect outputs or actions that violate phase boundaries."""
     constraints_by_phase = {
         phase["name"]: phase.get("constraints", {}) for phase in pdl_obj.get("phases", [])
     }
@@ -64,7 +71,9 @@ def detect_phase_collapse(manifest: Dict[str, Any], pdl_obj: Dict[str, Any]) -> 
                 evidence={"undeclared_outputs": undeclared_outputs},
             )
         constraints = constraints_by_phase.get(phase_id, {})
-        if constraints.get("no_generation") and "generate" in phase_entry.get("observed_actions", []):
+        if constraints.get("no_generation") and "generate" in phase_entry.get(
+            "observed_actions", []
+        ):
             return FailureLabel(
                 Type="schema_failure",
                 message="Phase performed disallowed generation action",
@@ -75,5 +84,6 @@ def detect_phase_collapse(manifest: Dict[str, Any], pdl_obj: Dict[str, Any]) -> 
 
 
 def write_manifest(path: Path, manifest: Dict[str, Any]) -> None:
+    """Write a phase IO manifest to disk."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")

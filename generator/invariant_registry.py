@@ -1,3 +1,5 @@
+"""Invariant registry loading and coverage utilities."""
+
 from __future__ import annotations
 
 import json
@@ -22,6 +24,7 @@ CANONICAL_PHASES = {
 
 
 def load_invariants_yaml(path: Path) -> List[Dict[str, Any]]:
+    """Load invariants from YAML."""
     payload = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("invariants.yaml must contain a mapping")
@@ -32,6 +35,7 @@ def load_invariants_yaml(path: Path) -> List[Dict[str, Any]]:
 
 
 def load_registry(path: Path) -> Dict[str, Any]:
+    """Load invariant registry JSON from disk."""
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("invariants registry must be a mapping")
@@ -39,6 +43,8 @@ def load_registry(path: Path) -> Dict[str, Any]:
 
 
 def validate_registry(payload: Dict[str, Any]) -> List[str]:
+    """Validate invariant registry structure."""
+    # pylint: disable=too-many-branches
     errors: List[str] = []
     anchor = payload.get("anchor")
     if not isinstance(anchor, dict):
@@ -92,6 +98,7 @@ def validate_registry(payload: Dict[str, Any]) -> List[str]:
 
 
 def resolve_enforcement_paths(targets: Iterable[str], repo_root: Path) -> List[Dict[str, Any]]:
+    """Resolve enforcement targets to filesystem paths."""
     resolved: List[Dict[str, Any]] = []
     for target in targets:
         if not isinstance(target, str) or not target:
@@ -108,6 +115,7 @@ def resolve_enforcement_paths(targets: Iterable[str], repo_root: Path) -> List[D
 
 
 def resolve_documentation_paths(targets: Iterable[str], repo_root: Path) -> List[Dict[str, Any]]:
+    """Resolve documentation targets to filesystem paths."""
     resolved: List[Dict[str, Any]] = []
     for target in targets:
         if not isinstance(target, str) or not target:
@@ -126,6 +134,8 @@ def build_coverage_report(
     registry_payload: Dict[str, Any],
     repo_root: Path,
 ) -> Dict[str, Any]:
+    """Build an invariant coverage report from registry metadata."""
+    # pylint: disable=too-many-locals
     declared_ids = [item.get("id") for item in declared_invariants if item.get("id")]
     registry_invariants = registry_payload.get("invariants", [])
     registry_ids = [item.get("id") for item in registry_invariants if item.get("id")]

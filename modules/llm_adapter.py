@@ -51,6 +51,7 @@ class RefinementContract:
     )
 
     def validate(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate payload against required fields and type rules."""
         for field_name in self.required_fields:
             if field_name not in payload:
                 raise ValueError(f"Missing required field: {field_name}")

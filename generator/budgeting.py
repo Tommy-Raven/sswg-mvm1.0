@@ -1,23 +1,28 @@
+"""Budget evaluation utilities for runtime and artifacts."""
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List
 
 from generator.hashing import hash_data
 
 
 def load_budget_spec(path: Path) -> Dict[str, Any]:
+    """Load a budget specification from JSON."""
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _size_bytes(path: Path) -> int | None:
+    """Return size of the file in bytes, or None if missing."""
     if not path.exists():
         return None
     return path.stat().st_size
 
 
 def collect_artifact_sizes(artifact_budgets: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Collect artifact sizes for budget evaluation."""
     results: List[Dict[str, Any]] = []
     for budget in artifact_budgets:
         paths = [Path(path) for path in budget.get("paths", [])]
@@ -47,6 +52,8 @@ def evaluate_budgets(
     phase_durations: Dict[str, float],
     artifact_sizes: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
+    # pylint: disable=too-many-locals
+    """Evaluate phase duration and artifact size budgets."""
     phase_results = []
     for phase, limits in budget_spec.get("phase_budgets", {}).items():
         max_duration = float(limits.get("max_duration_sec", 0))

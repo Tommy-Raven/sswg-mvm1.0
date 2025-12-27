@@ -1,13 +1,16 @@
+"""Autopsy report utilities for failure diagnostics."""
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, List
 
 from generator.failure_emitter import FailureLabel
 
 
 def _extract_invariant_ids(evidence: Dict[str, Any]) -> List[str]:
+    """Extract invariant identifiers from failure evidence."""
     invariant_ids: List[str] = []
     if not evidence:
         return invariant_ids
@@ -26,6 +29,7 @@ def build_autopsy_report(
     failure: FailureLabel,
     invariants_registry: Dict[str, Any],
 ) -> Dict[str, Any]:
+    """Build an autopsy report payload from a failure label."""
     registry_invariants = {
         invariant.get("id"): invariant
         for invariant in invariants_registry.get("invariants", [])
@@ -57,5 +61,6 @@ def build_autopsy_report(
 
 
 def write_autopsy_report(path: Path, report: Dict[str, Any]) -> None:
+    """Write an autopsy report to disk."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2), encoding="utf-8")

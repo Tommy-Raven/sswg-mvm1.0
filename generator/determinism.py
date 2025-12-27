@@ -1,3 +1,5 @@
+"""Determinism checks and reporting utilities."""
+
 from __future__ import annotations
 
 import json
@@ -12,6 +14,8 @@ from generator.hashing import hash_data
 
 @dataclass(frozen=True)
 class DeterminismReport:
+    """Determinism replay results for required phases."""
+
     run_id: str
     inputs_hash: str
     phase_hashes: Dict[str, str]
@@ -20,6 +24,7 @@ class DeterminismReport:
     diff_summary: Optional[Dict[str, Any]] = None
 
     def as_dict(self) -> Dict[str, Any]:
+        """Return the report as a serializable dictionary."""
         payload = {
             "anchor": {
                 "anchor_id": "determinism_report",
@@ -39,6 +44,7 @@ class DeterminismReport:
 
 
 def _hash_phases(phase_outputs: Dict[str, Any]) -> Dict[str, str]:
+    """Hash each phase output payload."""
     return {phase: hash_data(output) for phase, output in phase_outputs.items()}
 
 
@@ -46,9 +52,14 @@ def _inject_nondeterminism(
     phase_outputs: Dict[str, Any],
     target_phase: str,
 ) -> Dict[str, Any]:
+    """Inject a nonce into a target phase to simulate nondeterminism."""
     mutated = dict(phase_outputs)
     if target_phase in mutated:
-        payload = dict(mutated[target_phase]) if isinstance(mutated[target_phase], dict) else {}
+        payload = (
+            dict(mutated[target_phase])
+            if isinstance(mutated[target_phase], dict)
+            else {}
+        )
         payload["nondeterministic_nonce"] = random.randint(0, 1000000)
         mutated[target_phase] = payload
     return mutated
@@ -61,6 +72,7 @@ def replay_determinism_check(
     required_phases: Iterable[str],
     inject_phase: Optional[str] = None,
 ) -> tuple[Optional[FailureLabel], DeterminismReport]:
+    """Replay deterministic phases and return a failure label on mismatch."""
     required_phases_set = set(required_phases)
     first_outputs = {phase: phase_outputs[phase] for phase in required_phases_set}
     second_outputs = first_outputs
@@ -68,7 +80,11 @@ def replay_determinism_check(
         second_outputs = _inject_nondeterminism(first_outputs, inject_phase)
     first_hashes = _hash_phases(first_outputs)
     second_hashes = _hash_phases(second_outputs)
-    mismatch = [phase for phase in required_phases_set if first_hashes[phase] != second_hashes[phase]]
+    mismatch = [
+        phase
+        for phase in required_phases_set
+        if first_hashes[phase] != second_hashes[phase]
+    ]
     diff = {
         phase: {"first": first_hashes[phase], "second": second_hashes[phase]}
         for phase in mismatch
@@ -99,6 +115,7 @@ def replay_determinism_check(
 
 
 def bijectivity_check(ids: Iterable[str]) -> Optional[FailureLabel]:
+    """Check identifiers for bijectivity and return a failure label."""
     seen = set()
     collisions = []
     for value in ids:
@@ -110,12 +127,18 @@ def bijectivity_check(ids: Iterable[str]) -> Optional[FailureLabel]:
             Type="deterministic_failure",
             message="Measurement identifiers are not bijective",
             phase_id="analyze",
-            evidence={"collisions": collisions, "invariant_ids": ["bijective_identifiers"]},
+            evidence={
+                "collisions": collisions,
+                "invariant_ids": ["bijective_identifiers"],
+            },
         )
     return None
 
 
-def write_bijectivity_report(path: Path, ids: Iterable[str], failure: Optional[FailureLabel]) -> None:
+def write_bijectivity_report(
+    path: Path, ids: Iterable[str], failure: Optional[FailureLabel]
+) -> None:
+    """Write a bijectivity report payload to disk."""
     payload = {
         "anchor": {
             "anchor_id": "bijectivity_report",
@@ -134,5 +157,6 @@ def write_bijectivity_report(path: Path, ids: Iterable[str], failure: Optional[F
 
 
 def write_determinism_report(path: Path, report: DeterminismReport) -> None:
+    """Write a determinism report payload to disk."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report.as_dict(), indent=2), encoding="utf-8")

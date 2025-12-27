@@ -23,13 +23,15 @@ SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
 
 
 @dataclass
-class PDLFailureLabel:
+class PDLFailureLabel:  # pylint: disable=invalid-name
+    """Failure label used by PDL validation."""
     Type: str
     message: str
     phase_id: Optional[str] = None
     evidence: Optional[Dict[str, Any]] = None
 
     def as_dict(self) -> Dict[str, Any]:
+        """Return the label as a serializable dictionary."""
         payload: Dict[str, Any] = {
             "Type": self.Type,
             "message": self.message,
@@ -42,12 +44,15 @@ class PDLFailureLabel:
 
 
 class PDLValidationError(RuntimeError):
+    """Raised when PDL validation fails."""
+
     def __init__(self, label: PDLFailureLabel) -> None:
         super().__init__(label.message)
         self.label = label
 
 
 def _load_schema(schema_dir: Path, schema_name: str) -> Dict[str, Any]:
+    """Load a JSON schema from disk."""
     schema_path = schema_dir / schema_name
     if not schema_path.exists():
         raise FileNotFoundError(f"Schema file not found: {schema_path}")
@@ -55,6 +60,7 @@ def _load_schema(schema_dir: Path, schema_name: str) -> Dict[str, Any]:
 
 
 def _get_validator(schema_dir: Path, schema_name: str) -> Draft202012Validator:
+    """Build a JSON schema validator with a local ref store."""
     schema_dir = schema_dir.resolve()
     schema = _load_schema(schema_dir, schema_name)
     store: Dict[str, Any] = {}
@@ -71,6 +77,7 @@ def _get_validator(schema_dir: Path, schema_name: str) -> Draft202012Validator:
 
 
 def _load_pdl_yaml(path: Path) -> Dict[str, Any]:
+    """Load a PDL YAML file and return it as a mapping."""
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(data, dict):
         raise ValueError("PDL YAML must parse to a mapping object")
@@ -83,6 +90,7 @@ def validate_pdl_object(
     schema_dir: Path = SCHEMAS_DIR,
     schema_name: str = "pdl.json",
 ) -> None:
+    """Validate a PDL object against the schema."""
     try:
         validator = _get_validator(schema_dir, schema_name)
     except FileNotFoundError as exc:
@@ -119,6 +127,7 @@ def validate_pdl_file(
     schema_dir: Path = SCHEMAS_DIR,
     schema_name: str = "pdl.json",
 ) -> None:
+    """Validate a PDL YAML file against the schema."""
     try:
         pdl_obj = _load_pdl_yaml(path)
     except (OSError, ValueError, yaml.YAMLError) as exc:
@@ -140,6 +149,7 @@ def validate_pdl_file_with_report(
     report_dir: Path,
     run_id: str,
 ) -> None:
+    """Validate a PDL file and emit a validation report."""
     schema_path = schema_dir / "pdl.json"
     try:
         validate_pdl_file(pdl_path, schema_dir=schema_dir)
@@ -179,6 +189,7 @@ def _write_validation_report(
     report_dir: Path,
     run_id: str,
 ) -> Path:
+    """Write a validation report payload to disk."""
     report_dir.mkdir(parents=True, exist_ok=True)
     payload = {
         "anchor": {
@@ -201,6 +212,7 @@ def _write_validation_report(
 
 
 def _parse_args() -> argparse.Namespace:
+    """Parse command line arguments for PDL validation."""
     parser = argparse.ArgumentParser(
         description="Validate a PDL YAML file against the PDL schema.",
     )

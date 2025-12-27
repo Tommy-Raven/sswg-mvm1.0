@@ -14,6 +14,8 @@ This version operates on schema-aligned JSON workflows:
 - Records history of parent/child workflow relationships
 """
 
+# pylint: disable=wrong-import-position,too-many-lines
+
 from __future__ import annotations
 
 import argparse
@@ -271,6 +273,7 @@ def _apply_inheritance_checks(
     *,
     change_source: str,
 ) -> None:
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     inheritance = workflow.get("inheritance")
     if not isinstance(inheritance, dict) or not inheritance:
         return
@@ -389,6 +392,7 @@ def _apply_meta_metrics(
     *,
     quality_report: Dict[str, Any],
 ) -> None:
+    # pylint: disable=too-many-locals
     workflow_id = workflow.get("workflow_id", "unnamed_workflow")
     baseline_scores = None
     baseline_overall = None
@@ -400,8 +404,12 @@ def _apply_meta_metrics(
         baseline_scores = baseline_meta.get("scores")
         baseline_overall = baseline_meta.get("overall_score")
         if baseline_scores is None:
-            baseline_scores = baseline.get("evaluation", {}).get("quality", {}).get("metrics")
-            baseline_overall = baseline.get("evaluation", {}).get("quality", {}).get("overall_score")
+            baseline_scores = (
+                baseline.get("evaluation", {}).get("quality", {}).get("metrics")
+            )
+            baseline_overall = (
+                baseline.get("evaluation", {}).get("quality", {}).get("overall_score")
+            )
         if baseline_scores is not None:
             baseline_status = "loaded"
 
@@ -415,7 +423,9 @@ def _apply_meta_metrics(
                 deltas[key] = value - base_value
 
     if baseline_overall is None and baseline_scores:
-        baseline_overall = sum(baseline_scores.values()) / max(len(baseline_scores), 1)
+        baseline_overall = sum(baseline_scores.values()) / max(
+            len(baseline_scores), 1
+        )
 
     thresholds = {
         "promotion_threshold": 0.02,
@@ -491,14 +501,14 @@ def _apply_dependency_tracking(
         if any(dep not in module_ids for dep in deps)
     }
 
-    dg = DependencyGraph(modules)
-    dg.autocorrect_missing_dependencies()
+    graph_helper = DependencyGraph(modules)
+    graph_helper.autocorrect_missing_dependencies()
 
-    cycle_detected = dg.detect_cycle()
+    cycle_detected = graph_helper.detect_cycle()
     cycle_corrected = False
     if cycle_detected:
         logger.warning("Dependency cycle detected; attempting autocorrect.")
-        cycle_corrected = dg.attempt_autocorrect_cycle()
+        cycle_corrected = graph_helper.attempt_autocorrect_cycle()
         if not cycle_corrected and workflow.get("evaluation") is not None:
             workflow["evaluation"].setdefault("notes", []).append(
                 "Unresolved dependency cycle detected; manual review required.",
@@ -583,8 +593,8 @@ except Exception:  # pylint: disable=broad-exception-caught
         payload = None
         if len(args) > 1:
             payload = args[1]
-        elif "payload" in kwargs:
-            payload = kwargs["payload"]
+        else:
+            payload = kwargs.get("payload")
         logger.info("log_event(%s, %r)", event, payload)
 
 
@@ -694,6 +704,7 @@ def process_workflow(
     enable_refinement: bool = True,
     out_dir: Path = Path("data/outputs"),
 ) -> Dict[str, Any]:
+    # pylint: disable=too-many-locals,too-many-statements
     """
     Run the MVM pipeline on a workflow dict in the canonical order:
     - schema validation
@@ -709,7 +720,9 @@ def process_workflow(
 
     orchestrator = Orchestrator()
     workflow_obj = Workflow(workflow)
-    orchestrator.telemetry.record("loaded_via_orchestrator", {"workflow_id": workflow_obj.id})
+    orchestrator.telemetry.record(
+        "loaded_via_orchestrator", {"workflow_id": workflow_obj.id}
+    )
 
     # 1. Normalize task packaging for modular reuse
     _apply_task_packaging(workflow, change_source="initial_pass")
@@ -719,8 +732,8 @@ def process_workflow(
 
     # 3. Schema validation
     # 1. Schema validation
-    ok, errors = validate_workflow(workflow)
-    if not ok and errors:
+    is_valid, errors = validate_workflow(workflow)
+    if not is_valid and errors:
         logger.warning("Initial schema validation reported issues: %s", errors)
         workflow.setdefault("evaluation", {}).setdefault(
             "notes",
@@ -918,8 +931,8 @@ def record_history_if_needed(
         # No detectable differences worth a history record
         return
 
-    hm = HistoryManager()
-    record = hm.record_transition(
+    history_manager = HistoryManager()
+    record = history_manager.record_transition(
         parent_workflow_id=parent_id,
         child_workflow_id=child_id,
         modifications=modifications,

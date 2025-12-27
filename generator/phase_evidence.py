@@ -1,14 +1,17 @@
+"""Phase evidence bundle utilities."""
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Optional
 
 from generator.failure_emitter import FailureLabel
 from generator.hashing import hash_data
 
 
 def _hash_payload(payload: Any) -> str:
+    """Hash a payload for phase evidence."""
     return hash_data(payload)
 
 
@@ -21,6 +24,8 @@ def build_phase_evidence_bundle(
     invariants_registry: Dict[str, Any],
     failures_by_phase: Optional[Dict[str, FailureLabel]] = None,
 ) -> Dict[str, Any]:
+    """Build a phase evidence bundle for a run."""
+    # pylint: disable=too-many-locals
     failures_by_phase = failures_by_phase or {}
     registry_invariants = invariants_registry.get("invariants", [])
 
@@ -62,5 +67,6 @@ def build_phase_evidence_bundle(
 
 
 def write_phase_evidence_bundle(path: Path, bundle: Dict[str, Any]) -> None:
+    """Write a phase evidence bundle to disk."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(bundle, indent=2), encoding="utf-8")

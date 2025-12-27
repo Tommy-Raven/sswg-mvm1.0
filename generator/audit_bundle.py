@@ -1,3 +1,5 @@
+"""Audit bundle creation and validation helpers."""
+
 from __future__ import annotations
 
 import hashlib
@@ -5,13 +7,15 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, List
 
 from generator.hashing import hash_data
 
 
 @dataclass(frozen=True)
 class BundleEntry:
+    """Entry for an audited bundle artifact."""
+
     component_id: str
     source_path: Path
     bundle_path: Path
@@ -19,10 +23,12 @@ class BundleEntry:
 
 
 def load_audit_spec(path: Path) -> Dict[str, Any]:
+    """Load the audit bundle specification from disk."""
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _hash_file(path: Path) -> str:
+    """Hash file contents using SHA-256."""
     hasher = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(8192), b""):
@@ -31,6 +37,7 @@ def _hash_file(path: Path) -> str:
 
 
 def _resolve_components(spec: Dict[str, Any], run_id: str) -> List[dict]:
+    """Resolve spec component paths for the provided run ID."""
     components = []
     for component in spec.get("components", []):
         if "path_template" in component:
@@ -54,6 +61,7 @@ def build_bundle(
     bundle_dir: Path,
     manifest_path: Path,
 ) -> Dict[str, Any]:
+    """Create a bundle of audit artifacts and emit a manifest."""
     bundle_dir.mkdir(parents=True, exist_ok=True)
     entries: List[BundleEntry] = []
 
@@ -103,6 +111,7 @@ def build_bundle(
 
 
 def validate_bundle(manifest: Dict[str, Any]) -> Dict[str, Any]:
+    """Validate a bundle manifest against on-disk artifacts."""
     errors = []
     entries = manifest.get("entries", [])
     run_id = manifest.get("run_id")

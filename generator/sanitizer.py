@@ -1,3 +1,5 @@
+"""Sanitization helpers for sensitive payloads."""
+
 from __future__ import annotations
 
 import math
@@ -31,6 +33,7 @@ HIGH_ENTROPY_THRESHOLD = 4.0
 
 
 def shannon_entropy(value: str) -> float:
+    """Compute Shannon entropy for a string."""
     if not value:
         return 0.0
     counts = {}
@@ -41,12 +44,14 @@ def shannon_entropy(value: str) -> float:
 
 
 def _truncate(value: str) -> str:
+    """Truncate long strings for safe logging."""
     if len(value) <= MAX_STRING_LENGTH:
         return value
     return value[:MAX_STRING_LENGTH] + "...[TRUNCATED]"
 
 
 def redact_text(value: str) -> str:
+    """Redact secrets and high-entropy tokens from a string."""
     redacted = value
     for pattern in SECRET_PATTERNS:
         redacted = pattern.sub("[REDACTED]", redacted)
@@ -57,6 +62,7 @@ def redact_text(value: str) -> str:
 
 
 def find_secret_indicators(value: str) -> list[str]:
+    """Return matching secret indicators for a string."""
     indicators: list[str] = []
     for pattern in SECRET_PATTERNS:
         if pattern.search(value):
@@ -69,6 +75,7 @@ def find_secret_indicators(value: str) -> list[str]:
 
 
 def _sanitize_mapping(data: Mapping[str, Any]) -> dict[str, Any]:
+    """Sanitize a mapping by redacting sensitive keys."""
     sanitized: dict[str, Any] = {}
     for key, value in data.items():
         key_lower = key.lower()
@@ -80,10 +87,12 @@ def _sanitize_mapping(data: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _sanitize_iterable(values: Iterable[Any]) -> list[Any]:
+    """Sanitize a list of values."""
     return [sanitize_payload(value) for value in values]
 
 
 def sanitize_payload(value: Any) -> Any:
+    """Sanitize a payload recursively."""
     if isinstance(value, Mapping):
         return _sanitize_mapping(value)
     if isinstance(value, (list, tuple)):

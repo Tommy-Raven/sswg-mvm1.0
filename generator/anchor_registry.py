@@ -1,3 +1,5 @@
+"""Anchor registry utilities for canonical metadata enforcement."""
+
 from __future__ import annotations
 
 import json
@@ -13,6 +15,8 @@ ALLOWED_STATUSES = {"draft", "sandbox", "canonical", "archived"}
 
 @dataclass(frozen=True)
 class AnchorRecord:
+    """Immutable record for anchor registry entries."""
+
     anchor_id: str
     anchor_version: str
     scope: str
@@ -22,6 +26,7 @@ class AnchorRecord:
     content_hash: str
 
     def as_dict(self) -> Dict[str, Any]:
+        """Return the anchor record as a serializable dictionary."""
         return {
             "anchor_id": self.anchor_id,
             "anchor_version": self.anchor_version,
@@ -34,22 +39,30 @@ class AnchorRecord:
 
 
 class AnchorRegistry:
+    """Registry for tracking anchored artifacts and their hashes."""
+
     def __init__(self, registry_path: Path) -> None:
+        """Initialize the registry and ensure the JSON file exists."""
         self.registry_path = registry_path
         self.registry_path.parent.mkdir(parents=True, exist_ok=True)
         if not self.registry_path.exists():
             self.registry_path.write_text(
-                json.dumps({"anchor_registry_version": "1.0.0", "anchors": []}, indent=2),
+                json.dumps(
+                    {"anchor_registry_version": "1.0.0", "anchors": []}, indent=2
+                ),
                 encoding="utf-8",
             )
 
     def load(self) -> Dict[str, Any]:
+        """Load the registry JSON into a dict."""
         return json.loads(self.registry_path.read_text(encoding="utf-8"))
 
     def save(self, data: Dict[str, Any]) -> None:
+        """Persist the registry payload to disk."""
         self.registry_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
     def register(self, record: AnchorRecord) -> None:
+        """Register a new anchor record, ensuring uniqueness."""
         data = self.load()
         anchors = data.get("anchors", [])
         for anchor in anchors:
@@ -63,14 +76,19 @@ class AnchorRegistry:
         self.save(data)
 
     def find(self, anchor_id: str, anchor_version: str) -> Optional[Dict[str, Any]]:
+        """Find an anchor record by ID and version."""
         data = self.load()
         for anchor in data.get("anchors", []):
-            if anchor["anchor_id"] == anchor_id and anchor["anchor_version"] == anchor_version:
+            if (
+                anchor["anchor_id"] == anchor_id
+                and anchor["anchor_version"] == anchor_version
+            ):
                 return anchor
         return None
 
 
 def validate_anchor_metadata(metadata: Dict[str, Any]) -> None:
+    """Ensure anchor metadata contains required fields and status."""
     required = {"anchor_id", "anchor_version", "scope", "owner", "status"}
     missing = required - metadata.keys()
     if missing:
@@ -85,6 +103,7 @@ def enforce_anchor(
     metadata: Dict[str, Any],
     registry: AnchorRegistry,
 ) -> Optional[FailureLabel]:
+    """Enforce anchor immutability and register new anchors."""
     validate_anchor_metadata(metadata)
     artifact_payload = json.loads(artifact_path.read_text(encoding="utf-8"))
     content_hash = hash_data(artifact_payload)

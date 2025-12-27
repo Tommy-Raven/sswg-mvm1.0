@@ -1,3 +1,5 @@
+"""Overlay governance validation helpers."""
+
 from __future__ import annotations
 
 import json
@@ -8,10 +10,12 @@ from jsonschema import Draft202012Validator, RefResolver
 
 
 def _load_schema(schema_path: Path) -> Dict[str, Any]:
+    """Load a JSON schema from disk."""
     return json.loads(schema_path.read_text(encoding="utf-8"))
 
 
 def get_overlay_validator(schema_dir: Path) -> Draft202012Validator:
+    """Return a validator for overlay descriptors."""
     schema = _load_schema(schema_dir / "overlay-descriptor.json")
     base_uri = schema_dir.as_uri().rstrip("/") + "/"
     resolver = RefResolver(base_uri=base_uri, referrer=schema)
@@ -24,6 +28,7 @@ def validate_overlay_descriptor(
     schema_dir: Path,
     overlay_path: Path | None = None,
 ) -> List[Dict[str, Any]]:
+    """Validate an overlay descriptor and return lint results."""
     validator = get_overlay_validator(schema_dir)
     errors = sorted(validator.iter_errors(overlay), key=lambda e: e.path)
     results: List[Dict[str, Any]] = [
@@ -125,6 +130,7 @@ def validate_overlay_descriptor(
 
 
 def detect_overlay_ambiguity(overlays: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Detect ambiguous override ordering in overlays."""
     errors: List[Dict[str, Any]] = []
     scope_path_map: Dict[tuple[str, str], List[Dict[str, Any]]] = {}
 
@@ -167,6 +173,7 @@ def build_overlay_promotion_report(
     lint_errors: Dict[str, List[Dict[str, Any]]],
     ambiguity_errors: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
+    """Build a promotion report for overlay descriptors."""
     ambiguity_map: Dict[str, List[Dict[str, Any]]] = {}
     for error in ambiguity_errors:
         for overlay_id in error.get("overlay_ids", []):

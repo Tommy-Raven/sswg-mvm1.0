@@ -42,6 +42,8 @@ class RecursionPolicy:
 
 @dataclass
 class RecursionOutcome:
+    """Outcome of a recursion cycle."""
+
     refined_workflow: Dict[str, Any]
     before_report: Dict[str, Any]
     after_report: Dict[str, Any]
@@ -71,16 +73,19 @@ class SemanticDeltaCalculator:
         logger.info("Loaded SentenceTransformer model: %s", model_name)
 
     def _flatten_workflow(self, workflow: Dict[str, Any]) -> str:
+        """Flatten workflow content into a plain text representation."""
         blocks = self.analyzer.extract_text_blocks(workflow)
         return "\n".join(blocks)
 
     def encode(self, workflow: Dict[str, Any]):
+        """Encode workflow content into an embedding or lexical tokens."""
         text = self._flatten_workflow(workflow)
         if not self.model:
             return text.lower().split()
         return self.model.encode(text, convert_to_tensor=True)
 
     def delta(self, before_embedding: Any, after_embedding: Any) -> float:
+        """Compute semantic delta between embeddings."""
         if self.model is None:
             before_set = set(before_embedding)
             after_set = set(after_embedding)
@@ -93,7 +98,7 @@ class SemanticDeltaCalculator:
         return 1.0 - max(min(similarity, 1.0), -1.0)
 
 
-class RecursionManager:
+class RecursionManager:  # pylint: disable=too-many-instance-attributes
     """Decide whether to recurse and generate refined workflow variants."""
 
     def __init__(
@@ -158,6 +163,7 @@ class RecursionManager:
         }
 
     def _evaluate(self, workflow: Dict[str, Any]) -> Dict[str, Any]:
+        """Evaluate a workflow and return quality + embedding."""
         quality = evaluate_workflow_quality(workflow)
         embedding = self.delta_calculator.encode(workflow)
         return {"quality": quality, "embedding": embedding}
@@ -168,6 +174,8 @@ class RecursionManager:
         after_report: Dict[str, Any],
         semantic_delta: float,
     ) -> Path:
+        """Render a simple SVG chart for before/after metrics."""
+        # pylint: disable=too-many-locals
         metrics = ["overall_score", "clarity", "coverage", "coherence", "specificity"]
         before_scores = [
             before_report["quality"]["overall_score"],
@@ -213,14 +221,14 @@ class RecursionManager:
                 (after_scores[idx], "#10B981", bar_width),
             ):
                 bar_height = max(score, 0.0) * y_scale
-                x = _bar_x(idx, offset)
-                y = height - padding - bar_height
+                x_coord = _bar_x(idx, offset)
+                y_coord = height - padding - bar_height
                 svg_parts.append(
-                    f'<rect x="{x}" y="{y}" width="{bar_width}" height="{bar_height}" '
+                    f'<rect x="{x_coord}" y="{y_coord}" width="{bar_width}" height="{bar_height}" '
                     f'fill="{color}" opacity="0.85" />'
                 )
                 svg_parts.append(
-                    f'<text x="{x + bar_width/2}" y="{y - 6}" text-anchor="middle" '
+                    f'<text x="{x_coord + bar_width/2}" y="{y_coord - 6}" text-anchor="middle" '
                     f'font-size="10" font-family="Inter">{score:.2f}</text>'
                 )
 
@@ -242,6 +250,7 @@ class RecursionManager:
     def _propose_regeneration(
         self, workflow: Dict[str, Any], evaluation: Dict[str, Any], depth: int
     ) -> Dict[str, Any]:
+        """Return a deterministic fallback refinement proposal."""
         prompt = (
             "Refine workflow to raise quality scores. "
             f"Current overall={evaluation['quality']['overall_score']:.3f}, depth={depth}. "
@@ -271,6 +280,7 @@ class RecursionManager:
         return regenerated
 
     def should_recurse(self, depth: int, score_delta: float) -> bool:
+        """Return True when the recursion policy allows another cycle."""
         if depth >= self.policy.max_depth:
             return False
         return score_delta >= self.policy.min_improvement
@@ -337,6 +347,8 @@ class RecursionManager:
         return refined_workflow
 
     def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
+        """Run a recursion cycle and return the outcome."""
+        # pylint: disable=too-many-locals
         schema_version = self._ensure_schema_tags(workflow_data)
         lineage_context = self._load_lineage_context(workflow_data)
 

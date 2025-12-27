@@ -4,18 +4,6 @@
 from __future__ import annotations
 
 import importlib
-"""
-generator/recursion_manager.py — Recursion policy and refinement.
-
-This version wires in semantic deltas (SentenceTransformer embeddings),
-quality evaluations, and the offline llm_adapter shim to decide whether
-regeneration is worth running. It also emits before/after metric plots so the
-pipeline can demonstrate recursive improvement.
-"""
-
-from __future__ import annotations
-
-import json
 import logging
 from copy import deepcopy
 from dataclasses import dataclass
@@ -27,6 +15,7 @@ from ai_evaluation.semantic_analysis import SemanticAnalyzer
 from ai_memory.feedback_integrator import FeedbackIntegrator
 from ai_memory.memory_store import MemoryStore
 from ai_monitoring.structured_logger import log_event
+from ai_recursive.version_diff_engine import compute_diff_summary
 from ai_validation import (
     ErrorClass,
     ErrorSignal,
@@ -36,24 +25,8 @@ from ai_validation import (
     classify_exception,
     recovery_decision,
 )
-from ai_recursive.version_diff_engine import compute_diff_summary
-from modules.llm_adapter import (
-    RefinementContract,
-    generate_refinement,
-)
 from generator.history import HistoryManager
-from copy import deepcopy
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, Optional
-
-import importlib
-
-from ai_evaluation.evaluation_engine import evaluate_workflow_quality
-from ai_evaluation.semantic_analysis import SemanticAnalyzer
-from ai_memory.feedback_integrator import FeedbackIntegrator
-from ai_recursive.version_diff_engine import compute_diff_summary
-from modules.llm_adapter import generate_text
+from modules.llm_adapter import RefinementContract, generate_refinement, generate_text
 
 logger = logging.getLogger("generator.recursion_manager")
 
@@ -122,8 +95,6 @@ class SemanticDeltaCalculator:
 
 class RecursionManager:
     """Decide whether to recurse and generate refined workflow variants."""
-"""    At MVM stage, refinement is non-destructive and only annotates metadata.
-    """
 
     def __init__(
         self,
@@ -268,92 +239,6 @@ class RecursionManager:
         plot_path.write_text("\n".join(svg_parts), encoding="utf-8")
         return plot_path
 
-        self.output_dir = output_dir
-        self.delta_calculator = SemanticDeltaCalculator()
-        self.feedback = FeedbackIntegrator()
-
-    def _evaluate(self, workflow: Dict[str, Any]) -> Dict[str, Any]:
-        quality = evaluate_workflow_quality(workflow)
-        embedding = self.delta_calculator.encode(workflow)
-        return {"quality": quality, "embedding": embedding}
-
-    def _render_metric_plot(
-        self,
-        before_report: Dict[str, Any],
-        after_report: Dict[str, Any],
-        semantic_delta: float,
-    ) -> Path:
-        metrics = ["overall_score", "clarity", "coverage", "coherence", "specificity"]
-        before_scores = [
-            before_report["quality"]["overall_score"],
-            *[
-                before_report["quality"]["metrics"].get(name, 0.0)
-                for name in metrics[1:]
-            ],
-        ]
-        after_scores = [
-            after_report["quality"]["overall_score"],
-            *[
-                after_report["quality"]["metrics"].get(name, 0.0)
-                for name in metrics[1:]
-            ],
-        ]
-
-        width = 720
-        height = 360
-        padding = 60
-        bar_width = 30
-        gap = 30
-        y_scale = height - 2 * padding
-
-        def _bar_x(idx: int, offset: int) -> int:
-            return padding + idx * (2 * bar_width + gap) + offset
-
-        svg_parts = [
-            f'<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">',
-            f'<text x="{width/2}" y="30" text-anchor="middle" font-size="16" font-family="Inter">',
-            f"Recursive refinement — semantic Δ={semantic_delta:.3f}",
-            "</text>",
-        ]
-
-        for idx, metric in enumerate(metrics):
-            x_label = padding + idx * (2 * bar_width + gap) + bar_width
-            svg_parts.append(
-                f'<text x="{x_label}" y="{height - padding/2}" text-anchor="middle" '
-                f'font-size="12" font-family="Inter">{metric.title()}</text>'
-            )
-
-            for score, color, offset in (
-                (before_scores[idx], "#7C3AED", 0),
-                (after_scores[idx], "#10B981", bar_width),
-            ):
-                bar_height = max(score, 0.0) * y_scale
-                x = _bar_x(idx, offset)
-                y = height - padding - bar_height
-                svg_parts.append(
-                    f'<rect x="{x}" y="{y}" width="{bar_width}" height="{bar_height}" '
-                    f'fill="{color}" opacity="0.85" />'
-                )
-                svg_parts.append(
-                    f'<text x="{x + bar_width/2}" y="{y - 6}" text-anchor="middle" '
-                    f'font-size="10" font-family="Inter">{score:.2f}</text>'
-                )
-
-        svg_parts.extend(
-            [
-                '<rect x="20" y="20" width="12" height="12" fill="#7C3AED" opacity="0.85" />',
-                '<text x="40" y="30" font-size="12" font-family="Inter">before</text>',
-                '<rect x="100" y="20" width="12" height="12" fill="#10B981" opacity="0.85" />',
-                '<text x="120" y="30" font-size="12" font-family="Inter">after</text>',
-                "</svg>",
-            ]
-        )
-
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        plot_path = self.output_dir / "metrics_before_after.svg"
-        plot_path.write_text("\n".join(svg_parts), encoding="utf-8")
-        return plot_path
-
     def _propose_regeneration(
         self, workflow: Dict[str, Any], evaluation: Dict[str, Any], depth: int
     ) -> Dict[str, Any]:
@@ -384,6 +269,7 @@ class RecursionManager:
                 }
             )
         return regenerated
+
     def should_recurse(self, depth: int, score_delta: float) -> bool:
         if depth >= self.policy.max_depth:
             return False
@@ -554,57 +440,9 @@ class RecursionManager:
         )
 
 
-def simple_refiner(workflow: Dict[str, Any], *, output_dir: Path = Path("data/outputs")) -> Dict[str, Any]:
-    """MVM-friendly refinement wrapper that uses RecursionManager."""
-
-    manager = RecursionManager(output_dir=output_dir)
-    try:
-        outcome = manager.run_cycle(workflow, depth=0)
-        workflow.setdefault("evaluation", {}).setdefault("before_after", {})[
-            "semantic_delta"
-        ] = outcome.semantic_delta
-        workflow.setdefault("evaluation", {}).setdefault("plots", {})[
-            "before_after"
-        ] = str(outcome.plot_path)
-        workflow.setdefault("evaluation", {}).setdefault("quality", {}).update(
-            outcome.after_report["quality"]
-        )
-        score_delta = (
-            candidate_report["quality"]["overall_score"]
-            - baseline_report["quality"]["overall_score"]
-        )
-        semantic_delta = self.delta_calculator.delta(
-            baseline_report["embedding"], candidate_report["embedding"]
-        )
-
-        regenerate = self.should_recurse(depth, score_delta) or (
-            semantic_delta >= self.policy.min_semantic_delta
-        )
-
-        final_workflow = candidate if regenerate else workflow_data
-        plot_path = self._render_metric_plot(
-            baseline_report, candidate_report, semantic_delta
-        )
-
-        diff_summary = compute_diff_summary(workflow_data, final_workflow)
-        clarity_score = candidate_report["quality"]["metrics"].get("clarity", 0.0)
-        self.feedback.record_cycle(
-            diff_summary,
-            {"clarity_score": clarity_score, "score_delta": score_delta},
-            regenerated=regenerate,
-        )
-
-        return RecursionOutcome(
-            refined_workflow=final_workflow,
-            before_report=baseline_report,
-            after_report=candidate_report,
-            score_delta=score_delta,
-            semantic_delta=semantic_delta,
-            plot_path=plot_path,
-        )
-
-
-def simple_refiner(workflow: Dict[str, Any], *, output_dir: Path = Path("data/outputs")) -> Dict[str, Any]:
+def simple_refiner(
+    workflow: Dict[str, Any], *, output_dir: Path = Path("data/outputs")
+) -> Dict[str, Any]:
     """MVM-friendly refinement wrapper that uses RecursionManager."""
 
     manager = RecursionManager(output_dir=output_dir)

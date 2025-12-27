@@ -1,6 +1,6 @@
 # Deterministic Run Recipe (sswg/mvm)
 
-This runbook is the single canonical guide for deterministic, audit-ready runs of the sswg/mvm pipeline.
+**Canonical status (primary entrypoint for how to run + expected outputs):** This runbook is the single canonical guide for deterministic, audit-ready runs of the sswg/mvm pipeline. Other docs are secondary/overview and should defer here to avoid drift.
 
 ## Deterministic Run Recipe
 

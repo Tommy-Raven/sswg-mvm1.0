@@ -11,7 +11,7 @@ The system combines deterministic pipeline execution with semantic evaluation, r
 ## Canonical Runbook
 
 **Primary entrypoint (how to run + expected outputs):**  
-[docs/RUNBOOK.md](RUNBOOK.md)
+RUNBOOK.md
 
 Other docs are secondary/overview and should defer to this canonical runbook to avoid drift.
 

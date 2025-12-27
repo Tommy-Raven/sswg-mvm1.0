@@ -8,7 +8,7 @@ Licensing: Raven Recordings ©️ see: *LICENSE.md*
 # API Reference — SSWG-MVM
 
 **Primary entrypoint (how to run + expected outputs):**  
-getting_started/run_mvm.md
+RUNBOOK.md
 
 Other docs are secondary/overview and should defer to the canonical runbook above.
 

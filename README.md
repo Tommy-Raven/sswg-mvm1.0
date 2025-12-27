@@ -65,7 +65,7 @@ Author: **Tommy Raven (Thomas Byers)**
 ## ▶️ Canonical Runbook
 
 **Primary entrypoint (how to run + expected outputs):**  
-[docs/RUNBOOK.md](docs/RUNBOOK.md)
+docs/RUNBOOK.md
 
 Other docs are secondary/overview and should defer to the canonical runbook above.
 

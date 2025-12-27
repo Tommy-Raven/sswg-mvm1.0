@@ -11,7 +11,7 @@ This document provides a **high-level map** of all public interfaces.
 # Canonical Runbook
 
 **Primary entrypoint (how to run + expected outputs):**  
-../docs/getting_started/run_mvm.md
+../docs/RUNBOOK.md
 
 Other docs are secondary/overview and should defer to the canonical runbook above.
 

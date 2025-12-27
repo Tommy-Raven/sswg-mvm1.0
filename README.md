@@ -86,6 +86,9 @@ This section documents the concrete, implemented semantics used by the mvm
 runtime for recursive refinement and evaluation. It is intended to be
 machine-auditable and to mirror the behavior in `generator/recursion_manager.py`,
 `ai_recursive/recursion_manager.py`, and `ai_evaluation/quality_metrics.py`.
+The recursion policy described below is the authoritative behavior for
+termination and guardrails; formal guarantees and assumptions are documented in
+[docs/FORMAL_GUARANTEES.md](docs/FORMAL_GUARANTEES.md).
 
 ### Recursion Semantics (single-cycle refinement)
 Each recursion cycle executes the following steps:

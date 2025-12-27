@@ -18,6 +18,7 @@ Key goals:
 - adjust dependencies to keep the DAG consistent
 
 This behavior is implemented primarily in [`generator/recursion_manager.py`](../../generator/recursion_manager.py) with supporting schemas and evaluation modules referenced in [docs/ARCHITECTURE.md](../ARCHITECTURE.md) and [docs/RECURSION_MANAGER.md](../RECURSION_MANAGER.md).
+The recursion policy (guardrails and termination semantics) is summarized in the root [README](../../README.md), with formal guarantees and assumptions in [docs/FORMAL_GUARANTEES.md](../FORMAL_GUARANTEES.md).
 
 ---
 

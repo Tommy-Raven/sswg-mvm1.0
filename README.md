@@ -80,6 +80,92 @@ Outputs are stable, regenerable, and lineage-tracked.
 
 ---
 
+## 📐 Formal Behavioral Semantics (Recursion, Metrics, Termination)
+
+This section documents the concrete, implemented semantics used by the mvm
+runtime for recursive refinement and evaluation. It is intended to be
+machine-auditable and to mirror the behavior in `generator/recursion_manager.py`,
+`ai_recursive/recursion_manager.py`, and `ai_evaluation/quality_metrics.py`.
+
+### Recursion Semantics (single-cycle refinement)
+Each recursion cycle executes the following steps:
+
+1. **Baseline evaluation:** `evaluate_workflow_quality` computes per-metric
+   scores and an `overall_score` (average of metric values).
+2. **Refinement proposal:** `generate_refinement` produces a candidate workflow
+   and an LLM decision (e.g., `accept`, `revise`).
+3. **Candidate evaluation:** the candidate is re-scored using the same metric
+   set.
+4. **Delta computation:**
+   - `score_delta = candidate.overall_score - baseline.overall_score`
+   - `semantic_delta = 1 - similarity(before, after)` where similarity is
+     cosine similarity if sentence-transformers is available, otherwise a
+     lexical set overlap proxy.
+5. **Regeneration decision:** the candidate is adopted only if:
+   - `llm_decision ∈ {"accept", "revise"}`, **and**
+   - `depth < policy.max_depth`, **and**
+   - (`score_delta ≥ policy.min_improvement` **or**
+     `semantic_delta ≥ policy.min_semantic_delta`)
+6. **State recording:** metric plots, diff summaries, feedback records, and
+   lineage snapshots are persisted for auditability.
+
+Default policy thresholds (subject to explicit override):
+`max_depth = 2`, `min_improvement = 0.05`, `min_semantic_delta = 0.08`.
+
+### Recursion Guardrails (call-level constraints)
+Guardrails are enforced by `ai_recursive.RecursionManager` for any recursive
+call site that opts into its API:
+
+- **Termination condition is mandatory:** every call must supply a
+  `termination_condition` string, or the call raises a
+  `RecursionTerminationError`.
+- **Hard ceilings:** `max_depth` and `max_children` are enforced per recursion
+  root; exceeding either raises `RecursionLimitError`.
+- **Cost budgeting:** `estimated_cost` is accumulated per root; exceeding
+  `cost_budget` raises `RecursionBudgetError`.
+- **Checkpoint gating:** when depth or cost exceed `checkpoint_ratio`, an
+  optional `checkpoint_handler` is called and may deny continuation
+  (`RecursionCheckpointError`).
+- **Audit trail:** each call records an immutable snapshot containing
+  `root_id`, `parent_id`, `depth`, `children_generated`, `cost_spent`,
+  `budget_remaining`, `termination_condition`, and `timestamp`.
+
+### Evaluation Metric Definitions
+All metrics are deterministic and operate on the schema-aligned workflow dict.
+`overall_score` is the arithmetic mean of all registered metric values.
+
+- **clarity:** per phase, count words in `ai_task_logic` (fallback:
+  `description`), compute `len(words) / 10`, clamp to `[0, 1]`, then average
+  across phases.
+- **coverage:** fraction of phases whose `ai_task_logic` or `description`
+  contains non-empty text.
+- **coherence:** redundancy estimate from `SemanticAnalyzer`, reported directly
+  as coherence in `[0, 1]`.
+- **specificity:** `min(1.0, avg_block_length / 500)`, where `avg_block_length`
+  is average character length of extracted text blocks.
+- **completeness:** average of (a) fraction of phases containing tasks and (b)
+  fraction of tasks declaring both prerequisites/inputs and
+  expected_outputs/outputs.
+- **intent_alignment:** token overlap ratio between metadata intent fields
+  (`purpose`, `description`, `title`) and all extracted content tokens, with
+  stop-words removed.
+- **usability:** fraction of tasks that define prerequisites/inputs,
+  expected_outputs/outputs, and a description/action.
+
+### Termination Conditions (evaluation-driven)
+Evaluation-driven recursion stops when **any** of the following are true:
+
+- **Depth cap reached:** `depth ≥ policy.max_depth`.
+- **Insufficient improvement:** `score_delta < policy.min_improvement` **and**
+  `semantic_delta < policy.min_semantic_delta`.
+- **LLM decision does not permit refinement:** `llm_decision` is not
+  `accept` or `revise`.
+
+When the above conditions fail, the cycle returns the original workflow
+snapshot without regenerating.
+
+---
+
 ## 🏛 System Architecture
 
     SSWG-mvm1.0/

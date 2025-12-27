@@ -153,6 +153,7 @@ Defines the canonical structural and semantic contracts for workflows.
 - [schemas/metadata_schema.json](../schemas/metadata_schema.json)
 - [schemas/ontology_schema.json](../schemas/ontology_schema.json)
 - [schemas/template_schema.json](../schemas/template_schema.json)
+- [guarantees.yaml](../guarantees.yaml) (canonical output guarantees)
 
 ---
 

@@ -15,3 +15,8 @@ invariants:
   - id: validation_required
     rule: >
       Outputs that fail validation must not be promoted or reused.
+
+  - id: quarantine_on_failure
+    rule: >
+      Workflows with critical or major incidents must remain quarantined
+      until recovery steps complete and validation passes.

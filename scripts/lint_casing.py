@@ -14,6 +14,7 @@ TARGETS = [
     "sswg.yaml",
     "mvm.yaml",
     "execution_policy.yaml",
+    "guarantees.yaml",
     "governance.yaml",
     "invariants.yaml",
     "root_contract.yaml",

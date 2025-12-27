@@ -25,3 +25,15 @@ emitted on violations. The canonical invariant declarations remain in
 
 Promotion readiness evidence bundles emit per-phase invariant checks with the
 required inputs hash, outputs hash, and pass/fail status for audit review.
+anchor_id: invariants-doc
+anchor_version: "1.0"
+scope: documentation
+owner: sswg
+status: draft
+---
+
+# Canonical invariants source
+
+`invariants.yaml` is the canonical source of truth for sswg/mvm invariants.
+`root_contract.yaml` must reference `invariants.yaml` and mirror its invariant
+entries exactly; parity is enforced by `scripts/validate_root_contracts.py`.

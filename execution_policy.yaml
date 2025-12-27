@@ -25,4 +25,9 @@ execution_policy:
     selection_rules:
       - tool_must_meet_output_guarantees
       - convenience_does_not_override_correctness
+    guarantees_ref: guarantees.yaml
+    required_output_guarantees:
+      - deterministic_output
+      - reproducible_output
+      - bijective_keys
     mismatch_policy: invalidate_tool

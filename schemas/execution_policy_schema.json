@@ -75,7 +75,12 @@
         "tooling": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["selection_rules", "mismatch_policy"],
+          "required": [
+            "selection_rules",
+            "guarantees_ref",
+            "required_output_guarantees",
+            "mismatch_policy"
+          ],
           "properties": {
             "selection_rules": {
               "type": "array",
@@ -84,6 +89,18 @@
                 "minLength": 1
               },
               "minItems": 1
+            },
+            "guarantees_ref": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required_output_guarantees": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
             },
             "mismatch_policy": {
               "type": "string",

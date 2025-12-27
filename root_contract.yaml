@@ -189,6 +189,8 @@ root_contract:
         - phase_validation
         - reproducibility_validation
 
+  invariants_source: invariants.yaml
+
   invariants:
     - id: deterministic_measurement
       rule: >

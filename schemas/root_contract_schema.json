@@ -9,7 +9,14 @@
     "root_contract": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sswg", "mvm", "execution_policy", "governance", "invariants"],
+      "required": [
+        "sswg",
+        "mvm",
+        "execution_policy",
+        "governance",
+        "invariants_source",
+        "invariants"
+      ],
       "properties": {
         "sswg": {
           "$ref": "sswg_contract_schema.json#/properties/sswg"
@@ -22,6 +29,10 @@
         },
         "governance": {
           "$ref": "governance_schema.json#/properties/governance"
+        },
+        "invariants_source": {
+          "type": "string",
+          "minLength": 1
         },
         "invariants": {
           "$ref": "invariants_schema.json#/properties/invariants"

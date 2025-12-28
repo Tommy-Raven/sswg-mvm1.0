@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
+from subprocess import run as subprocess_run
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -883,7 +883,7 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    docs_proc = subprocess.run(
+    docs_proc = subprocess_run(  # nosec B603
         [
             sys.executable,
             "scripts/docs_repro_check.py",

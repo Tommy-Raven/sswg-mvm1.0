@@ -18,9 +18,9 @@ Usage:
 
 import argparse
 import os
-import subprocess
 import sys
 from dataclasses import dataclass
+from subprocess import run as subprocess_run
 from typing import List, Sequence
 
 
@@ -36,7 +36,7 @@ def run_command(name: str, command: Sequence[str]) -> TaskResult:
     print(f"\n=== [{name}] ===")
     print(" ".join(command))
     try:
-        proc = subprocess.run(command, check=False)
+        proc = subprocess_run(command, check=False)  # nosec B603
         return TaskResult(name=name, command=command, returncode=proc.returncode)
     except FileNotFoundError as exc:
         print(f"[{name}] ERROR: command not found: {command[0]} ({exc})")

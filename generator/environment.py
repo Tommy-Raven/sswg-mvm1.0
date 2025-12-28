@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import json
 import platform
-import subprocess
 import sys
 from importlib import metadata
 from pathlib import Path
+from shutil import which
+from subprocess import run as subprocess_run
 from typing import Any, Dict, List
 
 from generator.failure_emitter import FailureLabel
@@ -27,8 +28,11 @@ def compute_lock_hash(lock_path: Path) -> str:
 
 def get_git_commit() -> str:
     """Return the current git commit SHA or 'unknown' if unavailable."""
-    result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
+    git_executable = which("git")
+    if not git_executable:
+        return "unknown"
+    result = subprocess_run(  # nosec B603
+        [git_executable, "rev-parse", "HEAD"],
         check=False,
         capture_output=True,
         text=True,

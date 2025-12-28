@@ -9,9 +9,10 @@ Purpose:
 from __future__ import annotations
 
 import argparse
-import subprocess
 from argparse import Namespace
 from pathlib import Path
+from subprocess import run as subprocess_run
+from typing import Sequence
 
 from pdl.default_pdl import (
     execute_phase as pdl_execute_phase,
@@ -22,17 +23,17 @@ from pdl.default_pdl import (
 CANONICAL_BRANCH = "canonical"
 
 
-def run(cmd: str) -> int:
+def run(cmd: Sequence[str]) -> int:
     """
-    Execute a shell command and return the exit code.
+    Execute a command and return the exit code.
 
     Args:
-        cmd: Shell command to execute.
+        cmd: Command to execute.
 
     Returns:
         Exit code from the executed command.
     """
-    completed = subprocess.run(cmd, shell=True, check=False)
+    completed = subprocess_run(cmd, check=False)  # nosec B603
     return int(completed.returncode)
 
 
@@ -71,8 +72,8 @@ def cmd_add_artifact(args: Namespace) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(args.content, encoding="utf-8")
 
-    run(f"git add {args.path}")
-    run(f"git commit -m 'Add artifact: {args.path}'")
+    run(["git", "add", args.path])
+    run(["git", "commit", "-m", f"Add artifact: {args.path}"])
     print(f"[CLI] Artifact added and committed: {args.path}")
 
 
@@ -83,7 +84,7 @@ def cmd_fork(args: Namespace) -> None:
     Args:
         args: Parsed CLI arguments containing 'name'.
     """
-    exit_code = run(f"git checkout -b {args.name}")
+    exit_code = run(["git", "checkout", "-b", args.name])
     if exit_code == 0:
         print(f"[CLI] Branch created: {args.name}")
     else:
@@ -99,8 +100,8 @@ def cmd_request_merge(args: Namespace) -> None:
     """
     target = CANONICAL_BRANCH
     # Best-effort merge; errors are surfaced but not hidden.
-    run(f"git checkout {target}")
-    exit_code = run(f"git merge {args.branch}")
+    run(["git", "checkout", target])
+    exit_code = run(["git", "merge", args.branch])
     if exit_code == 0:
         print(f"[CLI] Merge completed: {args.branch} → {target}")
     else:

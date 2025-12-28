@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-import random
+import secrets
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
@@ -60,7 +60,7 @@ def _inject_nondeterminism(
             if isinstance(mutated[target_phase], dict)
             else {}
         )
-        payload["nondeterministic_nonce"] = random.randint(0, 1000000)
+        payload["nondeterministic_nonce"] = secrets.randbelow(1000001)
         mutated[target_phase] = payload
     return mutated
 

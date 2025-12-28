@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from generator.determinism import bijectivity_check, replay_determinism_check
+from tests.assertions import require
 
 
 def test_determinism_replay_pass() -> None:
@@ -15,8 +16,8 @@ def test_determinism_replay_pass() -> None:
         phase_outputs=phase_outputs,
         required_phases=["normalize", "analyze", "validate", "compare"],
     )
-    assert failure is None
-    assert report.match is True
+    require(failure is None, "Expected determinism replay to pass")
+    require(report.match is True, "Expected determinism report to match")
 
 
 def test_determinism_replay_failure() -> None:
@@ -32,12 +33,18 @@ def test_determinism_replay_failure() -> None:
         required_phases=["normalize", "analyze", "validate", "compare"],
         inject_phase="compare",
     )
-    assert failure is not None
-    assert failure.Type == "deterministic_failure"
-    assert report.match is False
+    require(failure is not None, "Expected determinism replay failure")
+    require(
+        failure.Type == "deterministic_failure",
+        "Expected deterministic_failure label",
+    )
+    require(report.match is False, "Expected determinism report to mismatch")
 
 
 def test_bijectivity_check_detects_collision() -> None:
     failure = bijectivity_check(["id-1", "id-1"])
-    assert failure is not None
-    assert failure.Type == "deterministic_failure"
+    require(failure is not None, "Expected bijectivity failure")
+    require(
+        failure.Type == "deterministic_failure",
+        "Expected deterministic_failure label",
+    )

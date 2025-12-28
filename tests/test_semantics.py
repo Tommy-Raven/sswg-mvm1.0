@@ -5,11 +5,16 @@ Will later test NLP-based evaluation of meaning similarity.
 
 from ai_evaluation.quality_metrics import evaluate_clarity
 
+from tests.assertions import require
+
 
 def test_semantic_placeholder():
     wf = {"phases": [{"id": "P1", "ai_task_logic": "Analyze semantic similarity"}]}
     metrics = evaluate_clarity(wf)
-    assert 0 <= metrics["clarity_score"] <= 1
+    require(
+        0 <= metrics["clarity_score"] <= 1,
+        "Expected clarity score to be within bounds",
+    )
 
 
 def test_clarity_clamped_to_upper_bound():
@@ -17,4 +22,4 @@ def test_clarity_clamped_to_upper_bound():
     wf = {"phases": [{"id": "P1", "ai_task_logic": long_text}]}
     metrics = evaluate_clarity(wf)
 
-    assert metrics["clarity_score"] == 1.0
+    require(metrics["clarity_score"] == 1.0, "Expected clarity score to clamp")

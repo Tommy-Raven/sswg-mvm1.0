@@ -3,18 +3,20 @@
 """Run linting and structural checks from the repository root."""
 
 import os
-import subprocess
 import sys
+from subprocess import run as subprocess_run
 
 # Establish repo root
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
+
 def run(cmd):
     """Run a shell command and stop on failure."""
     print(f"\n Running: {' '.join(cmd)}\n")
-    result = subprocess.run(cmd, cwd=ROOT)
+    result = subprocess_run(cmd, cwd=ROOT, check=False)  # nosec B603
     if result.returncode != 0:
         sys.exit(result.returncode)
+
 
 def main():
     print(" Linting and Structure Check Started")

@@ -1,7 +1,10 @@
 """Tests for exporter helper functions."""
 
-from generator.exporters import export_json, export_markdown
 import os
+
+from generator.exporters import export_json, export_markdown
+from tests.assertions import require
+
 
 def test_json_markdown_exports(tmp_path):
     wf = {
@@ -14,4 +17,7 @@ def test_json_markdown_exports(tmp_path):
     json_out = export_json(wf, tmp_path)
     md_out = export_markdown(wf, tmp_path)
 
-    assert all(os.path.exists(p) for p in [json_out, md_out])
+    require(
+        all(os.path.exists(p) for p in [json_out, md_out]),
+        "Expected JSON and Markdown exports to exist",
+    )

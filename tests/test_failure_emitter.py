@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from generator.failure_emitter import FailureEmitter, FailureLabel, validate_failure_label
+from tests.assertions import require
 
 
 def test_failure_label_validation_rejects_unknown_type() -> None:
@@ -40,5 +41,11 @@ def test_failure_emitter_redacts_secrets(tmp_path: Path) -> None:
     )
     path = emitter.emit(label, run_id="run-1")
     payload = json.loads(path.read_text(encoding="utf-8"))
-    assert payload["label"]["evidence"]["token"] == "[REDACTED]"
-    assert payload["label"]["evidence"]["nested"]["password"] == "[REDACTED]"
+    require(
+        payload["label"]["evidence"]["token"] == "[REDACTED]",
+        "Expected token to be redacted",
+    )
+    require(
+        payload["label"]["evidence"]["nested"]["password"] == "[REDACTED]",
+        "Expected password to be redacted",
+    )

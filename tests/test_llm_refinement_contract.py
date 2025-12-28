@@ -4,6 +4,7 @@ import pytest
 
 from generator.recursion_manager import RecursionManager
 from modules.llm_adapter import parse_refinement_response, RefinementContract
+from tests.assertions import require
 
 
 def test_parse_refinement_response_enforces_contract():
@@ -17,7 +18,7 @@ def test_parse_refinement_response_enforces_contract():
     }
 
     parsed = parse_refinement_response(json.dumps(payload), contract)
-    assert parsed == payload
+    require(parsed == payload, "Expected parsed response to match payload")
 
     payload["decision"] = "unknown"
     with pytest.raises(ValueError):
@@ -41,8 +42,11 @@ def test_recursion_manager_merges_llm_refinement_payload():
     manager = RecursionManager(llm_generate=fake_generate)
     refined = manager.refine_workflow(workflow, evaluation, depth=1)
 
-    assert refined["modules"] == ["m1"]
+    require(refined["modules"] == ["m1"], "Expected refined modules to match")
     metadata = refined.get("recursion_metadata", {})
-    assert metadata["llm_decision"] == "accept"
-    assert metadata["llm_contract_version"] == manager.contract.version
-    assert metadata["llm_status"] == "ok"
+    require(metadata["llm_decision"] == "accept", "Expected accept decision")
+    require(
+        metadata["llm_contract_version"] == manager.contract.version,
+        "Expected contract version to match",
+    )
+    require(metadata["llm_status"] == "ok", "Expected ok status")

@@ -10,6 +10,7 @@ from ai_evaluation.quality_metrics import evaluate_clarity
 from ai_visualization.export_manager import export_workflow
 import os
 
+from tests.assertions import require
 
 def test_full_workflow_cycle(tmp_path):
     orch = Orchestrator()
@@ -17,14 +18,14 @@ def test_full_workflow_cycle(tmp_path):
     wf_dict = wf.to_dict()
 
     valid, err = validate_workflow(wf_dict)
-    assert valid, err
+    require(valid, err or "Expected workflow to be valid")
 
     metrics = evaluate_clarity(wf_dict)
-    assert metrics["clarity_score"] > 0
+    require(metrics["clarity_score"] > 0, "Expected clarity score to be positive")
 
     exports = export_workflow(wf_dict, export_mode="json")
     for f in exports.values():
-        assert os.path.exists(f)
+        require(os.path.exists(f), f"Expected export to exist: {f}")
 
 
 def test_get_default_phases_prefers_id():
@@ -38,4 +39,7 @@ def test_get_default_phases_prefers_id():
         }
     )
 
-    assert wf.get_default_phases() == ["alpha", "beta", "gamma"]
+    require(
+        wf.get_default_phases() == ["alpha", "beta", "gamma"],
+        "Expected default phase order to prefer ids",
+    )

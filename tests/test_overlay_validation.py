@@ -5,6 +5,8 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, RefResolver
 
+from tests.assertions import require
+
 
 def _get_validator(schema_path: Path) -> Draft202012Validator:
     schema_path = schema_path.resolve()
@@ -17,4 +19,4 @@ def test_overlay_descriptor_valid() -> None:
     validator = _get_validator(Path("schemas/overlay-descriptor.json"))
     overlay = json.loads(Path("tests/fixtures/overlay_descriptor.json").read_text(encoding="utf-8"))
     errors = list(validator.iter_errors(overlay))
-    assert not errors
+    require(not errors, "Expected overlay descriptor to validate")

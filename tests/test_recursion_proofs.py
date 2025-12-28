@@ -2,6 +2,7 @@
 """Tests for recursion correctness proofs."""
 
 from ai_recursive import RecursionManager
+from tests.assertions import require
 
 
 def test_recursion_proof_success():
@@ -23,14 +24,14 @@ def test_recursion_proof_success():
 
     proof = manager.prove_correctness("root")
 
-    assert proof.overall_ok is True
-    assert proof.steps
-    assert all(step.ok for step in proof.steps)
+    require(proof.overall_ok is True, "Expected proof to be OK")
+    require(proof.steps, "Expected proof steps")
+    require(all(step.ok for step in proof.steps), "Expected all proof steps to pass")
 
 
 def test_recursion_proof_missing_audit_log():
     manager = RecursionManager()
     proof = manager.prove_correctness("missing-root")
 
-    assert proof.overall_ok is False
-    assert proof.steps[0].ok is False
+    require(proof.overall_ok is False, "Expected proof to fail without audit log")
+    require(proof.steps[0].ok is False, "Expected first proof step to fail")

@@ -4,13 +4,14 @@ import json
 from pathlib import Path
 
 from generator.secret_scanner import load_allowlist, scan_paths
+from tests.assertions import require
 
 
 def test_secret_scanner_flags_env_file(tmp_path: Path) -> None:
     env_file = tmp_path / ".env"
     env_file.write_text("TOKEN=secret", encoding="utf-8")
     results = scan_paths([tmp_path], allowlist=[])
-    assert results["violations"]
+    require(results["violations"], "Expected secret scanner violations")
 
 
 def test_secret_scanner_respects_allowlist(tmp_path: Path) -> None:
@@ -38,4 +39,4 @@ def test_secret_scanner_respects_allowlist(tmp_path: Path) -> None:
     )
     allowlist = load_allowlist(allowlist_path)
     results = scan_paths([tmp_path], allowlist=allowlist)
-    assert not results["violations"]
+    require(not results["violations"], "Expected allowlist to suppress violations")

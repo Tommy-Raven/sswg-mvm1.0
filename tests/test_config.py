@@ -56,9 +56,10 @@ def template_dir():
 # Tests configuration loading + template resolution.
 
 from data.data_parsing import load_template
+from tests.assertions import require
 
 
 def test_load_template_by_slug(template_dir):
     data = load_template("creative")
-    assert isinstance(data, dict)
-    assert "phases" in data
+    require(isinstance(data, dict), "Expected template to load as dict")
+    require("phases" in data, "Expected template to include phases")

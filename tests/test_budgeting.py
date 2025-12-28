@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from generator.budgeting import evaluate_budgets
+from tests.assertions import require
 
 
 def test_evaluate_budgets_passes_within_limits() -> None:
@@ -24,7 +25,7 @@ def test_evaluate_budgets_passes_within_limits() -> None:
             }
         ],
     )
-    assert report["status"] == "pass"
+    require(report["status"] == "pass", "Expected budget report to pass")
 
 
 def test_evaluate_budgets_fails_on_missing_artifacts() -> None:
@@ -48,4 +49,4 @@ def test_evaluate_budgets_fails_on_missing_artifacts() -> None:
             }
         ],
     )
-    assert report["status"] == "fail"
+    require(report["status"] == "fail", "Expected budget report to fail")

@@ -8,6 +8,7 @@ from ai_recursive import (
     RecursionLimitError,
     RecursionTerminationError,
 )
+from tests.assertions import require
 
 
 def test_depth_and_child_limits():
@@ -102,12 +103,15 @@ def test_checkpoint_invocation_and_audit_trail():
         termination_condition="depth",
     )
 
-    assert calls, "Checkpoint handler should have been invoked"
-    assert calls[0] == snapshot
+    require(calls, "Checkpoint handler should have been invoked")
+    require(calls[0] == snapshot, "Expected snapshot to be recorded")
 
     audit_log = manager.get_audit_log("root")
-    assert len(audit_log) == 1
-    assert audit_log[0].budget_remaining == 5.0
+    require(len(audit_log) == 1, "Expected single audit log entry")
+    require(
+        audit_log[0].budget_remaining == 5.0,
+        "Expected budget remaining to be updated",
+    )
 
 
 def test_checkpoint_denial_blocks_recursion():
@@ -150,4 +154,3 @@ def test_missing_termination_condition_rejected():
         pass
     else:  # pragma: no cover - safety net
         raise AssertionError("Missing termination condition should be rejected")
-

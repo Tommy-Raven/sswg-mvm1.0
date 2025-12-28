@@ -1,7 +1,9 @@
 """Tests for workflow export helper functions."""
 
-from generator.exporters import export_json, export_markdown
 import os
+
+from generator.exporters import export_json, export_markdown
+from tests.assertions import require
 
 
 def test_export_workflow_json_and_md(tmp_path):
@@ -15,5 +17,5 @@ def test_export_workflow_json_and_md(tmp_path):
     json_out = export_json(wf, out_dir=str(tmp_path))
     md_out = export_markdown(wf, out_dir=str(tmp_path))
 
-    assert os.path.exists(json_out)
-    assert os.path.exists(md_out)
+    require(os.path.exists(json_out), "Expected JSON export to exist")
+    require(os.path.exists(md_out), "Expected Markdown export to exist")

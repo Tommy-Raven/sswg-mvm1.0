@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
+import shlex
 from pathlib import Path
+from subprocess import run as subprocess_run
 
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
@@ -46,7 +47,7 @@ def main() -> int:
         command = step.get("command")
         if not command:
             continue
-        proc = subprocess.run(command, shell=True, check=False)
+        proc = subprocess_run(shlex.split(command), check=False)  # nosec B603
         if proc.returncode != 0:
             emitter.emit(
                 FailureLabel(

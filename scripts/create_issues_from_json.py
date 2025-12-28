@@ -16,8 +16,8 @@ Usage:
 
 import argparse
 import json
-import subprocess
 from pathlib import Path
+from subprocess import CalledProcessError, run as subprocess_run
 from typing import Any, Dict, List
 
 
@@ -92,8 +92,8 @@ def main() -> None:
         # Important: this relies on current directory being the correct repo
         # or gh having a default repo set (gh repo set-default).
         try:
-            subprocess.run(cmd, check=True)
-        except subprocess.CalledProcessError as exc:
+            subprocess_run(cmd, check=True)  # nosec B603
+        except CalledProcessError as exc:
             print(f"  ERROR creating issue #{idx}: {exc}")
             # Decide whether to continue or abort; here we continue.
             continue

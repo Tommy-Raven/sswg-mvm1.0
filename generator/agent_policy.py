@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import hashlib
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+from shutil import which
+from subprocess import run as subprocess_run
 from typing import Iterable, Optional
 
 from generator.hashing import hash_data
@@ -74,8 +75,11 @@ def find_prohibited_commands(commands: Iterable[str]) -> list[str]:
 
 def detect_working_tree_changes(repo_root: Path) -> list[str]:
     """Return porcelain status lines for modified files under the repo."""
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
+    git_executable = which("git")
+    if not git_executable:
+        return []
+    result = subprocess_run(  # nosec B603
+        [git_executable, "status", "--porcelain"],
         cwd=repo_root,
         check=False,
         capture_output=True,

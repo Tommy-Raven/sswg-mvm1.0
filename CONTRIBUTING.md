@@ -1,5 +1,14 @@
-sswg-mvm; version 1.0+ (living document)
-Date: 12-22-2025
+---
+anchor:
+  anchor_id: contributing
+  anchor_version: "1.1.0"
+  scope: documentation
+  owner: sswg
+  status: draft
+---
+
+sswg-mvm (living document)
+Last updated: 2025-03-01
 Document title: CONTRIBUTING.md
 Author: Tommy Raven
 Licensing: Raven Recordings ©️ see: *LICENSE.md*
@@ -17,7 +26,8 @@ The root [README.md](./README.md) and [docs/README.md](./docs/README.md) describ
 - **Docs and community health** — clarifying guides, adding examples, or improving onboarding material.
 
 ## Ground rules
-- Follow the [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) and style expectations in [SECURITY.md](./SECURITY.md) and [LICENSE.md](./LICENSE.md).
+- Follow the [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) and security expectations in [SECURITY.md](./SECURITY.md).
+- Respect canonical layers (`generator/`, `cli/`, `pdl/`, `reproducibility/`) and additive-only layers (`artifacts/`, `data/`, `docs/`).
 - Align change descriptions with the architecture maps in [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) and the recursion overview in [docs/RECURSION_MANAGER.md](./docs/RECURSION_MANAGER.md).
 - Prefer small, reviewable PRs. Pair large refactors with a short design doc or checklist linked from the PR body.
 - Keep imports clean—no `try/except` wrappers around imports per project conventions.
@@ -26,7 +36,9 @@ The root [README.md](./README.md) and [docs/README.md](./docs/README.md) describ
 1. Read the root [README.md](./README.md) to understand goals and boundaries.
 2. Skim [docs/README.md](./docs/README.md) for documentation structure and navigation.
 3. Run local setup using `python -m venv .venv && source .venv/bin/activate && pip install -r REQUIREMENTS.txt`.
-4. Execute relevant smoke tests or linting before opening a PR.
+4. Validate the canonical PDL before running workflows:
+   `python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas`.
+5. Execute relevant smoke tests or linting before opening a PR.
 
 ## Change workflow
 - **Issues:** Open issues with a concise problem statement and reproduction when applicable. Tag modules (`ai_recursive`, `ai_memory`, `ai_monitoring`, etc.).

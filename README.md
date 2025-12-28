@@ -1,5 +1,14 @@
-# **sswg–MVM v.0.0.9mvm**  
-### *sswg — Synthetic Synthesist of Workflow Generation (Minimum Viable Model)*
+---
+anchor:
+  anchor_id: readme
+  anchor_version: "1.1.0"
+  scope: documentation
+  owner: sswg
+  status: draft
+---
+
+# **sswg-mvm v0.0.9mvm**  
+### *sswg — Synthetic Synthesist of Workflow Generation (minimum viable model)*
 
 <div id="top"></div>
 <div align="center">
@@ -7,7 +16,7 @@
 </div>
 
 <div align="center">
-<h2>sswg–MVM</h2>
+<h2>sswg-mvm</h2>
 <i>Recursive, Schema-Aligned Workflow Engine • Designed by Tommy Raven</i>
 </div>
 
@@ -15,14 +24,14 @@
 
 ![Status](https://img.shields.io/badge/Status-Active-7E3ACE?style=for-the-badge)
 ![Build](https://img.shields.io/badge/Build-Stable-4B9CD3?style=for-the-badge)
-![Version](https://img.shields.io/badge/v.09.mvm.25-Pre--Release-9E3CE7?style=for-the-badge)
+![Version](https://img.shields.io/badge/v0.0.9mvm-Pre--Release-9E3CE7?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
 ![Architecture](https://img.shields.io/badge/Architecture-Recursive_AI-black?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-Proprietary_(Pre--Release)-black?style=for-the-badge)
 
 </div>
 
-> **Pre-release notice:** sswg–MVM is proprietary software; private evaluation is allowed, but redistribution, hosting, model-training, or derivative use is prohibited.
+> **Pre-release notice:** sswg-mvm is proprietary software; private evaluation is allowed, but redistribution, hosting, model-training, or derivative use is prohibited.
 
 ---
 
@@ -35,7 +44,7 @@
 - Local evaluation permitted only  
 
 **Future Licensing (v1.0.0ts)**  
-- Licensed Use Only  
+- Licensed use only  
 - No ownership transfer  
 - No commercial redistribution  
 - No agent/model training  
@@ -46,16 +55,16 @@ See: `LICENSE.md` and `TERMS_OF_USE.md`.
 
 ## 🧠 Overview
 
-**sswg–MVM** is the Minimum Viable Model of *sswg — Synthetic Synthesist of Workflow Generation*:  
+**sswg-mvm** is the minimum viable model of *sswg — Synthetic Synthesist of Workflow Generation*:  
 a recursive, schema-aligned AI engine that creates deterministic, multi-phase instructional workflows.
 
 Instead of producing isolated responses, **sswg** synthesizes structured systems:
 
-- Multi-phase workflow specifications  
-- Dependency graphs (DAG-based)  
-- Schema-validated JSON artifacts  
-- Versioned lineage records  
-- Recursive refinement cycles  
+- Multi-phase workflow specifications (canonical 9-phase pipeline)
+- Dependency graphs (DAG-based)
+- Schema-validated JSON artifacts
+- Versioned lineage records
+- Recursive refinement cycles
 
 Author: **Tommy Raven (Thomas Byers)**  
 © Raven Recordings ©️ 2025  
@@ -79,13 +88,13 @@ Other docs are secondary/overview and should defer to the canonical runbook abov
 Workflows become seeds for subsequent generations.
 
 ### Schema Integrity  
-Strict JSON schema validation enforces schema validation invariants that support reproducibility. See the canonical definitions in [invariants.yaml](invariants.yaml) and [root_contract.yaml](root_contract.yaml).
+Strict JSON schema validation enforces invariants that support reproducibility. See the canonical definitions in [invariants.yaml](invariants.yaml) and [root_contract.yaml](root_contract.yaml).
 
 ### Modularity  
 Phases → tasks → dependencies → evaluation → refinement.
 
 ### Determinism  
-Outputs are stable, regenerable, and lineage-tracked.
+Outputs are stable, regenerable, and lineage-tracked. Determinism is required for `normalize`, `analyze`, `validate`, and `compare`.
 
 ---
 
@@ -180,7 +189,7 @@ snapshot without regenerating.
 
 ## 🏛 System Architecture
 
-    SSWG-mvm1.0/
+    sswg-mvm1.0/
     ├── generator/
     │     └── main.py                 → Primary workflow generator entry point
     ├── ai_validation/                → JSON schema enforcement
@@ -199,27 +208,31 @@ snapshot without regenerating.
 
 ## ⭐ Core Features
 
-- Template-driven workflow synthesis  
-- Recursive refinement engine  
-- Strict schema validation (Draft 2020-12)  
-- Dependency graph construction & autocorrection  
+- Template-driven workflow synthesis
+- Recursive refinement engine
+- Strict schema validation (Draft 2020-12)
+- Dependency graph construction & autocorrection
 - JSON + Markdown artifact exporters
 - Mermaid diagram generation
 - Version history + lineage tracking
-- CI/CD workflow automation (tests, PRs, docs)
+- Audit bundles and promotion readiness gates
 - Role-separated agents with documented creator/critic/curator hand-offs
 
 ---
 
-## 🌀 Operational Pipeline
+## 🌀 Canonical 9-Phase Pipeline
 
-1. Load template  
-2. Normalize input and validate against schema  
-3. Build dependency graph (DAG)  
-4. Execute recursive refinement steps  
-5. Produce artifacts (JSON, Mermaid, Markdown)
-6. Record lineage snapshot
-7. Auto-bump version if core modules changed
+sswg-mvm enforces the canonical phase order:
+
+1. `ingest`
+2. `normalize`
+3. `parse`
+4. `analyze`
+5. `generate`
+6. `validate`
+7. `compare`
+8. `interpret`
+9. `log`
 
 **Canonical run guide:** [docs/RUNBOOK.md](docs/RUNBOOK.md)
 
@@ -242,12 +255,14 @@ Outputs land in `data/outputs/demo_run` and include:
 
 ## 📄 Included Templates
 
-| Template File                       | Domain         | Purpose                                |
-|------------------------------------|----------------|----------------------------------------|
-| `creative_writing_template.json`   | Literary Arts  | Narrative & poetic workflow structures |
-| `technical_procedure_template.json`| Engineering    | SOP-style procedural workflows         |
-| `meta_reflection_template.json`    | Metacognition  | Self-evaluating process frameworks     |
-| `training_curriculum_template.json`| Education      | Modular curriculum design structures   |
+| Template File                                 | Domain         | Purpose                                |
+|----------------------------------------------|----------------|----------------------------------------|
+| `campfire_workflow.json`                     | Storytelling   | Workshop-style workflow structures     |
+| `creative_writing_template.json`             | Literary Arts  | Narrative & poetic workflow structures |
+| `technical_procedure_template.json`          | Engineering    | SOP-style procedural workflows         |
+| `meta_reflection_template.json`              | Metacognition  | Self-evaluating process frameworks     |
+| `meta_reflection_unified_superframework.json`| Metacognition  | Unified superframework template        |
+| `training_curriculum_template.json`          | Education      | Modular curriculum design structures   |
 
 ---
 
@@ -262,7 +277,11 @@ Outputs land in `data/outputs/demo_run` and include:
 
 ### Install Dependencies
 
-    pip install -r requirements.txt
+    pip install -r REQUIREMENTS.txt
+
+### Validate the canonical PDL (required before runs)
+
+    python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
 
 ### Run the Generator (exact entry path)
 
@@ -281,28 +300,22 @@ Run the full test suite:
 
 Test coverage includes:
 
-- CLI behaviors  
-- Template normalization  
-- Schema validation  
-- Graph engine  
-- Recursive engine  
-- Exporters  
-- Version diffing  
-- End-to-end workflow lifecycle  
+- CLI behaviors
+- Template normalization
+- Schema validation
+- Graph engine
+- Recursive engine
+- Exporters
+- Version diffing
+- End-to-end workflow lifecycle
 
 
-## 🔄 CI/CD Automation
+## 🔄 Automation & Gates
 
-### Implemented
-
-- Auto-version bump  
-- Automated documentation generation  
-- Full test execution  
-- Auto-PR generation for version bumps  
-
-### Planned  
-
-- MkDocs documentation site on GitHub Pages  
+- `make doctor` for environment sanity checks
+- `make test`, `make lint`, `make format` for local checks
+- `make gates` for audit readiness and determinism validation
+- `make preflight` for a local CI-equivalent sweep
 
 ---
 
@@ -320,7 +333,7 @@ Fun fact: *Not actually an Apache helicopter — but thriving anyway.*
 
 ## 📜 License Summary
 
-**sswg–MVM is proprietary pre-release software.**  
+**sswg-mvm is proprietary pre-release software.**  
 Private evaluation is permitted; redistribution, resale, hosting, model-training,  
 or derivative works are **not allowed**. See full terms in `LICENSE.md`.
 
@@ -339,6 +352,6 @@ or derivative works are **not allowed**. See full terms in `LICENSE.md`.
 - **vXX.xx.yy[tag][+tag]**  
   - **XX** = major system architecture revision
   - **xx** = minor system architecture revision  
-  - **+tag** = specific os/development series. *Model Versions appended first, no '+' symbol, OS versioning is non-hierarchal, and appended with an '+' symbol, i.e., > minimum viable model: 'mvm', Debian: '+deb', ChromeOS: '+cros', Transitive Semantic Version: 'ts', Deterministic Version: 'dtr', etc*
+  - **+tag** = specific os/development series. *Model versions appended first, no '+' symbol, OS versioning is non-hierarchal, and appended with an '+' symbol, i.e., > minimum viable model: 'mvm', Debian: '+deb', ChromeOS: '+cros', Transitive Semantic Version: 'ts', Deterministic Version: 'dtr', etc*
   - **yy** = iterative refinement/patch release  
 - **Pre-release** (like `v0.0.9mvm`) = additional licensing restrictions apply.

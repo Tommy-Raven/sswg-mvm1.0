@@ -1,8 +1,17 @@
-SSWG-MVM TERMS OF USE
+---
+anchor:
+  anchor_id: terms_of_use
+  anchor_version: "1.0.0"
+  scope: governance
+  owner: sswg
+  status: draft
+---
+
+sswg-mvm Terms of Use
 Version: Pre-Release (v0.0.9mvm)
 Effective Date: 2025-12-21
 
-These Terms of Use govern access to and use of the SSWG-MVM software (â€œSoftwareâ€). By accessing or using the Software, you agree to these terms.
+These Terms of Use govern access to and use of the sswg-mvm software ("Software"). By accessing or using the Software, you agree to these terms.
 
 1. PERMITTED USE
 Use of the Software is limited to:

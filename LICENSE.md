@@ -1,12 +1,21 @@
-SSWG-MVM LICENSE
+---
+anchor:
+  anchor_id: license
+  anchor_version: "1.0.0"
+  scope: governance
+  owner: sswg
+  status: draft
+---
+
+sswg-mvm License
 Version: Pre-Release (v0.0.9mvm)
 Effective Date: 2025-12-21
 
-Copyright Â© 2025 Raven Recordings
+Copyright © 2025 Raven Recordings
 Author: Thomas Byers (Tommy Raven)
 All Rights Reserved.
 
-This software, including all source code, documentation, schemas, workflows, and generated artifacts (collectively, the â€œSoftwareâ€), is proprietary and confidential.
+This software, including all source code, documentation, schemas, workflows, and generated artifacts (collectively, the "Software"), is proprietary and confidential.
 
 1. GRANT OF RIGHTS
 No rights are granted under this license except as expressly stated. Permission is granted solely for private, local evaluation of the Software in its unmodified form.
@@ -24,7 +33,7 @@ You may not, directly or indirectly:
 All intellectual property rights remain the exclusive property of Raven Recordings and the Author.
 
 4. NO WARRANTY
-THE SOFTWARE IS PROVIDED â€œAS ISâ€ WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
 
 5. LIMITATION OF LIABILITY
 IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY DAMAGES ARISING FROM USE OF THE SOFTWARE.

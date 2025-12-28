@@ -1,14 +1,26 @@
-Grimoire – WorkflowAI
-Recursive AI Workflow Generator and Orchestration Framework
+---
+anchor:
+  anchor_id: repo_description
+  anchor_version: "1.0.0"
+  scope: documentation
+  owner: sswg
+  status: draft
+---
 
-Grimoire is an intelligent workflow generator that evolves its own processes.
-It integrates semantic evaluation, graph-based dependency management, and recursive feedback loops to continuously refine workflow structures.
+sswg-mvm — recursive workflow generation and compliance scaffolding
+
+sswg-mvm is a schema-aligned workflow generator that enforces the canonical
+9-phase pipeline, deterministic measurement gates, and audit-ready outputs. It
+integrates semantic evaluation, graph-based dependency management, and
+recursive feedback loops to refine workflow structures.
 
 Core objectives:
-- Automate AI-driven workflow creation and testing
-- Enable recursive improvement through feedback and memory
-- Visualize dependency and recursion maps via Graphviz and Mermaid
-- Track performance, evolution, and quality metrics across milestones
+- Synthesize deterministic, schema-validated workflow specifications
+- Enforce phase separation, validation gates, and reproducibility guarantees
+- Track lineage, evidence, and audit bundles across runs
+- Visualize dependency and recursion maps via Mermaid and Graphviz
 
-This project is managed through the GitHub Project Dashboard:
-https://github.com/users/Tommy-Raven/projects/1
+Project tracking lives in repository governance and docs:
+- docs/RUNBOOK.md
+- governance.yaml
+- root_contract.yaml

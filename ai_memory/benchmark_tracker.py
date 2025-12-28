@@ -145,9 +145,9 @@ class BenchmarkTracker:
                 {
                     "name": name,
                     "new_score": float(score),
-                    "previous_score": previous_record.score
-                    if previous_record
-                    else None,
+                    "previous_score": (
+                        previous_record.score if previous_record else None
+                    ),
                     "timestamp": timestamp,
                 },
             )

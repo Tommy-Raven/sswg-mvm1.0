@@ -11,7 +11,9 @@ def test_anchor_enforcement_detects_canonical_mutation(tmp_path: Path) -> None:
     registry_path = tmp_path / "anchor_registry.json"
     registry = AnchorRegistry(registry_path)
     artifact_path = tmp_path / "artifact.json"
-    artifact = json.loads(Path("tests/fixtures/canonical_artifact.json").read_text(encoding="utf-8"))
+    artifact = json.loads(
+        Path("tests/fixtures/canonical_artifact.json").read_text(encoding="utf-8")
+    )
     artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
 
     failure = enforce_anchor(

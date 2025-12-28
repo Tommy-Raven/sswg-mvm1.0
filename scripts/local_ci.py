@@ -59,7 +59,14 @@ def task_pytest_api() -> List[TaskResult]:
         results.append(
             run_command(
                 "pytest: API tests",
-                ["pytest", "-q", "API/tests", "--disable-warnings", "--maxfail=1", "--tb=short"],
+                [
+                    "pytest",
+                    "-q",
+                    "API/tests",
+                    "--disable-warnings",
+                    "--maxfail=1",
+                    "--tb=short",
+                ],
             )
         )
     else:
@@ -69,7 +76,14 @@ def task_pytest_api() -> List[TaskResult]:
         results.append(
             run_command(
                 "pytest: generator tests",
-                ["pytest", "-q", "generator/tests", "--disable-warnings", "--maxfail=1", "--tb=short"],
+                [
+                    "pytest",
+                    "-q",
+                    "generator/tests",
+                    "--disable-warnings",
+                    "--maxfail=1",
+                    "--tb=short",
+                ],
             )
         )
     else:
@@ -228,4 +242,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-  

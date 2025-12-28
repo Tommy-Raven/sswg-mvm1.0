@@ -89,9 +89,7 @@ def recovery_decision(error_class: ErrorClass, severity: Severity) -> Dict[str, 
     decision: Dict[str, Any] = {"action": "monitor", "quarantine": False}
 
     if severity == Severity.CRITICAL:
-        decision.update(
-            {"action": "rollback", "quarantine": True, "escalate": True}
-        )
+        decision.update({"action": "rollback", "quarantine": True, "escalate": True})
     elif severity == Severity.MAJOR:
         decision.update({"action": "targeted_fix", "quarantine": True})
     elif severity == Severity.MINOR:

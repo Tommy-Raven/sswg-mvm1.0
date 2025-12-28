@@ -66,7 +66,9 @@ class PhaseController:
         wf_id = workflow.id
         modules = workflow.get_modules_for_phase(phase_id)
         if not modules:
-            logger.info("No modules defined for phase %s in workflow %s", phase_id, wf_id)
+            logger.info(
+                "No modules defined for phase %s in workflow %s", phase_id, wf_id
+            )
             return
 
         logger.info(
@@ -85,7 +87,10 @@ class PhaseController:
         for mod_def in ordered_modules:
             module_id = mod_def.get("module_id")
             if not module_id:
-                logger.warning("Skipping malformed module definition (no module_id) in phase %s", phase_id)
+                logger.warning(
+                    "Skipping malformed module definition (no module_id) in phase %s",
+                    phase_id,
+                )
                 continue
 
             entry = self.module_registry.get(module_id)
@@ -116,9 +121,7 @@ class PhaseController:
                     ctx.update(result)
             except Exception as e:
                 success = False
-                logger.error(
-                    "Module %s in phase %s failed: %s", module_id, phase_id, e
-                )
+                logger.error("Module %s in phase %s failed: %s", module_id, phase_id, e)
                 log_event(
                     "phase.module_error",
                     {
@@ -176,4 +179,6 @@ def _execute_module(entry: ModuleEntry, context: Dict[str, Any]) -> Any:
         return asyncio.run(result)
 
     return result
+
+
 # End of ai_core/phase_controller.py

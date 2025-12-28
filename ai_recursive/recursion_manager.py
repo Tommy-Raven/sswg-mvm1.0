@@ -192,9 +192,7 @@ class RecursionManager:
             return
 
         depth_ratio = snapshot.depth / float(self.max_depth)
-        cost_ratio = (
-            snapshot.cost_spent / self.cost_budget if self.cost_budget else 0.0
-        )
+        cost_ratio = snapshot.cost_spent / self.cost_budget if self.cost_budget else 0.0
         if depth_ratio >= self.checkpoint_ratio or cost_ratio >= self.checkpoint_ratio:
             allowed = self.checkpoint_handler(snapshot)
             if allowed is False:
@@ -231,9 +229,7 @@ class RecursionManager:
         snapshots = state.audit_log
         max_depth_seen = max(snapshot.depth for snapshot in snapshots)
         min_depth_seen = min(snapshot.depth for snapshot in snapshots)
-        depth_ok = all(
-            0 <= snapshot.depth <= self.max_depth for snapshot in snapshots
-        )
+        depth_ok = all(0 <= snapshot.depth <= self.max_depth for snapshot in snapshots)
         depth_step = ProofStep(
             statement="Depth is bounded by max_depth",
             ok=depth_ok,
@@ -264,9 +260,7 @@ class RecursionManager:
         cost_step = ProofStep(
             statement="Cost is monotonic and within cost_budget",
             ok=cost_monotonic and cost_budget_ok,
-            evidence=(
-                f"costs={costs}, cost_budget={self.cost_budget:.2f}."
-            ),
+            evidence=(f"costs={costs}, cost_budget={self.cost_budget:.2f}."),
         )
 
         termination_ok = all(

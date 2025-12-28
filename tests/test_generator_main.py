@@ -7,6 +7,7 @@ import json
 
 from tests.assertions import require
 
+
 def test_run_mvm_end_to_end(tmp_path):
     out_dir = tmp_path / "outputs"
     wf_path = tmp_path / "wf.json"

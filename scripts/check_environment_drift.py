@@ -8,7 +8,9 @@ from generator.failure_emitter import FailureEmitter
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Check environment drift against dependency lock.")
+    parser = argparse.ArgumentParser(
+        description="Check environment drift against dependency lock."
+    )
     parser.add_argument(
         "--lock-path",
         type=Path,

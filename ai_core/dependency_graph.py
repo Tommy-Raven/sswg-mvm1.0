@@ -104,4 +104,6 @@ class CoreDependencyGraph:
             return self._modules
 
         return [modules_by_id[mid] for mid in ordered_ids]
+
+
 # ----------------------------------------------------------------------

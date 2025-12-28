@@ -39,7 +39,9 @@ class RefResolver:
 class Draft202012Validator:
     """Minimal Draft 2020-12 validator used by tests."""
 
-    def __init__(self, schema: Dict[str, Any], resolver: Optional[RefResolver] = None) -> None:
+    def __init__(
+        self, schema: Dict[str, Any], resolver: Optional[RefResolver] = None
+    ) -> None:
         self.schema = schema
         self.resolver = resolver or RefResolver(referrer=schema)
 
@@ -102,9 +104,13 @@ def _iter_errors(
         return
 
     if isinstance(instance, dict):
-        yield from _validate_object(instance, schema, path, schema_path, resolver, referrer)
+        yield from _validate_object(
+            instance, schema, path, schema_path, resolver, referrer
+        )
     elif isinstance(instance, list):
-        yield from _validate_array(instance, schema, path, schema_path, resolver, referrer)
+        yield from _validate_array(
+            instance, schema, path, schema_path, resolver, referrer
+        )
     elif isinstance(instance, str):
         pattern = schema.get("pattern")
         if pattern and re.match(pattern, instance) is None:

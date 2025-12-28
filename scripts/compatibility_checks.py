@@ -88,12 +88,21 @@ def evaluate_compatibility(
                 continue
 
             try:
-                rollback_payload = json.loads(Path(rollback_plan).read_text(encoding="utf-8"))
+                rollback_payload = json.loads(
+                    Path(rollback_plan).read_text(encoding="utf-8")
+                )
                 rollback_ops = rollback_payload.get("operations", [])
-                rolled_back = apply_overlays(json.loads(json.dumps(migrated)), [{"operations": rollback_ops}])
+                rolled_back = apply_overlays(
+                    json.loads(json.dumps(migrated)), [{"operations": rollback_ops}]
+                )
                 validate_pdl_object(rolled_back, schema_dir=schema_dir)
                 rollback_result = "pass"
-            except (OverlayOperationError, PDLValidationError, OSError, json.JSONDecodeError) as exc:
+            except (
+                OverlayOperationError,
+                PDLValidationError,
+                OSError,
+                json.JSONDecodeError,
+            ) as exc:
                 rollback_result = "fail"
                 compatibility_errors.append(
                     {

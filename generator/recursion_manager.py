@@ -151,7 +151,9 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
             {
                 "workflow_id": workflow_id,
                 "has_previous": previous_snapshot is not None,
-                "previous_diff_size": diff_summary.get("diff_size") if diff_summary else 0,
+                "previous_diff_size": (
+                    diff_summary.get("diff_size") if diff_summary else 0
+                ),
             },
         )
 
@@ -346,7 +348,9 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
 
         return refined_workflow
 
-    def run_cycle(self, workflow_data: Dict[str, Any], depth: int = 0) -> RecursionOutcome:
+    def run_cycle(
+        self, workflow_data: Dict[str, Any], depth: int = 0
+    ) -> RecursionOutcome:
         """Run a recursion cycle and return the outcome."""
         # pylint: disable=too-many-locals
         schema_version = self._ensure_schema_tags(workflow_data)
@@ -376,12 +380,9 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
         )
 
         llm_decision = candidate.get("recursion_metadata", {}).get("llm_decision")
-        regenerate = (
-            llm_decision in {"accept", "revise"}
-            and (
-                self.should_recurse(depth, score_delta)
-                or semantic_delta >= self.policy.min_semantic_delta
-            )
+        regenerate = llm_decision in {"accept", "revise"} and (
+            self.should_recurse(depth, score_delta)
+            or semantic_delta >= self.policy.min_semantic_delta
         )
 
         final_workflow = candidate if regenerate else workflow_data

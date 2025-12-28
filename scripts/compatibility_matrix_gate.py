@@ -11,8 +11,12 @@ from overlay_ops import OverlayOperationError, load_artifact, load_overlays, wri
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Compatibility matrix gate for overlays.")
-    parser.add_argument("--run-id", type=str, default="compat-matrix", help="Run identifier.")
+    parser = argparse.ArgumentParser(
+        description="Compatibility matrix gate for overlays."
+    )
+    parser.add_argument(
+        "--run-id", type=str, default="compat-matrix", help="Run identifier."
+    )
     parser.add_argument(
         "--baseline-artifact",
         type=Path,
@@ -102,7 +106,9 @@ def main() -> int:
         "migration_result": migration_result,
         "rollback_result": rollback_result,
         "compatibility_errors": compatibility_errors,
-        "inputs_hash": hash_data({"baseline": baseline, "candidate": candidate, "overlays": overlays}),
+        "inputs_hash": hash_data(
+            {"baseline": baseline, "candidate": candidate, "overlays": overlays}
+        ),
     }
     write_json(args.report_path, report)
 

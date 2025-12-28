@@ -9,7 +9,10 @@ from tests.assertions import require
 
 def test_version_diff_comparison_basic():
     old = {"metadata": {"purpose": "A"}, "phases": [{"title": "Phase 1"}]}
-    new = {"metadata": {"purpose": "B"}, "phases": [{"title": "Phase 1"}, {"title": "Phase 2"}]}
+    new = {
+        "metadata": {"purpose": "B"},
+        "phases": [{"title": "Phase 1"}, {"title": "Phase 2"}],
+    }
 
     diff_summary = compute_diff_summary(old, new)
     require(diff_summary["diff_size"] > 0, "Expected diff_size to be non-zero")

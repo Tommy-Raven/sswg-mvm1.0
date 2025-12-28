@@ -42,7 +42,9 @@ def _resolve_components(spec: Dict[str, Any], run_id: str) -> List[dict]:
     for component in spec.get("components", []):
         if "path_template" in component:
             path = component["path_template"].format(run_id=run_id)
-            components.append({"component_id": component["component_id"], "paths": [path]})
+            components.append(
+                {"component_id": component["component_id"], "paths": [path]}
+            )
         elif "path_glob" in component:
             paths = sorted(Path(".").glob(component["path_glob"]))
             components.append(

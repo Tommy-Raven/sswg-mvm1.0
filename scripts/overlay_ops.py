@@ -18,7 +18,11 @@ def _decode_pointer_token(token: str) -> str:
 def _resolve_pointer(container: Any, pointer: str) -> tuple[Any, str]:
     if not pointer.startswith("/"):
         raise OverlayOperationError(f"Invalid JSON pointer: {pointer}")
-    tokens = [_decode_pointer_token(token) for token in pointer.lstrip("/").split("/") if token]
+    tokens = [
+        _decode_pointer_token(token)
+        for token in pointer.lstrip("/").split("/")
+        if token
+    ]
     if not tokens:
         raise OverlayOperationError(f"Pointer must target a value: {pointer}")
     current = container
@@ -27,16 +31,22 @@ def _resolve_pointer(container: Any, pointer: str) -> tuple[Any, str]:
             try:
                 index = int(token)
             except ValueError as exc:
-                raise OverlayOperationError(f"Expected list index in pointer: {pointer}") from exc
+                raise OverlayOperationError(
+                    f"Expected list index in pointer: {pointer}"
+                ) from exc
             if index >= len(current):
                 raise OverlayOperationError(f"Pointer index out of range: {pointer}")
             current = current[index]
         elif isinstance(current, dict):
             if token not in current:
-                raise OverlayOperationError(f"Pointer path missing key '{token}': {pointer}")
+                raise OverlayOperationError(
+                    f"Pointer path missing key '{token}': {pointer}"
+                )
             current = current[token]
         else:
-            raise OverlayOperationError(f"Pointer traversed non-container at {token}: {pointer}")
+            raise OverlayOperationError(
+                f"Pointer traversed non-container at {token}: {pointer}"
+            )
     return current, tokens[-1]
 
 
@@ -50,7 +60,9 @@ def apply_operation(payload: Any, operation: dict[str, Any]) -> Any:
         try:
             index = int(last_token)
         except ValueError as exc:
-            raise OverlayOperationError(f"Expected list index in pointer: {path}") from exc
+            raise OverlayOperationError(
+                f"Expected list index in pointer: {path}"
+            ) from exc
         if index >= len(container):
             raise OverlayOperationError(f"Pointer index out of range: {path}")
         current_value = container[index]
@@ -66,7 +78,9 @@ def apply_operation(payload: Any, operation: dict[str, Any]) -> Any:
             container[last_token] = operation.get("value")
         elif op == "deprecate":
             if last_token not in container:
-                raise OverlayOperationError(f"Pointer path missing key '{last_token}': {path}")
+                raise OverlayOperationError(
+                    f"Pointer path missing key '{last_token}': {path}"
+                )
             container[last_token] = {"deprecated": True, "previous": current_value}
         else:
             raise OverlayOperationError(f"Unknown operation: {op}")
@@ -100,9 +114,13 @@ def load_overlays(overlays_dir: Path) -> list[dict[str, Any]]:
             json.loads(path.read_text(encoding="utf-8"))
             for path in sorted(overlays_dir.glob("*.json"))
         ]
-    overlays.sort(key=lambda overlay: (overlay.get("precedence", {}).get("order") is None,
-                                       overlay.get("precedence", {}).get("order", 0),
-                                       overlay.get("overlay_id", "")))
+    overlays.sort(
+        key=lambda overlay: (
+            overlay.get("precedence", {}).get("order") is None,
+            overlay.get("precedence", {}).get("order", 0),
+            overlay.get("overlay_id", ""),
+        )
+    )
     return overlays
 
 

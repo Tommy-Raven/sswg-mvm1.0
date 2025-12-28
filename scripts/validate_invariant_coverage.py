@@ -97,7 +97,9 @@ def main() -> int:
     args.report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
     if report.get("status") != "pass":
-        missing_ids = [entry.get("id") for entry in report.get("missing_enforcement", [])]
+        missing_ids = [
+            entry.get("id") for entry in report.get("missing_enforcement", [])
+        ]
         emitter.emit(
             FailureLabel(
                 Type="schema_failure",

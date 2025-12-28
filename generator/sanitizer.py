@@ -40,7 +40,9 @@ def shannon_entropy(value: str) -> float:
     for char in value:
         counts[char] = counts.get(char, 0) + 1
     length = len(value)
-    return -sum((count / length) * math.log2(count / length) for count in counts.values())
+    return -sum(
+        (count / length) * math.log2(count / length) for count in counts.values()
+    )
 
 
 def _truncate(value: str) -> str:

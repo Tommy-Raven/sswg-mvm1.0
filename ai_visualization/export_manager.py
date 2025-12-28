@@ -19,6 +19,7 @@ from datetime import datetime
 
 # ---------------------- GRAPHVIZ EXPORT ---------------------- #
 
+
 def export_graphviz(wf: dict, out_dir: str = "./build") -> str:
     """Export the workflow dependency graph to a Graphviz DOT file."""
     os.makedirs(out_dir, exist_ok=True)
@@ -31,7 +32,9 @@ def export_graphviz(wf: dict, out_dir: str = "./build") -> str:
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("digraph workflow {\n")
-        f.write('  rankdir=LR;\n  node [shape=box, style="rounded,filled", color="#7C3AED", fillcolor="#EDE9FE"];\n')
+        f.write(
+            '  rankdir=LR;\n  node [shape=box, style="rounded,filled", color="#7C3AED", fillcolor="#EDE9FE"];\n'
+        )
         for n in nodes:
             f.write(f'  "{n}" [label="{n}"];\n')
         for e in edges:
@@ -44,11 +47,14 @@ def export_graphviz(wf: dict, out_dir: str = "./build") -> str:
 
 # ---------------------- MARKDOWN EXPORT ---------------------- #
 
+
 def export_markdown(wf: dict, out_dir: str = "./build") -> str:
     """Generate a human-readable Markdown version of the workflow."""
     os.makedirs(out_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_path = os.path.join(out_dir, f"workflow_{wf.get('workflow_id', 'unknown')}_{timestamp}.md")
+    out_path = os.path.join(
+        out_dir, f"workflow_{wf.get('workflow_id', 'unknown')}_{timestamp}.md"
+    )
 
     md_lines = []
     md_lines.append(f"# Workflow: {wf.get('workflow_id', 'Untitled')}")
@@ -82,11 +88,14 @@ def export_markdown(wf: dict, out_dir: str = "./build") -> str:
 
 # ---------------------- JSON EXPORT ---------------------- #
 
+
 def export_json(wf: dict, out_dir: str = "./build") -> str:
     """Save the workflow as a structured JSON file."""
     os.makedirs(out_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_path = os.path.join(out_dir, f"workflow_{wf.get('workflow_id', 'unknown')}_{timestamp}.json")
+    out_path = os.path.join(
+        out_dir, f"workflow_{wf.get('workflow_id', 'unknown')}_{timestamp}.json"
+    )
 
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(wf, f, indent=2)
@@ -95,6 +104,7 @@ def export_json(wf: dict, out_dir: str = "./build") -> str:
 
 
 # ---------------------- MULTI-MODE EXPORT ---------------------- #
+
 
 def export_workflow(wf: dict, export_mode: str = "json") -> dict:
     """
@@ -124,5 +134,3 @@ def export_workflow(wf: dict, export_mode: str = "json") -> dict:
         raise ValueError(f"Invalid export mode: {export_mode}")
 
     return results
-
-

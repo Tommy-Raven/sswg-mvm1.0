@@ -131,7 +131,11 @@ class DependencyGraph:
         # cycle if not all nodes were visited
         has_cycle = visited != len(self.modules)
         if has_cycle:
-            logger.warning("Dependency cycle detected (visited=%d, total=%d).", visited, len(self.modules))
+            logger.warning(
+                "Dependency cycle detected (visited=%d, total=%d).",
+                visited,
+                len(self.modules),
+            )
         else:
             logger.info("No dependency cycle detected.")
         return has_cycle
@@ -148,7 +152,9 @@ class DependencyGraph:
             cleaned = [d for d in deps if d in self.modules]
             removed = set(deps) - set(cleaned)
             if removed:
-                logger.warning("Removing missing dependencies for %s: %s", mid, sorted(removed))
+                logger.warning(
+                    "Removing missing dependencies for %s: %s", mid, sorted(removed)
+                )
                 m["dependencies"] = cleaned
 
     def attempt_autocorrect_cycle(self) -> bool:
@@ -166,7 +172,9 @@ class DependencyGraph:
         if not self.detect_cycle():
             return False
 
-        logger.warning("Cycle detected; attempting autocorrect using optional dependencies.")
+        logger.warning(
+            "Cycle detected; attempting autocorrect using optional dependencies."
+        )
         # Strategy 1: try remove optional dependencies
         for mid, m in self.modules.items():
             deps = list(m.get("dependencies", []) or [])
@@ -178,7 +186,9 @@ class DependencyGraph:
             for d in deps:
                 dep_obj = self.modules.get(d, {})
                 if dep_obj.get("dependency_optional", False):
-                    logger.info("Autocorrect: removing optional dependency %s from %s", d, mid)
+                    logger.info(
+                        "Autocorrect: removing optional dependency %s from %s", d, mid
+                    )
                     optional_removed = True
                 else:
                     newdeps.append(d)
@@ -190,12 +200,16 @@ class DependencyGraph:
                     return True
 
         # Strategy 2: fallback: drop last-listed dependency across modules
-        logger.warning("Optional dependency removal insufficient; trying fallback strategy.")
+        logger.warning(
+            "Optional dependency removal insufficient; trying fallback strategy."
+        )
         for mid, m in self.modules.items():
             deps = list(m.get("dependencies", []) or [])
             while deps:
                 removed = deps.pop()
-                logger.info("Fallback autocorrect: removing dependency %s from %s", removed, mid)
+                logger.info(
+                    "Fallback autocorrect: removing dependency %s from %s", removed, mid
+                )
                 m["dependencies"] = deps
                 if not self.detect_cycle():
                     logger.info("Cycle resolved via fallback removal.")
@@ -203,4 +217,6 @@ class DependencyGraph:
 
         logger.error("Autocorrect failed; cycle still present.")
         return False
+
+
 # End of ai_graph/dependency_graph.py

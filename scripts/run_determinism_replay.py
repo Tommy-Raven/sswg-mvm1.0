@@ -68,7 +68,9 @@ def main() -> int:
             id_failure,
         )
         if id_failure:
-            FailureEmitter(Path("artifacts/failures")).emit(id_failure, run_id=args.run_id)
+            FailureEmitter(Path("artifacts/failures")).emit(
+                id_failure, run_id=args.run_id
+            )
             print(f"Bijectivity check failed: {id_failure.as_dict()}")
             return 1
     write_determinism_report(args.output, report)

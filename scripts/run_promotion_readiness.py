@@ -16,16 +16,29 @@ from generator.determinism import (
     write_determinism_report,
 )
 from generator.autopsy_report import build_autopsy_report, write_autopsy_report
-from generator.failure_emitter import FailureEmitter, FailureLabel, validate_failure_label
+from generator.failure_emitter import (
+    FailureEmitter,
+    FailureLabel,
+    validate_failure_label,
+)
 from generator.agent_policy import (
     build_policy_manifest,
     detect_working_tree_changes,
     policy_state,
 )
 from generator.audit_bundle import build_bundle, load_audit_spec, validate_bundle
-from generator.budgeting import collect_artifact_sizes, evaluate_budgets, load_budget_spec
+from generator.budgeting import (
+    collect_artifact_sizes,
+    evaluate_budgets,
+    load_budget_spec,
+)
 from generator.pdl_validator import PDLValidationError, validate_pdl_file_with_report
-from generator.phase_io import build_phase_io_manifest, detect_phase_collapse, load_pdl, write_manifest
+from generator.phase_io import (
+    build_phase_io_manifest,
+    detect_phase_collapse,
+    load_pdl,
+    write_manifest,
+)
 from generator.anchor_registry import AnchorRegistry, enforce_anchor
 from generator.environment import check_environment_drift, environment_fingerprint
 from generator.evaluation_spec import validate_evaluation_spec
@@ -41,7 +54,10 @@ from generator.overlay_governance import (
     detect_overlay_ambiguity,
     validate_overlay_descriptor,
 )
-from generator.phase_evidence import build_phase_evidence_bundle, write_phase_evidence_bundle
+from generator.phase_evidence import (
+    build_phase_evidence_bundle,
+    write_phase_evidence_bundle,
+)
 from generator.secret_scanner import load_allowlist, scan_paths
 from generator.sanitizer import sanitize_payload
 
@@ -215,7 +231,8 @@ def _has_breaking_override(overlays: list[dict]) -> bool:
         compatibility = overlay.get("compatibility", {})
         if compatibility.get("compatibility") == "breaking":
             if all(
-                compatibility.get(key) for key in ("migration_plan_ref", "rollback_plan_ref")
+                compatibility.get(key)
+                for key in ("migration_plan_ref", "rollback_plan_ref")
             ):
                 return True
     return False
@@ -265,7 +282,9 @@ def main() -> int:
     policy_manifest = build_policy_manifest(policy, effective_scope=root_agents)
     policy_manifest_path = Path("artifacts/policy/policy_manifest.json")
     policy_manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    policy_manifest_path.write_text(json.dumps(policy_manifest, indent=2), encoding="utf-8")
+    policy_manifest_path.write_text(
+        json.dumps(policy_manifest, indent=2), encoding="utf-8"
+    )
 
     if not args.invariants_path.exists():
         return _gate_failure(
@@ -329,7 +348,9 @@ def main() -> int:
                 phase_id="validate",
                 evidence={
                     "missing_registry": coverage_report.get("missing_registry", []),
-                    "missing_enforcement": coverage_report.get("missing_enforcement", []),
+                    "missing_enforcement": coverage_report.get(
+                        "missing_enforcement", []
+                    ),
                     "invariant_ids": [item for item in missing_ids if item],
                 },
             ),
@@ -362,7 +383,9 @@ def main() -> int:
         )
         return gate_failure(failure)
 
-    validation_reports = list((evidence_dir / "validation").glob("pdl_validation_*.json"))
+    validation_reports = list(
+        (evidence_dir / "validation").glob("pdl_validation_*.json")
+    )
     if validation_reports:
         report_path = validation_reports[0]
         report_payload = json.loads(report_path.read_text(encoding="utf-8"))
@@ -388,7 +411,9 @@ def main() -> int:
         phase_outputs=phase_outputs,
         required_phases=["normalize", "analyze", "validate", "compare"],
     )
-    write_determinism_report(evidence_dir / "determinism_report.json", determinism_report)
+    write_determinism_report(
+        evidence_dir / "determinism_report.json", determinism_report
+    )
     if failure:
         return gate_failure(failure)
     measurement_ids = json.loads(args.measurement_ids.read_text(encoding="utf-8"))
@@ -439,7 +464,9 @@ def main() -> int:
     )
 
     overlay_lint_errors: dict[str, list[dict[str, object]]] = {}
-    for overlay_path in sorted(args.overlays_dir.glob("*.json")) if args.overlays_dir.exists() else []:
+    for overlay_path in (
+        sorted(args.overlays_dir.glob("*.json")) if args.overlays_dir.exists() else []
+    ):
         overlay = json.loads(overlay_path.read_text(encoding="utf-8"))
         errors = validate_overlay_descriptor(
             overlay,
@@ -457,7 +484,9 @@ def main() -> int:
         ambiguity_errors=ambiguity_errors,
     )
     overlay_report_path = evidence_dir / "overlay_promotion_report.json"
-    overlay_report_path.write_text(json.dumps(overlay_report, indent=2), encoding="utf-8")
+    overlay_report_path.write_text(
+        json.dumps(overlay_report, indent=2), encoding="utf-8"
+    )
 
     if overlay_lint_errors or ambiguity_errors:
         return gate_failure(
@@ -502,7 +531,11 @@ def main() -> int:
         exp_scope = json.loads(args.experiment_scope.read_text(encoding="utf-8"))
         exp_errors = sorted(
             Draft202012Validator(
-                json.loads((args.schema_dir / "experiment-scope.json").read_text(encoding="utf-8"))
+                json.loads(
+                    (args.schema_dir / "experiment-scope.json").read_text(
+                        encoding="utf-8"
+                    )
+                )
             ).iter_errors(exp_scope),
             key=lambda e: e.path,
         )
@@ -570,9 +603,13 @@ def main() -> int:
             ),
         )
 
-    criteria = {metric["name"]: metric["threshold"] for metric in eval_spec.get("metrics", [])}
+    criteria = {
+        metric["name"]: metric["threshold"] for metric in eval_spec.get("metrics", [])
+    }
     tolerance = float(eval_spec.get("regression_definition", {}).get("tolerance", 0.0))
-    checkpointer = EvaluationCheckpointer(success_criteria=criteria, tolerance=tolerance)
+    checkpointer = EvaluationCheckpointer(
+        success_criteria=criteria, tolerance=tolerance
+    )
     baseline_metrics = _load_metrics(args.eval_baseline)
     candidate_metrics = _load_metrics(args.eval_candidate)
     checkpointer.record("baseline", baseline_metrics)
@@ -603,7 +640,9 @@ def main() -> int:
         "regressions": candidate_checkpoint.regressions,
         "rollback_recommended": candidate_checkpoint.rollback_recommended,
         "override_used": override_used,
-        "inputs_hash": hash_data({"baseline": baseline_metrics, "candidate": candidate_metrics}),
+        "inputs_hash": hash_data(
+            {"baseline": baseline_metrics, "candidate": candidate_metrics}
+        ),
     }
     eval_report_path = evidence_dir / "eval_report.json"
     eval_report_path.write_text(json.dumps(eval_report, indent=2), encoding="utf-8")
@@ -675,7 +714,9 @@ def main() -> int:
             "output": phase_outputs.get("compare"),
         }
         compare_output_path = evidence_dir / "compare_output.json"
-        compare_output_path.write_text(json.dumps(compare_output, indent=2), encoding="utf-8")
+        compare_output_path.write_text(
+            json.dumps(compare_output, indent=2), encoding="utf-8"
+        )
 
     if args.release_track == "sswg-exp":
         exp_summary = {
@@ -749,11 +790,15 @@ def main() -> int:
         "artifacts": [_collect_artifact_entry(path) for path in artifact_paths],
     }
     provenance_path = evidence_dir / "provenance_manifest.json"
-    provenance_path.write_text(json.dumps(provenance_manifest, indent=2), encoding="utf-8")
+    provenance_path.write_text(
+        json.dumps(provenance_manifest, indent=2), encoding="utf-8"
+    )
 
     provenance_target = Path("artifacts/provenance/provenance_manifest.json")
     provenance_target.parent.mkdir(parents=True, exist_ok=True)
-    provenance_target.write_text(json.dumps(provenance_manifest, indent=2), encoding="utf-8")
+    provenance_target.write_text(
+        json.dumps(provenance_manifest, indent=2), encoding="utf-8"
+    )
 
     if not args.budget_spec.exists():
         return gate_failure(
@@ -842,7 +887,9 @@ def main() -> int:
     }
     budget_report_path = Path("artifacts/budgets/budget_report.json")
     budget_report_path.parent.mkdir(parents=True, exist_ok=True)
-    budget_report_path.write_text(json.dumps(budget_report_payload, indent=2), encoding="utf-8")
+    budget_report_path.write_text(
+        json.dumps(budget_report_payload, indent=2), encoding="utf-8"
+    )
     if budget_report_payload.get("status") != "pass":
         return gate_failure(
             FailureLabel(
@@ -873,10 +920,12 @@ def main() -> int:
             entry.get("artifact_class"): "pass" if entry.get("pass") else "fail"
             for entry in budget_report_payload.get("artifact_results", [])
         },
-        "total_budget": "pass"
-        if budget_report_payload.get("total_duration_sec", 0)
-        <= budget_report_payload.get("max_total_duration_sec", 0)
-        else "fail",
+        "total_budget": (
+            "pass"
+            if budget_report_payload.get("total_duration_sec", 0)
+            <= budget_report_payload.get("max_total_duration_sec", 0)
+            else "fail"
+        ),
     }
     telemetry_path.write_text(
         json.dumps(sanitize_payload(telemetry_payload), indent=2),
@@ -951,7 +1000,9 @@ def main() -> int:
         },
     }
     audit_certificate_path = Path("artifacts/audit/audit_certificate.json")
-    audit_certificate_path.write_text(json.dumps(audit_certificate, indent=2), encoding="utf-8")
+    audit_certificate_path.write_text(
+        json.dumps(audit_certificate, indent=2), encoding="utf-8"
+    )
 
     allowlist = load_allowlist(args.allowlist_path)
     secret_scan = scan_paths(
@@ -997,7 +1048,9 @@ def main() -> int:
     if compare_output_path:
         compare_anchor_failure = enforce_anchor(
             artifact_path=compare_output_path,
-            metadata=json.loads(compare_output_path.read_text(encoding="utf-8")).get("anchor", {}),
+            metadata=json.loads(compare_output_path.read_text(encoding="utf-8")).get(
+                "anchor", {}
+            ),
             registry=registry,
         )
         if compare_anchor_failure:

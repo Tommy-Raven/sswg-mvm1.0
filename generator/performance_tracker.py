@@ -15,6 +15,7 @@ from ai_monitoring.structured_logger import get_logger, log_event
 @dataclass
 class PhaseStats:
     """Aggregate statistics for a single phase label."""
+
     count: int = 0
     total_duration: float = 0.0
     failures: int = 0

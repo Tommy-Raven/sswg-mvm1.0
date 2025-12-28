@@ -72,9 +72,7 @@ def _get_workflow_id(workflow: Any) -> str:
     """Best-effort workflow ID extraction."""
     if _is_mapping(workflow):
         return str(
-            workflow.get("workflow_id")
-            or workflow.get("id")
-            or "unnamed_workflow"
+            workflow.get("workflow_id") or workflow.get("id") or "unnamed_workflow"
         )
     return str(getattr(workflow, "workflow_id", "unnamed_workflow"))
 
@@ -147,11 +145,7 @@ def export_markdown(workflow: Any, out_dir: str = "templates") -> str:
         # Template style: list of phase dicts
         for idx, phase in enumerate(sections.phases):
             if isinstance(phase, MappingABC):
-                pname = (
-                    phase.get("name")
-                    or phase.get("id")
-                    or f"Phase {idx + 1}"
-                )
+                pname = phase.get("name") or phase.get("id") or f"Phase {idx + 1}"
                 md_lines.append(f"### {pname}")
                 tasks = phase.get("tasks", [])
                 for task in tasks:
@@ -205,10 +199,6 @@ async def export_workflow_async(
     loop = asyncio.get_running_loop()
     out_dir_str = str(out_dir)
 
-    json_path = await loop.run_in_executor(
-        None, export_json, workflow, out_dir_str
-    )
-    md_path = await loop.run_in_executor(
-        None, export_markdown, workflow, out_dir_str
-    )
+    json_path = await loop.run_in_executor(None, export_json, workflow, out_dir_str)
+    md_path = await loop.run_in_executor(None, export_markdown, workflow, out_dir_str)
     return {"json": json_path, "markdown": md_path}

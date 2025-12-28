@@ -23,7 +23,9 @@ def _parse_args() -> argparse.Namespace:
         default=Path("schemas/run-telemetry.json"),
         help="Telemetry schema path.",
     )
-    parser.add_argument("--run-id", type=str, default="telemetry-validate", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="telemetry-validate", help="Run identifier."
+    )
     return parser.parse_args()
 
 

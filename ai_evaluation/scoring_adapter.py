@@ -70,4 +70,6 @@ class ScoreAdapter:
         """
         self.fit(ref_scores)
         return self.transform(score)
+
+
 # End of ai_evaluation/scoring_adapter.py

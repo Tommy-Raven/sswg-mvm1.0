@@ -57,7 +57,10 @@ class EvaluationCheckpointer:
         self.history: List[EvaluationCheckpoint] = []
 
     def _meets_criteria(self, metrics: Dict[str, float]) -> bool:
-        return all(metrics.get(name, 0.0) >= threshold for name, threshold in self.criteria.items())
+        return all(
+            metrics.get(name, 0.0) >= threshold
+            for name, threshold in self.criteria.items()
+        )
 
     def _detect_regressions(self, metrics: Dict[str, float]) -> Dict[str, float]:
         if not self.history:

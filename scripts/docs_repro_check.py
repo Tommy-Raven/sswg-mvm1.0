@@ -10,14 +10,18 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run documentation reproducibility checks.")
+    parser = argparse.ArgumentParser(
+        description="Run documentation reproducibility checks."
+    )
     parser.add_argument(
         "--runbook-path",
         type=Path,
         default=Path("docs/runbook.json"),
         help="Runbook JSON path.",
     )
-    parser.add_argument("--run-id", type=str, default="docs-repro", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="docs-repro", help="Run identifier."
+    )
     return parser.parse_args()
 
 

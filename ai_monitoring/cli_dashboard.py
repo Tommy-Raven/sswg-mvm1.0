@@ -59,9 +59,7 @@ class CLIDashboard:
         """
         Record the outcome of executing a single phase.
         """
-        stats = self.phase_stats.setdefault(
-            phase_id, {"success": 0, "failures": 0}
-        )
+        stats = self.phase_stats.setdefault(phase_id, {"success": 0, "failures": 0})
 
         if success:
             stats["success"] += 1
@@ -119,4 +117,6 @@ class CLIDashboard:
                 "failures": self.failures,
             },
         )
+
+
 # End of ai_monitoring/cli_dashboard.py

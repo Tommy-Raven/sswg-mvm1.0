@@ -40,7 +40,9 @@ def main() -> int:
         return 1
 
     spec = json.loads(args.spec_path.read_text(encoding="utf-8"))
-    errors = validate_evaluation_spec(spec, schema_dir=args.schema_dir, spec_path=args.spec_path)
+    errors = validate_evaluation_spec(
+        spec, schema_dir=args.schema_dir, spec_path=args.spec_path
+    )
     if errors:
         failure = FailureLabel(
             Type="schema_failure",

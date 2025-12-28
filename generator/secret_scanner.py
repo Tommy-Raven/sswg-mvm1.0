@@ -65,7 +65,9 @@ def load_allowlist(path: Optional[Path]) -> list[AllowlistEntry]:
     return _parse_allowlist(path)
 
 
-def _matches_entry(entry: AllowlistEntry, path: Path, indicators: Iterable[str]) -> bool:
+def _matches_entry(
+    entry: AllowlistEntry, path: Path, indicators: Iterable[str]
+) -> bool:
     """Return True when a path/indicator pair matches an allowlist entry."""
     if not fnmatch.fnmatch(str(path), entry.path_glob):
         return False
@@ -142,7 +144,9 @@ def scan_paths(
             for file_path in path.rglob("*"):
                 if file_path.is_dir():
                     continue
-                violations.extend(_scan_single_path(file_path, allowlist, allowlist_errors))
+                violations.extend(
+                    _scan_single_path(file_path, allowlist, allowlist_errors)
+                )
         else:
             violations.extend(_scan_single_path(path, allowlist, allowlist_errors))
 

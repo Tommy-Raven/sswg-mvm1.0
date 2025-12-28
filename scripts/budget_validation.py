@@ -6,7 +6,11 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from generator.budgeting import collect_artifact_sizes, evaluate_budgets, load_budget_spec
+from generator.budgeting import (
+    collect_artifact_sizes,
+    evaluate_budgets,
+    load_budget_spec,
+)
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
@@ -36,7 +40,9 @@ def _parse_args() -> argparse.Namespace:
         default=Path("schemas"),
         help="Schema directory.",
     )
-    parser.add_argument("--run-id", type=str, default="budget-validate", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="budget-validate", help="Run identifier."
+    )
     return parser.parse_args()
 
 
@@ -58,8 +64,12 @@ def main() -> int:
         return 1
 
     spec = load_budget_spec(args.budget_spec)
-    schema = json.loads((args.schema_dir / "budget-spec.json").read_text(encoding="utf-8"))
-    errors = sorted(Draft202012Validator(schema).iter_errors(spec), key=lambda e: e.path)
+    schema = json.loads(
+        (args.schema_dir / "budget-spec.json").read_text(encoding="utf-8")
+    )
+    errors = sorted(
+        Draft202012Validator(schema).iter_errors(spec), key=lambda e: e.path
+    )
     if errors:
         emitter.emit(
             FailureLabel(
@@ -68,7 +78,8 @@ def main() -> int:
                 phase_id="validate",
                 evidence={
                     "errors": [
-                        {"message": error.message, "path": list(error.path)} for error in errors
+                        {"message": error.message, "path": list(error.path)}
+                        for error in errors
                     ]
                 },
             ),

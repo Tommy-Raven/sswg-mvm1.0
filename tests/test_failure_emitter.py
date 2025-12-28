@@ -5,7 +5,11 @@ from pathlib import Path
 
 import pytest
 
-from generator.failure_emitter import FailureEmitter, FailureLabel, validate_failure_label
+from generator.failure_emitter import (
+    FailureEmitter,
+    FailureLabel,
+    validate_failure_label,
+)
 from tests.assertions import require
 
 

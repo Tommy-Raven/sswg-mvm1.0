@@ -88,7 +88,9 @@ def _parse_list(lines: List[str], index: int, indent: int) -> Tuple[List[Any], i
     return items, index
 
 
-def _parse_dict(lines: List[str], index: int, indent: int) -> Tuple[dict[str, Any], int]:
+def _parse_dict(
+    lines: List[str], index: int, indent: int
+) -> Tuple[dict[str, Any], int]:
     obj: dict[str, Any] = {}
     while index < len(lines):
         line = lines[index]
@@ -119,7 +121,7 @@ def _parse_value(value: str) -> Any:
         return value == "true"
     if value in {"null", "None"}:
         return None
-    if (value.startswith("\"") and value.endswith("\"")) or (
+    if (value.startswith('"') and value.endswith('"')) or (
         value.startswith("'") and value.endswith("'")
     ):
         return value[1:-1]

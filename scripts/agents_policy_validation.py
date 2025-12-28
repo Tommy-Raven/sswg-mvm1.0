@@ -16,7 +16,9 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate AGENTS.md policy compliance.")
+    parser = argparse.ArgumentParser(
+        description="Validate AGENTS.md policy compliance."
+    )
     parser.add_argument(
         "--repo-root",
         type=Path,

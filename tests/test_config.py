@@ -53,6 +53,7 @@ def output_dir(tmp_path_factory):
 def template_dir():
     return Path("data/templates").absolute()
 
+
 # Tests configuration loading + template resolution.
 
 from data.data_parsing import load_template

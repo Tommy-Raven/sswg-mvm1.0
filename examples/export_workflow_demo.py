@@ -15,10 +15,19 @@ def main() -> None:
         "version": "1.0",
         "metadata": {"purpose": "Testing export manager", "audience": "Developers"},
         "phases": [
-            {"title": "Phase 1: Initialization", "tasks": ["Collect user inputs", "Load template"]},
-            {"title": "Phase 2: Generation", "tasks": ["Assemble structure", "Export results"]},
+            {
+                "title": "Phase 1: Initialization",
+                "tasks": ["Collect user inputs", "Load template"],
+            },
+            {
+                "title": "Phase 2: Generation",
+                "tasks": ["Assemble structure", "Export results"],
+            },
         ],
-        "dependency_graph": {"nodes": ["Init", "Generate"], "edges": [["Init", "Generate"]]},
+        "dependency_graph": {
+            "nodes": ["Init", "Generate"],
+            "edges": [["Init", "Generate"]],
+        },
     }
 
     exported = export_workflow(wf_demo, export_mode="both")

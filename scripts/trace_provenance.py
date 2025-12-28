@@ -6,7 +6,9 @@ from pathlib import Path
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Trace provenance for a run or artifact.")
+    parser = argparse.ArgumentParser(
+        description="Trace provenance for a run or artifact."
+    )
     parser.add_argument(
         "--provenance-path",
         type=Path,
@@ -43,7 +45,10 @@ def main() -> int:
     if args.artifact_id:
         for artifact in manifest.get("artifacts", []):
             anchor = artifact.get("anchor", {})
-            if anchor.get("anchor_id") == args.artifact_id or artifact.get("path") == args.artifact_id:
+            if (
+                anchor.get("anchor_id") == args.artifact_id
+                or artifact.get("path") == args.artifact_id
+            ):
                 artifact_focus = artifact
                 break
         if not artifact_focus:

@@ -75,13 +75,11 @@ def _snapshot_dependencies(modules: list[dict[str, Any]]) -> dict[str, list[str]
     return snapshot
 
 
-def _build_dependency_graph(modules: list[dict[str, Any]]) -> dict[str, list[list[str]]]:
+def _build_dependency_graph(
+    modules: list[dict[str, Any]],
+) -> dict[str, list[list[str]]]:
     nodes = sorted(
-        {
-            str(module.get("module_id"))
-            for module in modules
-            if module.get("module_id")
-        }
+        {str(module.get("module_id")) for module in modules if module.get("module_id")}
     )
     edges: list[list[str]] = []
     for module in modules:
@@ -97,9 +95,7 @@ def _build_dependency_index(
     modules: list[dict[str, Any]],
 ) -> dict[str, dict[str, list[str]]]:
     module_ids = {
-        str(module.get("module_id"))
-        for module in modules
-        if module.get("module_id")
+        str(module.get("module_id")) for module in modules if module.get("module_id")
     }
     upstream: dict[str, list[str]] = {}
     downstream: dict[str, list[str]] = {module_id: [] for module_id in module_ids}
@@ -287,7 +283,9 @@ def _apply_inheritance_checks(
     precedence = conflict_rules.get("precedence") or []
     strategy = conflict_rules.get("strategy")
     if not precedence or host_domain not in precedence or not strategy:
-        raise ValueError("Inheritance conflict_rules must define precedence and strategy.")
+        raise ValueError(
+            "Inheritance conflict_rules must define precedence and strategy."
+        )
 
     glossary = inheritance.get("glossary") or {}
     if glossary:
@@ -319,9 +317,7 @@ def _apply_inheritance_checks(
     imports = inheritance.get("imports") or []
     tasks_by_id = _collect_tasks(workflow)
     outputs = _collect_task_outputs(workflow)
-    prerequisite_overrides = set(
-        inheritance.get("prerequisite_overrides") or []
-    )
+    prerequisite_overrides = set(inheritance.get("prerequisite_overrides") or [])
 
     provenance_updates: list[dict[str, str]] = []
     missing_prereqs: dict[str, list[str]] = {}
@@ -423,9 +419,7 @@ def _apply_meta_metrics(
                 deltas[key] = value - base_value
 
     if baseline_overall is None and baseline_scores:
-        baseline_overall = sum(baseline_scores.values()) / max(
-            len(baseline_scores), 1
-        )
+        baseline_overall = sum(baseline_scores.values()) / max(len(baseline_scores), 1)
 
     thresholds = {
         "promotion_threshold": 0.02,
@@ -454,7 +448,9 @@ def _apply_meta_metrics(
     promotion_threshold = thresholds["promotion_threshold"]
     promotion_eligible = False
     if overall_delta is not None:
-        promotion_eligible = overall_delta >= promotion_threshold and regression_guard_passed
+        promotion_eligible = (
+            overall_delta >= promotion_threshold and regression_guard_passed
+        )
 
     meta_metrics = {
         "timestamp": _utc_timestamp(),
@@ -490,9 +486,7 @@ def _apply_dependency_tracking(
 ) -> None:
     modules = workflow.get("modules", []) or []
     module_ids = {
-        str(module.get("module_id"))
-        for module in modules
-        if module.get("module_id")
+        str(module.get("module_id")) for module in modules if module.get("module_id")
     }
     before_snapshot = _snapshot_dependencies(modules)
     missing_dependencies = {
@@ -619,6 +613,7 @@ DEFAULT_TEMPLATE = Path("data/templates/campfire_workflow.json")
 
 # ─── CLI Parsing ─────────────────────────────────────────────────
 
+
 def parse_args(argv: Optional[list] = None) -> argparse.Namespace:
     """
     Parse command-line arguments for the MVM entrypoint.
@@ -683,6 +678,7 @@ def parse_args(argv: Optional[list] = None) -> argparse.Namespace:
 
 # ─── IO Helpers ──────────────────────────────────────────────────
 
+
 def load_workflow(path: Path) -> Dict[str, Any]:
     """
     Load a workflow JSON file from disk.
@@ -697,6 +693,7 @@ def load_workflow(path: Path) -> Dict[str, Any]:
 
 
 # ─── Core Processing Pipeline ────────────────────────────────────
+
 
 def process_workflow(
     workflow: Dict[str, Any],
@@ -815,7 +812,9 @@ def process_workflow(
                 "evidence": {
                     "score_delta": outcome.score_delta,
                     "semantic_delta": outcome.semantic_delta,
-                    "decision": refined.get("recursion_metadata", {}).get("llm_decision"),
+                    "decision": refined.get("recursion_metadata", {}).get(
+                        "llm_decision"
+                    ),
                     "diff_summary": diff_summary,
                 },
                 "impact_analysis": {
@@ -860,6 +859,7 @@ def process_workflow(
 
 
 # ─── Export & History Recording ──────────────────────────────────
+
 
 def export_artifacts(
     workflow: Dict[str, Any],
@@ -948,6 +948,7 @@ def record_history_if_needed(
 
 # ─── Public API Entry for Programmatic Use ───────────────────────
 
+
 def run_mvm(
     workflow_source: Union[Path, Dict[str, Any]],
     *,
@@ -990,6 +991,7 @@ def run_mvm(
 
 
 # ─── Main CLI Entrypoint ─────────────────────────────────────────
+
 
 def main(argv: Optional[list] = None) -> int:
     """

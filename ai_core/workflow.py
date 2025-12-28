@@ -86,7 +86,9 @@ class Workflow:
                 "or (workflow_dict: dict)."
             )
 
-    def _init_from_id_and_params(self, workflow_id: str, params: Dict[str, Any]) -> None:
+    def _init_from_id_and_params(
+        self, workflow_id: str, params: Dict[str, Any]
+    ) -> None:
         """Legacy / generator initialization path."""
         self.workflow_id = workflow_id
         self.params = dict(params)
@@ -97,7 +99,9 @@ class Workflow:
 
     def _init_from_dict(self, data: Dict[str, Any]) -> None:
         """Schema-style initialization from a workflow dict."""
-        self.workflow_id = data.get("workflow_id") or data.get("id") or "unnamed_workflow"
+        self.workflow_id = (
+            data.get("workflow_id") or data.get("id") or "unnamed_workflow"
+        )
         self.version = str(data.get("version", "0.0.0"))
         self.schema_version = str(data.get("schema_version", "1.0.0"))
 
@@ -105,7 +109,9 @@ class Workflow:
         if "title" not in self.metadata:
             self.metadata["title"] = data.get("title") or "Untitled Workflow"
         if "description" not in self.metadata:
-            self.metadata["description"] = data.get("description") or "Generated workflow."
+            self.metadata["description"] = (
+                data.get("description") or "Generated workflow."
+            )
 
         self.phases = data.get("phases", []) or []
         if not self.phases:
@@ -183,10 +189,7 @@ class Workflow:
             - module_id: str
             - phase_id: str
         """
-        return [
-            m for m in self.modules
-            if str(m.get("phase_id")) == str(phase_id)
-        ]
+        return [m for m in self.modules if str(m.get("phase_id")) == str(phase_id)]
 
     def get_context(self) -> Dict[str, Any]:
         """
@@ -271,4 +274,6 @@ class Workflow:
         if self.params:
             payload["params"] = self.params
         return payload
+
+
 # ---------------------------------------------------------------------- #

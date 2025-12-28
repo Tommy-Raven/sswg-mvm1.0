@@ -78,4 +78,6 @@ def check_error_rate_threshold(
         threshold=max_rate,
         message=msg,
     )
+
+
 # End of ai_monitoring/performance_alerts.py

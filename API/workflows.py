@@ -116,9 +116,7 @@ def _format_schema_errors(errors: Optional[Any]) -> str:
         return "Schema validation failed."
     if isinstance(errors, str):
         return errors
-    return "; ".join(
-        f"{error.message} at {list(error.path)}" for error in errors
-    )
+    return "; ".join(f"{error.message} at {list(error.path)}" for error in errors)
 
 
 def refine(
@@ -199,11 +197,7 @@ def get_dependency_graph(workflow: Dict[str, Any]) -> Dict[str, Any]:
 
 def _build_dependency_graph(modules: list[Dict[str, Any]]) -> Dict[str, Any]:
     nodes = sorted(
-        {
-            str(module.get("module_id"))
-            for module in modules
-            if module.get("module_id")
-        }
+        {str(module.get("module_id")) for module in modules if module.get("module_id")}
     )
     edges: list[list[str]] = []
     for module in modules:

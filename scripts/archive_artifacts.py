@@ -11,7 +11,9 @@ from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Archive canonical artifacts with manifest.")
+    parser = argparse.ArgumentParser(
+        description="Archive canonical artifacts with manifest."
+    )
     parser.add_argument(
         "--artifact-paths",
         type=Path,
@@ -37,8 +39,12 @@ def _parse_args() -> argparse.Namespace:
         default=Path("config/anchor_registry.json"),
         help="Anchor registry path.",
     )
-    parser.add_argument("--run-id", type=str, default="archive-run", help="Run identifier.")
-    parser.add_argument("--reason", type=str, default="retention_policy", help="Archival reason.")
+    parser.add_argument(
+        "--run-id", type=str, default="archive-run", help="Run identifier."
+    )
+    parser.add_argument(
+        "--reason", type=str, default="retention_policy", help="Archival reason."
+    )
     return parser.parse_args()
 
 

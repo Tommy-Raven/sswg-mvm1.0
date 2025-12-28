@@ -61,7 +61,9 @@ def _summarize_total(phases: Dict[str, Dict[str, Any]]) -> Dict[str, float]:
     }
 
 
-def _safe_validate_workflow(workflow: Dict[str, Any]) -> Tuple[bool, list[str], str | None]:
+def _safe_validate_workflow(
+    workflow: Dict[str, Any],
+) -> Tuple[bool, list[str], str | None]:
     try:
         ok, errors = validate_workflow(workflow)
     except Exception as exc:  # pylint: disable=broad-exception-caught
@@ -94,9 +96,7 @@ def profile_workflow(workflow_path: Path, *, out_dir: Path) -> Dict[str, Any]:
 
     _, phases["normalize_task_packaging"] = _measure_phase(
         "normalize_task_packaging",
-        lambda: mvm_main._apply_task_packaging(
-            workflow, change_source="profiling_run"
-        ),
+        lambda: mvm_main._apply_task_packaging(workflow, change_source="profiling_run"),
     )
 
     _, phases["inheritance_checks"] = _measure_phase(
@@ -106,9 +106,11 @@ def profile_workflow(workflow_path: Path, *, out_dir: Path) -> Dict[str, Any]:
         ),
     )
 
-    (schema_ok, schema_errors, schema_exception), phases["schema_validation"] = _measure_phase(
-        "schema_validation",
-        lambda: _safe_validate_workflow(workflow),
+    (schema_ok, schema_errors, schema_exception), phases["schema_validation"] = (
+        _measure_phase(
+            "schema_validation",
+            lambda: _safe_validate_workflow(workflow),
+        )
     )
     phases["schema_validation"]["details"] = {
         "ok": bool(schema_ok),

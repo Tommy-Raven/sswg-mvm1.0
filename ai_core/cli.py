@@ -30,9 +30,7 @@ from .orchestrator import Orchestrator, RunContext
 
 
 def parse_args(argv: Optional[list] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="ai_core orchestration CLI (MVM)"
-    )
+    parser = argparse.ArgumentParser(description="ai_core orchestration CLI (MVM)")
     parser.add_argument(
         "-j",
         "--workflow-json",
@@ -87,9 +85,7 @@ def main(argv: Optional[list] = None) -> int:
     result = orchestrator.run_mvm(context)
 
     # Optional: print a short summary
-    print(
-        f"Workflow {result.workflow.id} executed via ai_core.Orchestrator."
-    )
+    print(f"Workflow {result.workflow.id} executed via ai_core.Orchestrator.")
     return 0
 
 

@@ -6,6 +6,7 @@ import argparse
 
 from ai_core.orchestrator import Orchestrator, RunContext
 
+
 def main():
     parser = argparse.ArgumentParser(description="AI Instructional Workflow CLI")
     parser.add_argument("--purpose", required=True)
@@ -20,6 +21,7 @@ def main():
     context = RunContext(workflow_source=workflow_payload)
     result = orchestrator.run_mvm(context)
     print("Workflow generated:", result.workflow.id)
+
 
 if __name__ == "__main__":
     main()

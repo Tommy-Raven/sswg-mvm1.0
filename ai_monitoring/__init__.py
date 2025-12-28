@@ -18,6 +18,7 @@ from .performance_alerts import (
     check_latency_threshold,
     check_error_rate_threshold,
 )
+
 # CLIDashboard imported lazily in get_cli_dashboard to avoid hard dependency
 # if users want a headless environment.
 
@@ -41,6 +42,7 @@ def get_cli_dashboard():
     try:
         from .cli_dashboard import CLIDashboard  # type: ignore
     except Exception:  # pragma: no cover - defensive stub
+
         class CLIDashboard:  # type: ignore[no-redef]
             def record_cycle(self, success: bool) -> None:
                 pass

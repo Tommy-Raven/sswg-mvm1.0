@@ -25,6 +25,7 @@ SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
 @dataclass
 class PDLFailureLabel:  # pylint: disable=invalid-name
     """Failure label used by PDL validation."""
+
     Type: str
     message: str
     phase_id: Optional[str] = None

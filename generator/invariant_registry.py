@@ -97,7 +97,9 @@ def validate_registry(payload: Dict[str, Any]) -> List[str]:
     return errors
 
 
-def resolve_enforcement_paths(targets: Iterable[str], repo_root: Path) -> List[Dict[str, Any]]:
+def resolve_enforcement_paths(
+    targets: Iterable[str], repo_root: Path
+) -> List[Dict[str, Any]]:
     """Resolve enforcement targets to filesystem paths."""
     resolved: List[Dict[str, Any]] = []
     for target in targets:
@@ -114,7 +116,9 @@ def resolve_enforcement_paths(targets: Iterable[str], repo_root: Path) -> List[D
     return resolved
 
 
-def resolve_documentation_paths(targets: Iterable[str], repo_root: Path) -> List[Dict[str, Any]]:
+def resolve_documentation_paths(
+    targets: Iterable[str], repo_root: Path
+) -> List[Dict[str, Any]]:
     """Resolve documentation targets to filesystem paths."""
     resolved: List[Dict[str, Any]] = []
     for target in targets:

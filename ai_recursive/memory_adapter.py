@@ -18,6 +18,7 @@ from typing import Any, Dict, Optional
 try:
     from ai_memory.memory_store import MemoryStore  # type: ignore
 except Exception:  # pragma: no cover
+
     class MemoryStore:  # type: ignore[no-redef]
         def save(self, obj: Dict[str, Any]) -> None:
             pass
@@ -29,6 +30,7 @@ except Exception:  # pragma: no cover
 try:
     from generator.history import HistoryManager  # type: ignore
 except Exception:  # pragma: no cover
+
     class HistoryManager:  # type: ignore[no-redef]
         def record_transition(
             self,

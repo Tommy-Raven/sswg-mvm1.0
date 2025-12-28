@@ -35,9 +35,7 @@ def main() -> int:
         overlay_path=args.overlay_path,
     )
     if errors:
-        evidence = {
-            "errors": errors
-        }
+        evidence = {"errors": errors}
         failure = FailureLabel(
             Type="schema_failure",
             message="Overlay descriptor validation failed",

@@ -78,7 +78,9 @@ def main() -> int:
         return 1
 
     spec = json.loads(args.eval_spec.read_text(encoding="utf-8"))
-    errors = validate_evaluation_spec(spec, schema_dir=args.schema_dir, spec_path=args.eval_spec)
+    errors = validate_evaluation_spec(
+        spec, schema_dir=args.schema_dir, spec_path=args.eval_spec
+    )
     if errors:
         failure = FailureLabel(
             Type="schema_failure",
@@ -101,9 +103,13 @@ def main() -> int:
         print(f"Evaluation checkpoint failed: {failure.as_dict()}")
         return 1
 
-    criteria = {metric["name"]: metric["threshold"] for metric in spec.get("metrics", [])}
+    criteria = {
+        metric["name"]: metric["threshold"] for metric in spec.get("metrics", [])
+    }
     tolerance = float(spec.get("regression_definition", {}).get("tolerance", 0.0))
-    checkpointer = EvaluationCheckpointer(success_criteria=criteria, tolerance=tolerance)
+    checkpointer = EvaluationCheckpointer(
+        success_criteria=criteria, tolerance=tolerance
+    )
 
     baseline_metrics = _load_metrics(args.baseline)
     candidate_metrics = _load_metrics(args.candidate)
@@ -117,7 +123,7 @@ def main() -> int:
     }
 
     override_used = False
-    if not candidate_checkpoint.passed and args.allow-breaking-override:
+    if not candidate_checkpoint.passed and args.allow - breaking - override:
         override_used = True
 
     report = {
@@ -138,7 +144,9 @@ def main() -> int:
         "regressions": candidate_checkpoint.regressions,
         "rollback_recommended": candidate_checkpoint.rollback_recommended,
         "override_used": override_used,
-        "inputs_hash": hash_data({"baseline": baseline_metrics, "candidate": candidate_metrics}),
+        "inputs_hash": hash_data(
+            {"baseline": baseline_metrics, "candidate": candidate_metrics}
+        ),
     }
 
     args.output_dir.mkdir(parents=True, exist_ok=True)

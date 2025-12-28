@@ -19,7 +19,9 @@ DISALLOWED_PATTERNS = [
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Scan generated artifacts for disallowed content.")
+    parser = argparse.ArgumentParser(
+        description="Scan generated artifacts for disallowed content."
+    )
     parser.add_argument(
         "--scan-dirs",
         type=Path,
@@ -27,7 +29,9 @@ def _parse_args() -> argparse.Namespace:
         default=[Path("artifacts"), Path("data")],
         help="Directories to scan for redaction violations.",
     )
-    parser.add_argument("--run-id", type=str, default="redaction-scan", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="redaction-scan", help="Run identifier."
+    )
     return parser.parse_args()
 
 

@@ -38,6 +38,7 @@ ModuleFunc = Union[Callable[..., Any], Callable[..., Awaitable[Any]]]
 @dataclass
 class ModuleEntry:
     """Descriptor for a registered module."""
+
     module_id: str
     func: ModuleFunc
     phase_id: Optional[str] = None

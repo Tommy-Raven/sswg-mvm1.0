@@ -8,7 +8,9 @@ from generator.secret_scanner import load_allowlist, scan_paths
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Scan repo artifacts for secret exposure.")
+    parser = argparse.ArgumentParser(
+        description="Scan repo artifacts for secret exposure."
+    )
     parser.add_argument(
         "--scan-dirs",
         type=Path,
@@ -29,7 +31,9 @@ def _parse_args() -> argparse.Namespace:
         default=Path("governance/secret_allowlist.json"),
         help="Allowlist path for scoped secret exceptions.",
     )
-    parser.add_argument("--run-id", type=str, default="secrets-scan", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="secrets-scan", help="Run identifier."
+    )
     return parser.parse_args()
 
 
@@ -49,7 +53,10 @@ def main() -> int:
                 Type="reproducibility_failure",
                 message="Secret scanning gate detected sensitive content",
                 phase_id="validate",
-                evidence={"violations": violations, "allowlist_errors": allowlist_errors},
+                evidence={
+                    "violations": violations,
+                    "allowlist_errors": allowlist_errors,
+                },
             ),
             run_id=args.run_id,
         )

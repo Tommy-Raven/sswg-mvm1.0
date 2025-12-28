@@ -40,9 +40,9 @@ class AnomalyDetector:
 
         count = len(numeric_values)
         self.mean = sum(numeric_values) / count
-        variance = sum(
-            (value - self.mean) ** 2 for value in numeric_values
-        ) / max(1, count - 1)
+        variance = sum((value - self.mean) ** 2 for value in numeric_values) / max(
+            1, count - 1
+        )
         self.std = sqrt(variance)
         self._fitted = True
         return self

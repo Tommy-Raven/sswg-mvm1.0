@@ -18,7 +18,11 @@ def _extract_invariant_ids(evidence: Dict[str, Any]) -> List[str]:
         invariant_ids.append(evidence["invariant_id"])
     if isinstance(evidence.get("invariant_ids"), list):
         invariant_ids.extend(
-            [item for item in evidence.get("invariant_ids", []) if isinstance(item, str)]
+            [
+                item
+                for item in evidence.get("invariant_ids", [])
+                if isinstance(item, str)
+            ]
         )
     return sorted(set(invariant_ids))
 
@@ -40,7 +44,9 @@ def build_autopsy_report(
         {
             "id": invariant_id,
             "description": registry_invariants.get(invariant_id, {}).get("description"),
-            "failure_type": registry_invariants.get(invariant_id, {}).get("failure_type"),
+            "failure_type": registry_invariants.get(invariant_id, {}).get(
+                "failure_type"
+            ),
         }
         for invariant_id in invariant_ids
     ]

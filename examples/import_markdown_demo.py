@@ -19,7 +19,9 @@ def main() -> None:
     if os.path.exists(demo_md):
         import_markdown(demo_md)
     else:
-        print(f"No demo Markdown file found at {demo_md}. Run export_workflow_demo first.")
+        print(
+            f"No demo Markdown file found at {demo_md}. Run export_workflow_demo first."
+        )
 
 
 if __name__ == "__main__":

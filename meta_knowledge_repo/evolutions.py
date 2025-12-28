@@ -81,7 +81,9 @@ class MetaKnowledgeRepository:
         try:
             return self.revisions[domain][revision_id]
         except KeyError as exc:  # pragma: no cover - defensive guard
-            raise ValueError(f"Unknown revision '{revision_id}' for domain '{domain}'") from exc
+            raise ValueError(
+                f"Unknown revision '{revision_id}' for domain '{domain}'"
+            ) from exc
 
     def add_revision(
         self,
@@ -94,7 +96,10 @@ class MetaKnowledgeRepository:
         self._assert_domain_is_anchored(revision.domain)
         domain_revisions = self.revisions[revision.domain]
 
-        if revision.parent_revision_id and revision.parent_revision_id not in domain_revisions:
+        if (
+            revision.parent_revision_id
+            and revision.parent_revision_id not in domain_revisions
+        ):
             raise ValueError(
                 f"Parent revision '{revision.parent_revision_id}' missing for domain '{revision.domain}'"
             )
@@ -106,12 +111,17 @@ class MetaKnowledgeRepository:
 
         current_revision = self.current(revision.domain)
         supersedes_id = revision.parent_revision_id
-        if current_revision and revision.parent_revision_id != current_revision.revision_id:
+        if (
+            current_revision
+            and revision.parent_revision_id != current_revision.revision_id
+        ):
             resolution = self._resolve_conflict(current_revision, revision)
             revision = resolution.chosen
             supersedes_id = resolution.superseded.revision_id
             conflicts = list(conflicts or []) + [resolution.rationale]
-            summary = f"Resolved conflict; superseded {resolution.superseded.revision_id}"
+            summary = (
+                f"Resolved conflict; superseded {resolution.superseded.revision_id}"
+            )
 
         if revision.revision_id in domain_revisions:
             # Conflict resolution kept the incumbent; record the clash but
@@ -200,10 +210,14 @@ class MetaKnowledgeRepository:
                 chosen = existing
                 superseded = incoming
 
-        return ConflictResolution(chosen=chosen, superseded=superseded, rationale=rationale)
+        return ConflictResolution(
+            chosen=chosen, superseded=superseded, rationale=rationale
+        )
 
     @staticmethod
-    def _format_rationale(reason: str, existing: DomainRevision, incoming: DomainRevision) -> str:
+    def _format_rationale(
+        reason: str, existing: DomainRevision, incoming: DomainRevision
+    ) -> str:
         return (
             f"{reason}: existing={existing.revision_id} ({existing.trust_tier}), "
             f"incoming={incoming.revision_id} ({incoming.trust_tier})"
@@ -214,7 +228,9 @@ class MetaKnowledgeRepository:
             raise ValueError(f"Domain '{domain}' has not been anchored yet")
 
 
-def _merge_with_lineage(existing: DomainRevision, incoming: DomainRevision) -> DomainRevision:
+def _merge_with_lineage(
+    existing: DomainRevision, incoming: DomainRevision
+) -> DomainRevision:
     """Merge payloads while preserving the incoming lineage."""
 
     merged_payload = deep_merge(existing.payload, incoming.payload)

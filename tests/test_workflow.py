@@ -12,6 +12,7 @@ import os
 
 from tests.assertions import require
 
+
 def test_full_workflow_cycle(tmp_path):
     orch = Orchestrator()
     wf = orch.run({"purpose": "E2E test", "audience": "Testers"})

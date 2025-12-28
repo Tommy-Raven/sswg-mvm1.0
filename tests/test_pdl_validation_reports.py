@@ -31,7 +31,7 @@ def test_pdl_validation_report_fail(tmp_path: Path) -> None:
             schema_dir=Path("schemas"),
             report_dir=report_dir,
             run_id="test-run",
-    )
+        )
     reports = list(report_dir.glob("pdl_validation_*.json"))
     require(reports, "Expected validation report to be written")
     payload = json.loads(reports[0].read_text(encoding="utf-8"))

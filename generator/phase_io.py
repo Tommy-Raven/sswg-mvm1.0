@@ -56,7 +56,8 @@ def detect_phase_collapse(
 ) -> Optional[FailureLabel]:
     """Detect outputs or actions that violate phase boundaries."""
     constraints_by_phase = {
-        phase["name"]: phase.get("constraints", {}) for phase in pdl_obj.get("phases", [])
+        phase["name"]: phase.get("constraints", {})
+        for phase in pdl_obj.get("phases", [])
     }
     for phase_entry in manifest.get("phases", []):
         phase_id = phase_entry["phase_id"]

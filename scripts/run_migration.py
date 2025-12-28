@@ -9,12 +9,22 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 from generator.pdl_validator import PDLValidationError, validate_pdl_object
 
-from overlay_ops import OverlayOperationError, apply_overlays, load_artifact, load_overlays, write_json
+from overlay_ops import (
+    OverlayOperationError,
+    apply_overlays,
+    load_artifact,
+    load_overlays,
+    write_json,
+)
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run deterministic migration for overlay compatibility.")
-    parser.add_argument("--run-id", type=str, default="migration-run", help="Run identifier.")
+    parser = argparse.ArgumentParser(
+        description="Run deterministic migration for overlay compatibility."
+    )
+    parser.add_argument(
+        "--run-id", type=str, default="migration-run", help="Run identifier."
+    )
     parser.add_argument(
         "--artifact",
         type=Path,

@@ -49,4 +49,6 @@ class TelemetryLogger:
             payload.update(data)
 
         log_event(event, payload)
+
+
 # End of ai_monitoring/telemetry.py

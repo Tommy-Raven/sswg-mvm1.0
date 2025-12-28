@@ -39,6 +39,7 @@ try:
     # Optional: current version hint from meta_knowledge_repo
     from meta_knowledge_repo.versioning import get_current_version
 except Exception:  # fallback if not wired yet
+
     def get_current_version() -> str:  # type: ignore[no-redef]
         return "0.0.0-MVM"
 
@@ -57,7 +58,9 @@ def register_migration(from_version: str, to_version: str, func: MigrationFunc) 
     """
     key = (from_version, to_version)
     if key in _MIGRATIONS:
-        logger.warning("Overwriting existing migration %s -> %s", from_version, to_version)
+        logger.warning(
+            "Overwriting existing migration %s -> %s", from_version, to_version
+        )
     _MIGRATIONS[key] = func
     logger.info("Registered migration %s -> %s", from_version, to_version)
 
@@ -76,7 +79,9 @@ def _find_direct_migration(from_version: str, to_version: str) -> MigrationFunc 
     return _MIGRATIONS.get((from_version, to_version))
 
 
-def _annotate_no_migration(workflow: Dict[str, Any], target_version: str) -> Dict[str, Any]:
+def _annotate_no_migration(
+    workflow: Dict[str, Any], target_version: str
+) -> Dict[str, Any]:
     """
     If no migration path exists, return workflow unchanged but annotate.
     """

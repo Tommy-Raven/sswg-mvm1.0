@@ -105,10 +105,7 @@ def cmd_request_merge(args: Namespace) -> None:
     if exit_code == 0:
         print(f"[CLI] Merge completed: {args.branch} → {target}")
     else:
-        print(
-            f"[CLI] Merge failed: {args.branch} → {target} "
-            f"(exit={exit_code})"
-        )
+        print(f"[CLI] Merge failed: {args.branch} → {target} " f"(exit={exit_code})")
 
 
 def build_parser() -> argparse.ArgumentParser:

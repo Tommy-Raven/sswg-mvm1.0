@@ -9,7 +9,9 @@ from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate artifact index for retention tracking.")
+    parser = argparse.ArgumentParser(
+        description="Generate artifact index for retention tracking."
+    )
     parser.add_argument(
         "--artifacts-dir",
         type=Path,
@@ -43,7 +45,11 @@ def _load_json(path: Path) -> dict[str, Any] | None:
 
 def _classification_lookup(policy: dict[str, Any]) -> dict[str, str]:
     rules = policy.get("classification_rules", [])
-    return {rule["anchor_id"]: rule["retention_class"] for rule in rules if "anchor_id" in rule}
+    return {
+        rule["anchor_id"]: rule["retention_class"]
+        for rule in rules
+        if "anchor_id" in rule
+    }
 
 
 def main() -> int:

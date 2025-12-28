@@ -5,7 +5,12 @@ import json
 from pathlib import Path
 
 from generator.failure_emitter import FailureEmitter
-from generator.phase_io import build_phase_io_manifest, detect_phase_collapse, load_pdl, write_manifest
+from generator.phase_io import (
+    build_phase_io_manifest,
+    detect_phase_collapse,
+    load_pdl,
+    write_manifest,
+)
 
 
 def _parse_args() -> argparse.Namespace:

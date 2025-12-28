@@ -88,10 +88,7 @@ def run_template_regression_suite(
         obj = load_json(path)
 
         if not is_template_object(obj):
-            print(
-                "  - SKIP (non-template or no template_schema $schema): "
-                f"{path}"
-            )
+            print("  - SKIP (non-template or no template_schema $schema): " f"{path}")
             skipped += 1
             continue
 
@@ -102,9 +99,7 @@ def run_template_regression_suite(
             print(f"  ✓ {tpl_id} ({path})")
             passed += 1
         else:
-            print(
-                f"  ✗ {tpl_id} ({path}) — {len(errors or [])} schema issue(s)"
-            )
+            print(f"  ✗ {tpl_id} ({path}) — {len(errors or [])} schema issue(s)")
             failed += 1
 
     print(

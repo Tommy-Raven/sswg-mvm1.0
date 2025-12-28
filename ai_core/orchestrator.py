@@ -56,6 +56,7 @@ logger.addHandler(_handler)
 try:
     from ai_memory.memory_store import MemoryStore  # type: ignore
 except Exception:  # pragma: no cover - defensive stub
+
     class MemoryStore:  # type: ignore[no-redef]
         def save(self, obj):
             return None
@@ -64,6 +65,7 @@ except Exception:  # pragma: no cover - defensive stub
 try:
     from ai_monitoring.cli_dashboard import CLIDashboard  # type: ignore
 except Exception:  # pragma: no cover - defensive stub
+
     class CLIDashboard:  # type: ignore[no-redef]
         def record_cycle(self, success: bool) -> None:
             pass
@@ -78,6 +80,7 @@ except Exception:  # pragma: no cover - defensive stub
 try:
     from ai_monitoring.telemetry import TelemetryLogger  # type: ignore
 except Exception:  # pragma: no cover - defensive stub
+
     class TelemetryLogger:  # type: ignore[no-redef]
         def record(self, event: str, data=None) -> None:
             pass
@@ -138,18 +141,14 @@ class Orchestrator:
             return workflow_source
         if isinstance(workflow_source, Path):
             if not workflow_source.exists():
-                raise FileNotFoundError(
-                    f"Workflow JSON not found: {workflow_source}"
-                )
+                raise FileNotFoundError(f"Workflow JSON not found: {workflow_source}")
             data = json.loads(workflow_source.read_text(encoding="utf-8"))
             return Workflow(data)
         return Workflow(workflow_source)
 
     def run_mvm(self, context: RunContext) -> RunResult:
         if context.runner is not None:
-            result = context.runner(
-                context.workflow_source, **context.runner_kwargs
-            )
+            result = context.runner(context.workflow_source, **context.runner_kwargs)
             if isinstance(result, Workflow):
                 workflow_obj = result
                 workflow_data = result.to_dict()
@@ -210,9 +209,7 @@ class Orchestrator:
             workflow = Workflow(workflow)
 
         wf_id = workflow.id
-        phases_to_run: List[str] = list(
-            phases or workflow.get_default_phases()
-        )
+        phases_to_run: List[str] = list(phases or workflow.get_default_phases())
         phase_status: dict[str, dict[str, object]] = {}
 
         logger.info("Starting orchestration for workflow %s", wf_id)
@@ -258,9 +255,7 @@ class Orchestrator:
                         "workflow_id": wf_id,
                         "phase": phase_id,
                         "error": str(e),
-                        "phase_status": {
-                            phase_id: phase_status[phase_id]
-                        },
+                        "phase_status": {phase_id: phase_status[phase_id]},
                     },
                 )
                 self.telemetry.record(
@@ -352,4 +347,6 @@ class Orchestrator:
 
         logger.info("Workflow orchestration complete for %s", wf_id)
         return workflow
+
+
 # ---------------------------------------------------------------------- #

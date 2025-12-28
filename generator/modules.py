@@ -21,6 +21,7 @@ ModuleFunc = Callable[[Dict[str, Any]], Dict[str, Any]]
 @dataclass
 class GeneratorModule:
     """Descriptor for a generator-time module."""
+
     name: str
     description: str
     run: ModuleFunc
@@ -74,7 +75,4 @@ class GeneratorModuleRegistry:
         """
         Return a mapping of name → description for discoverability.
         """
-        return {
-            name: module.description
-            for name, module in self._modules.items()
-        }
+        return {name: module.description for name, module in self._modules.items()}

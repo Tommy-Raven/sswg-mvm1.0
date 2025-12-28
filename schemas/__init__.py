@@ -40,9 +40,7 @@ def list_schemas() -> List[str]:
     """
     if not SCHEMAS_DIR.exists():
         return []
-    return sorted(
-        p.name for p in SCHEMAS_DIR.glob("*.json") if p.is_file()
-    )
+    return sorted(p.name for p in SCHEMAS_DIR.glob("*.json") if p.is_file())
 
 
 def get_schema_path(schema_name: str) -> Optional[Path]:

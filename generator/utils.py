@@ -26,7 +26,9 @@ def generate_workflow_id(prefix: str = "workflow") -> str:
     return f"{prefix}_{random_part}_{timestamp}"
 
 
-def log(message: str, level: str = "INFO", extra: Optional[Dict[str, Any]] = None) -> None:
+def log(
+    message: str, level: str = "INFO", extra: Optional[Dict[str, Any]] = None
+) -> None:
     """
     Structured console logger with timestamp and level.
 

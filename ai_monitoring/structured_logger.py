@@ -39,9 +39,7 @@ def get_logger(name: str = "grimoire") -> logging.Logger:
 
         # File handler
         fh = logging.FileHandler(LOG_PATH)
-        fh.setFormatter(
-            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        )
+        fh.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 
         logger.addHandler(ch)
         logger.addHandler(fh)
@@ -106,7 +104,11 @@ def log_event(
 if __name__ == "__main__":
     # Legacy style
     legacy_log = get_logger()
-    log_event(legacy_log, "workflow_generated_legacy", {"id": "demo_legacy", "purpose": "testing"})
+    log_event(
+        legacy_log,
+        "workflow_generated_legacy",
+        {"id": "demo_legacy", "purpose": "testing"},
+    )
 
     # New MVM style
     log_event("workflow_generated_mvm", {"id": "demo_mvm", "purpose": "testing"})

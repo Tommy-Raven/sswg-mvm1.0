@@ -9,8 +9,12 @@ from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate promotion checklist artifact.")
-    parser.add_argument("--promotion-id", type=str, required=True, help="Promotion identifier.")
+    parser = argparse.ArgumentParser(
+        description="Generate promotion checklist artifact."
+    )
+    parser.add_argument(
+        "--promotion-id", type=str, required=True, help="Promotion identifier."
+    )
     parser.add_argument(
         "--evidence-paths",
         type=Path,
@@ -18,7 +22,9 @@ def _parse_args() -> argparse.Namespace:
         required=True,
         help="Evidence artifact paths.",
     )
-    parser.add_argument("--approver-id", type=str, required=True, help="Approver identifier.")
+    parser.add_argument(
+        "--approver-id", type=str, required=True, help="Approver identifier."
+    )
     parser.add_argument("--role", type=str, required=True, help="Approver role.")
     parser.add_argument(
         "--output-path",

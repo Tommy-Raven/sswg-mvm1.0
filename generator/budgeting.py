@@ -21,7 +21,9 @@ def _size_bytes(path: Path) -> int | None:
     return path.stat().st_size
 
 
-def collect_artifact_sizes(artifact_budgets: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def collect_artifact_sizes(
+    artifact_budgets: Iterable[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
     """Collect artifact sizes for budget evaluation."""
     results: List[Dict[str, Any]] = []
     for budget in artifact_budgets:
@@ -79,7 +81,9 @@ def evaluate_budgets(
                 "size_bytes": size_bytes,
                 "max_size_bytes": max_size_bytes,
                 "missing": entry.get("missing", []),
-                "pass": bool(entry.get("missing") == [] and size_bytes <= max_size_bytes),
+                "pass": bool(
+                    entry.get("missing") == [] and size_bytes <= max_size_bytes
+                ),
             }
         )
 
@@ -93,7 +97,9 @@ def evaluate_budgets(
             violations.append({"type": "phase_duration", "phase": result["phase"]})
     for result in artifact_results:
         if not result["pass"]:
-            violations.append({"type": "artifact_size", "artifact_class": result["artifact_class"]})
+            violations.append(
+                {"type": "artifact_size", "artifact_class": result["artifact_class"]}
+            )
     if not total_pass:
         violations.append({"type": "total_duration"})
 

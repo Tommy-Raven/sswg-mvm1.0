@@ -64,7 +64,9 @@ def validate_contracts() -> int:
         root_contract = load_yaml(root_contract_path)
         invariants_doc = load_yaml(invariants_path)
         root_invariants = root_contract.get("root_contract", {}).get("invariants")
-        invariants_source = root_contract.get("root_contract", {}).get("invariants_source")
+        invariants_source = root_contract.get("root_contract", {}).get(
+            "invariants_source"
+        )
         canonical_invariants = invariants_doc.get("invariants")
 
         if invariants_source != "invariants.yaml":
@@ -72,11 +74,17 @@ def validate_contracts() -> int:
                 "root_contract.yaml: root_contract/invariants_source must be invariants.yaml"
             )
 
-        if not isinstance(root_invariants, list) or not isinstance(canonical_invariants, list):
-            failures.append("root_contract.yaml: invariants must be a list in both files")
+        if not isinstance(root_invariants, list) or not isinstance(
+            canonical_invariants, list
+        ):
+            failures.append(
+                "root_contract.yaml: invariants must be a list in both files"
+            )
         else:
             root_map = {item.get("id"): item.get("rule") for item in root_invariants}
-            canonical_map = {item.get("id"): item.get("rule") for item in canonical_invariants}
+            canonical_map = {
+                item.get("id"): item.get("rule") for item in canonical_invariants
+            }
             if root_map != canonical_map:
                 failures.append(
                     "root_contract.yaml: invariants do not match invariants.yaml"

@@ -22,7 +22,9 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/audit/audit_certificate.json"),
         help="Audit certificate output path.",
     )
-    parser.add_argument("--run-id", type=str, default="audit-validate", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="audit-validate", help="Run identifier."
+    )
     return parser.parse_args()
 
 
@@ -78,7 +80,9 @@ def main() -> int:
         },
     }
     args.certificate_path.parent.mkdir(parents=True, exist_ok=True)
-    args.certificate_path.write_text(json.dumps(certificate, indent=2), encoding="utf-8")
+    args.certificate_path.write_text(
+        json.dumps(certificate, indent=2), encoding="utf-8"
+    )
 
     print("Audit readiness validation passed")
     return 0

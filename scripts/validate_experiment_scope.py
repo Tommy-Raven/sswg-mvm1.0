@@ -10,13 +10,19 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _get_validator(schema_dir: Path) -> Draft202012Validator:
-    schema = json.loads((schema_dir / "experiment-scope.json").read_text(encoding="utf-8"))
+    schema = json.loads(
+        (schema_dir / "experiment-scope.json").read_text(encoding="utf-8")
+    )
     base_uri = schema_dir.as_uri().rstrip("/") + "/"
-    return Draft202012Validator(schema, resolver=RefResolver(base_uri=base_uri, referrer=schema))
+    return Draft202012Validator(
+        schema, resolver=RefResolver(base_uri=base_uri, referrer=schema)
+    )
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate experiment scope declaration.")
+    parser = argparse.ArgumentParser(
+        description="Validate experiment scope declaration."
+    )
     parser.add_argument("scope_path", type=Path, help="Experiment scope JSON path.")
     parser.add_argument(
         "--schema-dir",

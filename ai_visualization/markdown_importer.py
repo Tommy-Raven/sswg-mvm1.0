@@ -30,7 +30,7 @@ def parse_markdown(md_path: str) -> dict:
         "version": None,
         "metadata": {},
         "phases": [],
-        "dependency_graph": {"nodes": [], "edges": []}
+        "dependency_graph": {"nodes": [], "edges": []},
     }
 
     current_phase = None
@@ -81,7 +81,9 @@ def parse_markdown(md_path: str) -> dict:
 
     # Generate simple edge map (linear sequence)
     nodes = workflow["dependency_graph"]["nodes"]
-    workflow["dependency_graph"]["edges"] = [[nodes[i], nodes[i + 1]] for i in range(len(nodes) - 1)]
+    workflow["dependency_graph"]["edges"] = [
+        [nodes[i], nodes[i + 1]] for i in range(len(nodes) - 1)
+    ]
 
     return workflow
 
@@ -98,4 +100,3 @@ def import_markdown(md_path: str, out_dir: str = "./data/workflows") -> str:
 
     print(f"🪶 Imported Markdown workflow saved as JSON → {out_path}")
     return out_path
-

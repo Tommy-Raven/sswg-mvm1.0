@@ -6,7 +6,9 @@ from pathlib import Path
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate run health summary from telemetry.")
+    parser = argparse.ArgumentParser(
+        description="Generate run health summary from telemetry."
+    )
     parser.add_argument(
         "--telemetry-path",
         type=Path,

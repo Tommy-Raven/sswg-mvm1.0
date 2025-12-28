@@ -20,6 +20,7 @@ class HistoryRecord:
     """
     Represents a single transition between two workflows.
     """
+
     timestamp: str
     parent_workflow: str
     child_workflow: str

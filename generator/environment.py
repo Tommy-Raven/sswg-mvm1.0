@@ -64,7 +64,10 @@ def check_environment_drift(lock_path: Path) -> FailureLabel | None:
     current_python = sys.version.split()[0]
     drift: Dict[str, Any] = {}
     if expected_python and expected_python != current_python:
-        drift["python_version"] = {"expected": expected_python, "actual": current_python}
+        drift["python_version"] = {
+            "expected": expected_python,
+            "actual": current_python,
+        }
 
     missing: List[Dict[str, str]] = []
     mismatched: List[Dict[str, str]] = []

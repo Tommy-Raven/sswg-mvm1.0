@@ -10,7 +10,9 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate promotion bundle completeness.")
+    parser = argparse.ArgumentParser(
+        description="Validate promotion bundle completeness."
+    )
     parser.add_argument(
         "--checklist-path",
         type=Path,
@@ -43,7 +45,9 @@ def _parse_args() -> argparse.Namespace:
         default=Path("schemas"),
         help="Schema directory.",
     )
-    parser.add_argument("--run-id", type=str, default="promotion-validate", help="Run identifier.")
+    parser.add_argument(
+        "--run-id", type=str, default="promotion-validate", help="Run identifier."
+    )
     return parser.parse_args()
 
 
@@ -104,7 +108,9 @@ def main() -> int:
     non_waivable = protocol.get("blocking_conditions", {}).get("non_waivable", [])
 
     for waiver_path in args.waiver_paths:
-        waiver_errors = _validate_schema(waiver_path, args.schema_dir / "waiver-record.json")
+        waiver_errors = _validate_schema(
+            waiver_path, args.schema_dir / "waiver-record.json"
+        )
         if waiver_errors:
             emitter.emit(
                 FailureLabel(

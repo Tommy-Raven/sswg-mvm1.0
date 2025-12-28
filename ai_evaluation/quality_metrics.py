@@ -268,4 +268,6 @@ def usability_metric(wf: Dict[str, Any]) -> float:
             usable += 1
 
     return usable / len(tasks)
+
+
 # End of ai_evaluation/quality_metrics.py

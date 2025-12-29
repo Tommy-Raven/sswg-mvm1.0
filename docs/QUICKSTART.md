@@ -36,7 +36,7 @@ For fully reproducible environments, see:
 ### 3. Run the Main Generator
 
 ```bash
-python generator/main.py
+python3 generator/main.py
 ```
 
 This executes the default MVM pipeline:

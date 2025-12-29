@@ -35,9 +35,9 @@ The root [README.md](./README.md) and [docs/README.md](./docs/README.md) describ
 ## Getting started
 1. Read the root [README.md](./README.md) to understand goals and boundaries.
 2. Skim [docs/README.md](./docs/README.md) for documentation structure and navigation.
-3. Run local setup using `python -m venv .venv && source .venv/bin/activate && pip install -r REQUIREMENTS.txt`.
+3. Run local setup using `python3 -m venv .venv && source .venv/bin/activate && pip install -r REQUIREMENTS.txt`.
 4. Validate the canonical PDL before running workflows:
-   `python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas`.
+   `python3 -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas`.
 5. Execute relevant smoke tests or linting before opening a PR.
 
 ## Change workflow

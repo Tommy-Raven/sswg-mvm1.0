@@ -52,7 +52,7 @@ uvicorn src.web.app:app --reload
 
 Run CLI examples:
 
-python generator/main.py --purpose "Design an AI ethics curriculum"
+python3 generator/main.py --purpose "Design an AI ethics curriculum"
 
 Generated workflows appear in `data/workflows/` and logs in `logs/workflow.log`.
 

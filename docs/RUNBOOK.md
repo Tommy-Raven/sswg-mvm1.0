@@ -8,7 +8,7 @@
 
 **Command**
 ```bash
-python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
+python3 -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
 ```
 
 **Inputs**
@@ -24,7 +24,7 @@ python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
 
 **Command**
 ```bash
-python generator/main.py \
+python3 generator/main.py \
   --workflow-json data/templates/campfire_workflow.json \
   --no-refine \
   --out-dir data/outputs

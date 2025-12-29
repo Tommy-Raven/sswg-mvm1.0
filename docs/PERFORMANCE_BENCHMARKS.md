@@ -41,13 +41,13 @@ These calibration benchmarks establish expected metric ranges for quality scorin
 Use the same benchmark command used by local CI:
 
 ```bash
-python scripts/local_ci.py bench
+python3 scripts/local_ci.py bench
 ```
 
 Or run the benchmark tracker directly:
 
 ```bash
-python -m ai_memory.benchmark_tracker
+python3 -m ai_memory.benchmark_tracker
 ```
 
 For calibration guidance and how to interpret expected ranges, see

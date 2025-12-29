@@ -242,7 +242,7 @@ Run the complete recursive pipeline (validation → evaluation → recursion →
 from the repo root with a single command:
 
 ```bash
-python generator/main.py --demo --preview
+python3 generator/main.py --demo --preview
 ```
 
 Outputs land in `data/outputs/demo_run` and include:
@@ -276,12 +276,12 @@ Outputs land in `data/outputs/demo_run` and include:
     cd SSWG-mvm1.0
 
 ### Install Dependencies
-
-    pip install -r REQUIREMENTS.txt
+    use `pipx` if using virtual container
+    `pip install -r REQUIREMENTS.txt`
 
 ### Validate the canonical PDL (required before runs)
 
-    python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
+    python3 -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
 
 ### Run the Generator (exact entry path)
 

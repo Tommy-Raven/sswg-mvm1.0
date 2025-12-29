@@ -34,7 +34,7 @@
       }
     },
     "metadata": {
-      "$ref": "module_schema.json"
+      "$ref": "metadata_schema.json"
     }
   },
   "additionalProperties": false

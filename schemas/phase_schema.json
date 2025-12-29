@@ -29,7 +29,7 @@
     "$ref": "evaluation_schema.json"
   },
     "metadata": {
-      "$ref": "phase_schema.json"
+      "$ref": "metadata_schema.json"
     }
 },
 "additionalProperties": false

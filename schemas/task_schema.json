@@ -93,7 +93,7 @@
       "type": "string"
     },
      "metadata": {
-      "$ref": "task_schema.json"
+      "$ref": "metadata_schema.json"
     }
   },
   "anyOf": [

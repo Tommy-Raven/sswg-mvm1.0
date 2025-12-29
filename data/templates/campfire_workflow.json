@@ -4,6 +4,13 @@
   "workflow_id": "campfire_workflow",
   "version": "0.1.0",
   "schema_version": "1.0.0",
+  "anchor": {
+    "anchor_id": "workflow:campfire_workflow",
+    "anchor_version": "0.1.0",
+    "scope": "template",
+    "owner": "Tommy",
+    "status": "draft"
+  },
   "metadata": {
     "title": "Build a safe campfire",
     "description": "Step-by-step workflow to build a small, safe campfire for cooking and warmth.",
@@ -13,83 +20,183 @@
     "tags": ["campfire", "outdoors", "safety"]
   },
   "phases": [
-    { "phase_id": "phase_1", "name": "Preparation", "description": "Select location, collect permits, check fire danger, gather materials" },
-    { "phase_id": "phase_2", "name": "Construction", "description": "Lay tinder, kindling, fuel wood; form fire structure" },
-    { "phase_id": "phase_3", "name": "Ignition & Management", "description": "Ignite, maintain, and manage burn" },
-    { "phase_id": "phase_4", "name": "Extinguish & Leave No Trace", "description": "Douse and clean site" }
+    {
+      "id": "phase_1",
+      "phase_id": "phase_1",
+      "title": "Preparation",
+      "name": "Preparation",
+      "description": "Select location, collect permits, check fire danger, gather materials",
+      "tasks": [
+        {
+          "task_id": "task_prep_01",
+          "description": "Verify a safe location and gather the required materials for a controlled campfire.",
+          "inputs": [],
+          "outputs": ["site_approved", "tinder_set", "kindling_set", "fuelwood_set"]
+        }
+      ]
+    },
+    {
+      "id": "phase_2",
+      "phase_id": "phase_2",
+      "title": "Construction",
+      "name": "Construction",
+      "description": "Lay tinder, kindling, fuel wood; form fire structure",
+      "tasks": [
+        {
+          "task_id": "task_construct_01",
+          "description": "Assemble a safe fire structure using prepared tinder and kindling.",
+          "inputs": ["tinder_set", "kindling_set"],
+          "outputs": ["structure_ready"]
+        }
+      ]
+    },
+    {
+      "id": "phase_3",
+      "phase_id": "phase_3",
+      "title": "Ignition & Management",
+      "name": "Ignition & Management",
+      "description": "Ignite, maintain, and manage burn",
+      "tasks": [
+        {
+          "task_id": "task_ignite_01",
+          "description": "Ignite the structure safely and maintain a controlled burn.",
+          "inputs": ["structure_ready"],
+          "outputs": ["fire_lit", "burn_controlled"]
+        }
+      ]
+    },
+    {
+      "id": "phase_4",
+      "phase_id": "phase_4",
+      "title": "Extinguish & Leave No Trace",
+      "name": "Extinguish & Leave No Trace",
+      "description": "Douse and clean site",
+      "tasks": [
+        {
+          "task_id": "task_extinguish_01",
+          "description": "Fully extinguish the fire and restore the site to a safe, clean state.",
+          "inputs": ["burn_controlled"],
+          "outputs": ["site_clean"]
+        }
+      ]
+    }
   ],
   "modules": [
     {
       "module_id": "m01_location_check",
-      "phase_id": "phase_1",
-      "name": "Location & Permits",
-      "inputs": [],
-      "outputs": ["site_approved"],
+      "title": "Location & Permits",
+      "description": "Confirm site safety and compliance before gathering materials.",
+      "tasks": [
+        {
+          "task_id": "task_location_01",
+          "description": "Check regulations, assess the site, and confirm clearances.",
+          "inputs": [],
+          "outputs": ["site_approved"],
+          "ai_logic": "Check local regulations, assess proximity to vegetation, evaluate wind conditions.",
+          "human_actionable": true
+        }
+      ],
       "dependencies": [],
-      "ai_logic": "Check local regulations, assess proximity to vegetation, evaluate wind conditions.",
-      "human_actionable": "Inspect site. If no local ban and a 10 ft cleared area exists, mark site_approved = true."
+      "linked_phases": ["phase_1"]
     },
     {
       "module_id": "m02_materials_gather",
-      "phase_id": "phase_1",
-      "name": "Gather materials",
-      "inputs": [],
-      "outputs": ["tinder_set","kindling_set","fuelwood_set"],
+      "title": "Gather materials",
+      "description": "Collect tinder, kindling, and fuelwood for ignition.",
+      "tasks": [
+        {
+          "task_id": "task_materials_01",
+          "description": "Collect dry tinder, kindling, and fuel wood suitable for a small campfire.",
+          "inputs": [],
+          "outputs": ["tinder_set", "kindling_set", "fuelwood_set"],
+          "ai_logic": "List locally available tinder, kindling, and fuelwood types and quantities.",
+          "human_actionable": true
+        }
+      ],
       "dependencies": ["m01_location_check"],
-      "ai_logic": "List locally available tinder, kindling, and fuelwood types and quantities.",
-      "human_actionable": "Collect dry tinder (leaves, birch bark), kindling (small sticks), and fuel wood (split logs)."
+      "linked_phases": ["phase_1"]
     },
     {
       "module_id": "m03_build_structure",
-      "phase_id": "phase_2",
-      "name": "Build fire structure",
-      "inputs": ["tinder_set","kindling_set"],
-      "outputs": ["structure_ready"],
+      "title": "Build fire structure",
+      "description": "Assemble a stable fire structure for ignition.",
+      "tasks": [
+        {
+          "task_id": "task_structure_01",
+          "description": "Arrange tinder and kindling into a teepee or log cabin structure.",
+          "inputs": ["tinder_set", "kindling_set"],
+          "outputs": ["structure_ready"],
+          "ai_logic": "Recommend a structure (teepee, log cabin) based on available materials.",
+          "human_actionable": true
+        }
+      ],
       "dependencies": ["m02_materials_gather"],
-      "ai_logic": "Recommend a structure (teepee, log cabin) based on available materials.",
-      "human_actionable": "Construct a small teepee of kindling over tinder, leaving airflow paths."
+      "linked_phases": ["phase_2"]
     },
     {
       "module_id": "m04_ignite",
-      "phase_id": "phase_3",
-      "name": "Ignition",
-      "inputs": ["structure_ready"],
-      "outputs": ["fire_lit"],
+      "title": "Ignition",
+      "description": "Safely ignite the prepared fire structure.",
+      "tasks": [
+        {
+          "task_id": "task_ignite_01",
+          "description": "Ignite tinder carefully and build a sustained flame.",
+          "inputs": ["structure_ready"],
+          "outputs": ["fire_lit"],
+          "ai_logic": "Provide step sequence for safe ignition (sparks, matches, lighter), monitor smoldering risk.",
+          "human_actionable": true
+        }
+      ],
       "dependencies": ["m03_build_structure"],
-      "ai_logic": "Provide step sequence for safe ignition (sparks, matches, lighter), monitor smoldering risk.",
-      "human_actionable": "Ignite tinder carefully; feed small kindling until sustained flame."
+      "linked_phases": ["phase_3"]
     },
     {
       "module_id": "m05_manage",
-      "phase_id": "phase_3",
-      "name": "Manage burn",
-      "inputs": ["fire_lit"],
-      "outputs": ["burn_controlled"],
+      "title": "Manage burn",
+      "description": "Maintain a safe, controlled burn once ignited.",
+      "tasks": [
+        {
+          "task_id": "task_manage_01",
+          "description": "Add fuel gradually and monitor conditions to keep the fire controlled.",
+          "inputs": ["fire_lit"],
+          "outputs": ["burn_controlled"],
+          "ai_logic": "Advise on safe adding of fuel wood, monitor wind changes, advise extinguishing if unsafe.",
+          "human_actionable": true
+        }
+      ],
       "dependencies": ["m04_ignite"],
-      "ai_logic": "Advise on safe adding of fuel wood, monitor wind changes, advise extinguishing if unsafe.",
-      "human_actionable": "Add fuel wood gradually, maintain a small, controlled flame."
+      "linked_phases": ["phase_3"]
     },
     {
       "module_id": "m06_extinguish",
-      "phase_id": "phase_4",
-      "name": "Extinguish",
-      "inputs": ["burn_controlled"],
-      "outputs": ["site_clean"],
+      "title": "Extinguish",
+      "description": "Safely extinguish the fire and restore the site.",
+      "tasks": [
+        {
+          "task_id": "task_extinguish_01",
+          "description": "Douse, stir, and confirm the fire is fully out before leaving.",
+          "inputs": ["burn_controlled"],
+          "outputs": ["site_clean"],
+          "ai_logic": "Provide steps to fully extinguish (soak, stir, feel for heat) and restore site.",
+          "human_actionable": true
+        }
+      ],
       "dependencies": ["m05_manage"],
-      "ai_logic": "Provide steps to fully extinguish (soak, stir, feel for heat) and restore site.",
-      "human_actionable": "Douse with water, stir ashes, ensure cold-to-touch, scatter cooled rocks, fill any holes."
+      "linked_phases": ["phase_4"]
     }
   ],
   "outputs": ["site_clean", "process_log.json"],
   "evaluation": {
-    "clarity": null,
-    "coverage": null,
-    "feasibility": null,
-    "alignment": null,
+    "clarity_score": 0.0,
+    "completeness_score": 0.0,
+    "cohesion_score": 0.0,
+    "composite_score": 0.0,
     "notes": []
   },
   "recursion": {
+    "depth_limit": 2,
     "max_iterations": 2,
+    "trigger_condition": "quality_below_threshold",
     "auto_refine": true,
     "require_human_approval": false
   }

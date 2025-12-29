@@ -16,6 +16,43 @@
     "composite_score": {
       "type": "number"
     },
+    "semantic_alignment": {
+      "type": "number"
+    },
+    "quality": {
+      "type": "object",
+      "properties": {
+        "overall_score": {
+          "type": "number"
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "meta_metrics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "before_after": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "plots": {
+      "type": "object",
+      "additionalProperties": true
+    },
     "notes": {
       "oneOf": [
         { "type": "string" },

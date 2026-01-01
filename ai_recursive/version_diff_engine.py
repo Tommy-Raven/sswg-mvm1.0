@@ -120,6 +120,17 @@ def compute_diff_summary(
         if title not in new_titles:
             summary["removed_phases"].append(title)
 
+    def _format_tasks(tasks: list[Any]) -> str:
+        rendered: list[str] = []
+        for task in tasks:
+            if isinstance(task, dict):
+                rendered.append(
+                    str(task.get("description") or task.get("id") or task)
+                )
+            else:
+                rendered.append(str(task))
+        return "\n".join(rendered)
+
     # Compare internal logic of shared phases (by title)
     for phase_new in new_phases:
         title_new = phase_new.get("title")
@@ -129,8 +140,8 @@ def compute_diff_summary(
             if phase_old.get("title") == title_new:
                 old_tasks = phase_old.get("tasks", []) or []
                 new_tasks = phase_new.get("tasks", []) or []
-                old_text = "\n".join(old_tasks)
-                new_text = "\n".join(new_tasks)
+                old_text = _format_tasks(old_tasks)
+                new_text = _format_tasks(new_tasks)
                 if old_text != new_text:
                     diff = diff_strings(old_text, new_text)
                     summary["modified_phases"].append(

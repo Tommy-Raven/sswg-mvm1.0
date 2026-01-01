@@ -10,10 +10,10 @@ Created by **Tommy Raven / Raven Recordings, LLC ©2025**
 
 <p align="center">
 <a href="https://github.com/Tommy-Raven/sswg-mvm1.0">
-<img src="https://img.shields.io/badge/SSWG-MVM-v0.9.mvm.25-purple?style=flat-square">
+<img src="https://img.shields.io/badge/SSWG-MVM-v1.2.0-purple?style=flat-square">
 </a>
 <img src="https://img.shields.io/badge/Python-3.10+-blue?style=flat-square">
-<img src="https://img.shields.io/badge/Status-Experimental-orange?style=flat-square">
+<img src="https://img.shields.io/badge/Status-Stable-green?style=flat-square">
 <img src="https://img.shields.io/badge/License-Proprietary-lightgray?style=flat-square">
 </p>
 
@@ -32,6 +32,8 @@ Created by **Tommy Raven / Raven Recordings, LLC ©2025**
 - preserving lineage through a version-aware memory system  
 
 It is both **educator and apprentice** — each workflow seeds the next generation.
+
+**Stability posture:** v1.2.0 is the current stable release for the MVM line, with canonical documentation and runbooks aligned to the 9-phase pipeline.
 
 ---
 

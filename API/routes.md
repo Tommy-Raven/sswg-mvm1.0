@@ -33,7 +33,7 @@ Production-style deployments typically mount under the same `/api` root.
 
 > {
   "workflow_id": "wf_rob_001",
-  "version": "v0.9.mvm.25",
+  "version": "v1.2.0",
   "metadata": { ... },
   "phases": [ ... ],
   "dependency_graph": { ... }
@@ -160,7 +160,7 @@ Production-style deployments typically mount under the same `/api` root.
 > {
   "status": "ok",
   "engine": "SSWG–MVM",
-  "version": "v0.9.mvm.25"
+  "version": "v1.2.0"
 }
 
 ## GET /api/version
@@ -168,7 +168,7 @@ Production-style deployments typically mount under the same `/api` root.
 — Returns MVM version + recursion profile.
 
 > {
-  "version": "v0.9.mvm.25",
+  "version": "v1.2.0",
   "profile": "sswg_mvm_v0_1"
 }
 

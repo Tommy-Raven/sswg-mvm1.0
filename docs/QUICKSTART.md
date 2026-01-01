@@ -1,14 +1,14 @@
-# Quickstart Guide â€” SSWG-MVM
+# Quickstart Guide — SSWG-MVM
 
-Welcome to **SSWG-MVM (Synthetic Synthesist of Workflow Generation â€” Minimum Viable Model)**.
+Welcome to **SSWG-MVM (Synthetic Synthesist of Workflow Generation — Minimum Viable Model)**.
 
 This system generates, evaluates, and recursively evolves instructional workflows, producing both **human-readable** and **machine-readable** outputs. It is designed for reproducibility, extensibility, and research-grade inspection.
 
-This Quickstart is intentionally minimal: it gets you from clone â†’ first run â†’ understanding recursion.
+This Quickstart is intentionally minimal: it gets you from clone → first run → understanding recursion.
 
 ---
 
-## ðŸš€ Getting Started
+## 🚀 Getting Started
 
 **Canonical run guide:** [docs/RUNBOOK.md](RUNBOOK.md)
 
@@ -60,7 +60,7 @@ Recursive execution will:
 
 ---
 
-## ðŸ›  Requirements
+## 🛠 Requirements
 
 - Python 3.11+
 - Git
@@ -70,7 +70,7 @@ Recursive execution will:
 
 ---
 
-## ðŸ“‚ Outputs
+## 📂 Outputs
 
 The system produces:
 
@@ -89,7 +89,7 @@ Artifacts are additive-only and versioned for traceability.
 
 ---
 
-## ðŸ— Architecture Reference
+## 🏗 Architecture Reference
 
 For a complete, code-aligned system description, see:
 
@@ -108,7 +108,7 @@ Canonical invariants (including schema validation invariants) are defined in [in
 
 ---
 
-## ðŸ”§ Core Directories (At a Glance)
+## 🔧 Core Directories (At a Glance)
 
 | Directory | Purpose |
 |--------|--------|
@@ -126,23 +126,25 @@ Canonical invariants (including schema validation invariants) are defined in [in
 
 ---
 
-## ðŸ”„ Conceptual Workflow Phases
+## 🔁 Canonical 9-Phase Flow
 
-The MVM pipeline follows these high-level phases:
+The MVM pipeline follows the canonical 9-phase flow:
 
-1. Initialization and input acquisition  
-2. Structural validation against schemas  
-3. Workflow generation and modular expansion  
-4. Evaluation and semantic scoring  
-5. Recursive refinement and evolution  
-6. Visualization and artifact export  
-7. Memory persistence and feedback logging  
+1. ingest
+2. normalize
+3. parse
+4. analyze
+5. generate
+6. validate
+7. compare
+8. interpret
+9. log
 
 Exact execution order and responsibilities are defined in `docs/ARCHITECTURE.md`.
 
 ---
 
-## âš¡ Tips
+## ⚡ Tips
 
 - Use `generator/main.py` for local CLI execution.
 - Recursive runs improve clarity and reduce redundancy over iterations.

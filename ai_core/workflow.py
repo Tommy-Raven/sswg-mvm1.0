@@ -25,6 +25,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterable, List, Optional
 
+from pdl.default_pdl import load_default_phases
+
 
 class Workflow:
     """
@@ -213,11 +215,7 @@ class Workflow:
         This preserves the original simple phase loop so that existing
         generator/main.py code using `wf.run_all_phases()` still works.
         """
-        phases = [
-            "Phase 1 — Initialization",
-            "Phase 2 — How-To Generation",
-            "Phase 3 — Modularization",
-        ]
+        phases = list(load_default_phases().keys())
         for phase in phases:
             self.results[phase] = self.execute_phase(phase)
 

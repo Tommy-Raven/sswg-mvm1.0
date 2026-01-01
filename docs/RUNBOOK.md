@@ -18,6 +18,10 @@ python3 -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
 **Expected result**
 - Validation completes without errors. No artifacts are written; the command prints validation output to stdout/stderr.
 
+**Handler resolution**
+- Canonical handlers live in `pdl/handlers.py` and are referenced as `pdl.handlers.<phase>`.
+- Validation fails fast if any handler is missing or not callable.
+
 ---
 
 ### 2) Run a deterministic workflow execution

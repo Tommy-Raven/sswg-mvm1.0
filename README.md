@@ -96,6 +96,8 @@ Run the runtime-driven PDL flow with the canonical 9-phase definition:
 python3 generator/main.py --pdl pdl/default-pdf.yaml --demo
 ```
 
+> **Heads-up:** this repo intentionally vendors in-repo `yaml/` and `jsonschema/` modules that can shadow similarly named third-party packages. This is a deliberate design choice to keep schema handling deterministic within the repo, so ensure your environment resolves these local modules when running the Quick Start.
+
 Expected outputs (including the PDL run report) land in:
 
 ```

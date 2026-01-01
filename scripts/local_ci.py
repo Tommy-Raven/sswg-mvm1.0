@@ -156,11 +156,11 @@ def task_root_casing_lint() -> TaskResult:
 def task_recursive_benchmark() -> TaskResult:
     """
     Run recursive benchmark / memory tracker.
-    This assumes ai_memory/benchmark_tracker.py exposes a __main__ entrypoint.
+    This uses the reproducible benchmark pipeline script.
     """
     return run_command(
-        "ai_memory.benchmark_tracker",
-        [sys.executable, "-m", "ai_memory.benchmark_tracker"],
+        "scripts.benchmark_pipeline",
+        [sys.executable, "scripts/benchmark_pipeline.py"],
     )
 
 

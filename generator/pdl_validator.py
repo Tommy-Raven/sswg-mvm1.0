@@ -80,10 +80,14 @@ def _get_validator(schema_dir: Path, schema_name: str) -> Draft202012Validator:
 
 
 def _load_pdl_yaml(path: Path) -> Dict[str, Any]:
-    """Load a PDL YAML file and return it as a mapping."""
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    """Load a PDL YAML/JSON file and return it as a mapping."""
+    payload = path.read_text(encoding="utf-8")
+    if path.suffix.lower() == ".json":
+        data = json.loads(payload)
+    else:
+        data = yaml.safe_load(payload)
     if not isinstance(data, dict):
-        raise ValueError("PDL YAML must parse to a mapping object")
+        raise ValueError("PDL document must parse to a mapping object")
     return data
 
 

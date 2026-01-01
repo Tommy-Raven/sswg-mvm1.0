@@ -16,6 +16,67 @@ from typing import Any, Callable, Dict, Optional
 
 
 _DEFAULT_JSON_PATH = Path(__file__).with_name("default-pdf.json")
+_DEFAULT_PHASE_ORDER = [
+    "ingest",
+    "normalize",
+    "parse",
+    "analyze",
+    "generate",
+    "validate",
+    "compare",
+    "interpret",
+    "log",
+]
+_DEFAULT_PHASE_TYPES = {
+    "ingest": "data",
+    "normalize": "normalize",
+    "parse": "parse",
+    "analyze": "analysis",
+    "generate": "generation",
+    "validate": "validation",
+    "compare": "comparison",
+    "interpret": "interpretation",
+    "log": "logging",
+}
+_DEFAULT_PHASE_CONSTRAINTS = {
+    "ingest": {
+        "no_interpretation": True,
+        "no_mutation_of_canonical": True,
+    },
+    "normalize": {
+        "deterministic_required": True,
+        "alignment_rules_required": True,
+    },
+    "parse": {
+        "schema_binding_required": True,
+        "no_generation": True,
+    },
+    "analyze": {
+        "deterministic_required": True,
+        "no_generative_tools_for_measurement": True,
+    },
+    "generate": {
+        "outputs_must_be_declarative": True,
+        "no_measurement_keys_generated_stochastically": True,
+    },
+    "validate": {
+        "schema_validation_required": True,
+        "invariants_required": True,
+    },
+    "compare": {
+        "deterministic_required": True,
+        "overlap_metrics_allowed": ["iou"],
+    },
+    "interpret": {
+        "must_reference_measured_artifacts": True,
+        "output_must_be_labeled_nondeterministic": True,
+    },
+    "log": {
+        "run_id_required": True,
+        "inputs_hash_required": True,
+        "phase_status_required": True,
+    },
+}
 
 
 def load_default_phases() -> Dict[str, Dict[str, Any]]:
@@ -25,7 +86,7 @@ def load_default_phases() -> Dict[str, Dict[str, Any]]:
     Returns:
         Mapping of phase names to canonical definitions.
     """
-    return {
+    phase_definitions = {
         "ingest": {
             "description": "Collect and register raw inputs without interpretation.",
             "handler": "pdl.handlers.ingest",
@@ -81,6 +142,7 @@ def load_default_phases() -> Dict[str, Dict[str, Any]]:
             "outputs": [{"id": "audit_log", "type": "log"}],
         },
     }
+    return {phase: phase_definitions[phase] for phase in _DEFAULT_PHASE_ORDER}
 
 
 def _resolve_handler(handler_path: str) -> Callable[..., Dict[str, Any]]:
@@ -104,6 +166,26 @@ def _validate_handlers(phases: Dict[str, Dict[str, Any]]) -> None:
         _resolve_handler(handler_path)
 
 
+def _build_default_workflow_spec() -> Dict[str, Any]:
+    phase_definitions = load_default_phases()
+    phases = []
+    for phase_name in _DEFAULT_PHASE_ORDER:
+        phase_definition = phase_definitions[phase_name]
+        phases.append(
+            {
+                "name": phase_name,
+                "type": _DEFAULT_PHASE_TYPES[phase_name],
+                "enabled": True,
+                "description": phase_definition["description"],
+                "inputs": phase_definition["inputs"],
+                "outputs": phase_definition["outputs"],
+                "handler": phase_definition["handler"],
+                "constraints": _DEFAULT_PHASE_CONSTRAINTS[phase_name],
+            }
+        )
+    return {"pipeline_profile": "full_9_phase", "phases": phases}
+
+
 def load_default_workflow_spec(path: Optional[str | Path] = None) -> Dict[str, Any]:
     """
     Load the default workflow spec from JSON.
@@ -119,13 +201,7 @@ def load_default_workflow_spec(path: Optional[str | Path] = None) -> Dict[str, A
 
     if not spec_path.exists():
         # Fallback: synthesize a spec using the known default phases.
-        phases = list(load_default_phases().keys())
-        return {
-            "workflow": {
-                "name": "default",
-                "phases": phases,
-            }
-        }
+        return _build_default_workflow_spec()
 
     with spec_path.open("r", encoding="utf-8") as file_handle:
         return json.load(file_handle)

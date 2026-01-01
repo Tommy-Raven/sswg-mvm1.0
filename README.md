@@ -82,27 +82,29 @@ Author: **Tommy Raven (Thomas Byers)**
 ## ▶️ Canonical Runbook
 
 **Primary entrypoint (how to run + expected outputs):**  
-docs/RUNBOOK.md
+[docs/RUNBOOK.md](docs/RUNBOOK.md)
 
 Other docs are secondary/overview and should defer to the canonical runbook above.
 
 ---
 
-## ⚡ Quick Start (Canonical PDL Run)
+## ⚡ Quick Start (Canonical, Deterministic)
 
-Run the runtime-driven PDL flow with the canonical 9-phase definition:
+Run the canonical deterministic demo flow from the repo root:
 
 ```bash
-python3 generator/main.py --pdl pdl/default-pdf.yaml --demo
+python3 -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas
+python3 generator/main.py --demo --no-refine
 ```
 
-> **Heads-up:** this repo intentionally vendors in-repo `yaml/` and `jsonschema/` modules that can shadow similarly named third-party packages. This is a deliberate design choice to keep schema handling deterministic within the repo, so ensure your environment resolves these local modules when running the Quick Start.
+> **Heads-up:** this repo intentionally vendors in-repo `yaml/` and `jsonschema/`
+> modules that can shadow similarly named third-party packages. This is a
+> deliberate design choice to keep schema handling deterministic within the
+> repo, so ensure your environment resolves these local modules when running
+> the Quick Start.
 
-Expected outputs (including the PDL run report) land in:
-
-```
-data/outputs/demo_run/
-```
+Expected outputs land in `data/outputs/demo_run/`. See the runbook for a
+complete, drift-free list of artifacts and optional PDL runtime commands.
 
 See [CHANGELOG.md](CHANGELOG.md) for the v1.2.0 release notes.
 
@@ -272,8 +274,7 @@ Run the PDL-driven runtime pipeline from the repo root:
 python3 generator/main.py --pdl pdl/default-pdf.yaml --demo
 ```
 
-Outputs land in `data/outputs/demo_run` and include:
-- PDL run report (`pdl_runs/*.json`)
+Outputs land in `data/outputs/demo_run/pdl_runs/` as `pdl_run_<inputs_hash>.json`.
 
 ---
 
@@ -296,12 +297,12 @@ Outputs land in `data/outputs/demo_run` and include:
 
 ### Clone the Repository
 
-    git clone https://github.com/Tommy-Raven/SSWG-mvm1.0.git
-    cd SSWG-mvm1.0
+    git clone https://github.com/Tommy-Raven/sswg-mvm1.0.git
+    cd sswg-mvm1.0
 
 ### Install Dependencies
-    use `pipx` if using virtual container
-    `pip install -r REQUIREMENTS.txt`
+    # use pipx if you prefer isolated environments
+    pip install -r REQUIREMENTS.txt
 
 ### Validate the canonical PDL (required before runs)
 
@@ -309,7 +310,7 @@ Outputs land in `data/outputs/demo_run` and include:
 
 ### Run the Generator (exact entry path)
 
-    python3 generator/main.py --pdl pdl/default-pdf.yaml --demo
+    python3 generator/main.py --demo --no-refine
 
 Artifacts will be created under:
 
@@ -349,7 +350,7 @@ Test coverage includes:
 AI Researcher • Workflow Engineer • Python Developer  
 © Raven Recordings, LLC 2025  
 
-GitHub: **https://github.com/Tommy-Raven/SSWG-mvm1.0**  
+GitHub: **https://github.com/Tommy-Raven/sswg-mvm1.0**  
 Pronouns: *Apache / Helicopter*  
 Fun fact: *Not actually an Apache helicopter — but thriving anyway.*  
 

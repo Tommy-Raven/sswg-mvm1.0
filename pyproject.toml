@@ -1,6 +1,6 @@
 [anchor]
 anchor_id = "pyproject"
-anchor_version = "1.2.0mvm"
+anchor_version = "1.2.0+mvm"
 scope = "repo"
 owner = "Raven Recordings"
 status = "draft"
@@ -11,6 +11,6 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sswg-mvm"
-version = "1.2.0mvm"
+version = "1.2.0+mvm"
 description = "sswg-mvm packaging metadata"
 requires-python = ">=3.10"

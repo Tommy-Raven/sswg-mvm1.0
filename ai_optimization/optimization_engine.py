@@ -13,9 +13,21 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from ai_core.optimization_loader import load_optimization_map
+
+
+@dataclass(frozen=True)
+class OptimizationState:
+    """Snapshot of optimization telemetry for recursion decisions."""
+
+    physical_determinism: float
+    dynamic_adaptivity: float
+    epistemic_recursion: float
+    total_optimization: float
+    environmental_entropy: float
 
 
 class OptimizationEngine:
@@ -53,6 +65,25 @@ class OptimizationEngine:
         workflow_logic = self.workflow_profile.get("workflow_logic", {})
         return workflow_logic if isinstance(workflow_logic, dict) else {}
 
+    def recursion_depth_limit(self) -> Optional[int]:
+        """Return a recursion depth cap from the optimization ontology, if set."""
+        raw_limit = self.logic.get("recursion_depth_limit")
+        if raw_limit is None:
+            return None
+        try:
+            return int(raw_limit)
+        except (TypeError, ValueError):
+            return None
+
+    def entropy_budget_alpha(self) -> float:
+        """Return the allowed entropy budget alpha, defaulting to 0.25."""
+        raw_budget = self.optimization_profile.get("entropy_budget_alpha")
+        if raw_budget is None:
+            raw_budget = self.optimization_profile.get("entropy_budget")
+        if isinstance(raw_budget, (int, float)):
+            return float(raw_budget)
+        return 0.25
+
     # ─────────────────────────────────────────────
     #  Core Computations
     # ─────────────────────────────────────────────
@@ -84,6 +115,31 @@ class OptimizationEngine:
                 examples_count += len(examples)
         noise = examples_count / (constants * 10)
         return round(max(0.0, min(1.0, noise)), 3)
+
+    def compute_total_optimization(
+        self,
+        *,
+        semantic_delta: float,
+        deterministic_delta: float,
+    ) -> OptimizationState:
+        """
+        Combine determinism, adaptivity, and recursion metrics into a summary.
+        """
+        physical_determinism = self.compute_deterministic_score()
+        environmental_entropy = self.compute_environmental_noise()
+        dynamic_adaptivity = max(0.0, min(1.0, 1.0 - deterministic_delta))
+        epistemic_recursion = max(0.0, min(1.0, semantic_delta))
+        total_optimization = (
+            physical_determinism + dynamic_adaptivity + epistemic_recursion
+        ) / 3.0
+
+        return OptimizationState(
+            physical_determinism=round(physical_determinism, 4),
+            dynamic_adaptivity=round(dynamic_adaptivity, 4),
+            epistemic_recursion=round(epistemic_recursion, 4),
+            total_optimization=round(total_optimization, 4),
+            environmental_entropy=round(environmental_entropy, 4),
+        )
 
     def optimize_heuristics(self, workflow: Dict[str, Any], noise: float) -> Dict[str, Any]:
         """

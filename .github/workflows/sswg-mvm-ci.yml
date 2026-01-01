@@ -70,6 +70,17 @@ jobs:
         run: |
           python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas --report-dir artifacts/validation --run-id ci-run
 
+      - name: Golden-path end-to-end run
+        run: |
+          python scripts/run_golden_path.py --out-dir artifacts/golden_path --no-refine --no-history
+
+      - name: Upload golden-path artifacts
+        if: always()
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b  # v4.3.4 pinned
+        with:
+          name: golden-path-artifacts
+          path: artifacts/golden_path
+
       - name: Root contract validation
         run: |
           python scripts/validate_root_contracts.py

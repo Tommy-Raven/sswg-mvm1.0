@@ -14,10 +14,14 @@ internal evolution of implementations.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from .workflow import Workflow
 from .module_registry import ModuleRegistry
 from .phase_controller import PhaseController
-from .orchestrator import Orchestrator
+
+if TYPE_CHECKING:
+    from .orchestrator import Orchestrator
 
 __all__ = [
     "Workflow",
@@ -32,3 +36,11 @@ def get_version() -> str:
     Return a simple version identifier for the core orchestration subsystem.
     """
     return "ai_core-mvm-0.1.0"
+
+
+def __getattr__(name: str):
+    if name == "Orchestrator":
+        from .orchestrator import Orchestrator as _Orchestrator
+
+        return _Orchestrator
+    raise AttributeError(f"module 'ai_core' has no attribute {name!r}")

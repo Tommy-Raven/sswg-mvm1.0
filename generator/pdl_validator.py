@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import dataclass
+from importlib import import_module
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -85,6 +87,47 @@ def _load_pdl_yaml(path: Path) -> Dict[str, Any]:
     return data
 
 
+def _validate_handler_paths(phases: list[dict[str, Any]]) -> None:
+    for phase in phases:
+        handler_path = phase.get("handler")
+        phase_name = phase.get("name", "unknown")
+        if not handler_path:
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="tool_mismatch",
+                    message="Missing handler declaration in PDL phase",
+                    evidence={"phase": phase_name},
+                )
+            )
+        module_path, _, attribute = handler_path.rpartition(".")
+        if not module_path or not attribute:
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="tool_mismatch",
+                    message="Invalid handler path format",
+                    evidence={"phase": phase_name, "handler": handler_path},
+                )
+            )
+        if find_spec(module_path) is None:
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="tool_mismatch",
+                    message="Handler module not found",
+                    evidence={"phase": phase_name, "handler": handler_path},
+                )
+            )
+        module = import_module(module_path)
+        handler = getattr(module, attribute, None)
+        if handler is None or not callable(handler):
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="tool_mismatch",
+                    message="Handler not callable",
+                    evidence={"phase": phase_name, "handler": handler_path},
+                )
+            )
+
+
 def validate_pdl_object(
     pdl_obj: Dict[str, Any],
     *,
@@ -120,6 +163,9 @@ def validate_pdl_object(
                 evidence={"errors": details},
             )
         )
+    phases = pdl_obj.get("phases", [])
+    if isinstance(phases, list):
+        _validate_handler_paths(phases)
 
 
 def validate_pdl_file(

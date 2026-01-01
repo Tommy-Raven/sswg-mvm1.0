@@ -3,10 +3,13 @@
     "name": "default",
     "phases": [
       "ingest",
+      "normalize",
       "parse",
+      "analyze",
       "generate",
-      "output",
       "validate",
+      "compare",
+      "interpret",
       "log"
     ]
   }

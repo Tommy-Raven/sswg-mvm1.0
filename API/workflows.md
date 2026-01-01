@@ -52,7 +52,7 @@ A valid SSWG–MVM workflow contains:
 ```json
 {
   "workflow_id": "wf_001",
-  "version": "v0.9.mvm.25",
+  "version": "v1.2.0",
   "metadata": { ... },
   "phases": [ ... ],
   "dependency_graph": { ... },

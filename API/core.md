@@ -1,4 +1,4 @@
-# 🧬 Core API (ai_core/)  
+# 🧬 Core API (ai_core/)
 ### Orchestrator, Phase Controller, Module Registry
 
 ---
@@ -11,11 +11,11 @@ Central coordination engine for workflow creation and validation.
 ### Key Methods
 
 #### `run(user_config, recursive=False)`
-- Generates workflow  
-- Validates schema  
-- Saves workflow to memory  
-- (Optional) performs recursive expansions  
-- Triggers telemetry + dashboard updates  
+- Generates workflow
+- Validates schema
+- Saves workflow to memory
+- (Optional) performs recursive expansions
+- Triggers telemetry + dashboard updates
 
 ---
 
@@ -25,22 +25,36 @@ Central coordination engine for workflow creation and validation.
 Executes transformation phases in order.
 
 ### Responsibilities:
-- manage input/output between phases  
-- track internal phase metadata  
-- unify phase schemas  
+- manage input/output between phases
+- track internal phase metadata
+- unify phase schemas
+
+### Canonical 9-Phase Model
+
+The core pipeline is defined as the canonical 9-phase flow:
+
+1. ingest
+2. normalize
+3. parse
+4. analyze
+5. generate
+6. validate
+7. compare
+8. interpret
+9. log
+
+Each phase must use its declared handler and I/O contracts from `schemas/pdl-phases/`.
 
 ---
 
 # 📦 Module Registry
 
 ## `class ModuleRegistry`
-In future releases this will:
+Provides module lookup and dependency tracking for workflow assembly.
 
-- map modules to dependencies  
-- enforce uniqueness & naming constraints  
-- support plugin loading  
-
-Currently implemented as a placeholder.
+Planned expansions include:
+- plugin loading
+- stricter module naming enforcement
 
 ---
 
@@ -50,12 +64,23 @@ Currently implemented as a placeholder.
 A lightweight container for:
 
 ```python
-workflow_id: str  
-params: dict  
-results: dict  
+workflow_id: str
+params: dict
+results: dict
 ```
 
 Primary method:
 
 ### `run_all_phases()`
-Executes P1 → P3 mock phases (MVM-minimal).
+Executes the canonical phase sequence for workflow execution.
+
+---
+
+# 🧪 Dev-Only Mock Behavior
+
+Legacy compatibility mode remains available for development and testing:
+
+- `Workflow.run_all_phases()` currently uses stubbed phase execution in `ai_core/workflow.py`.
+- `Workflow.execute_phase()` returns stubbed payloads and should not be used for canonical runs.
+
+Production runs should rely on the canonical PDL-driven execution and handler resolution defined in `pdl/handlers.py`.

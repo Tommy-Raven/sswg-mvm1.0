@@ -342,6 +342,21 @@ Test coverage includes:
 - `make gates` for audit readiness and determinism validation
 - `make preflight` for a local CI-equivalent sweep
 
+### ✅ Always-on correctness gates (minimum required)
+
+These gates are mandatory for any run or change set and enforce baseline correctness:
+
+- Schema validation (PDL wrapper + phase schemas)
+- Phase validation and invariants validation
+- Reproducibility validation for deterministic phases
+
+### 🧪 Optional research/promotion gates (situational)
+
+These gates are used for research readiness, audit bundles, and promotion decisions:
+
+- `make gates` for audit readiness + determinism evidence
+- Promotion readiness checks (e.g., audit bundle generation in `scripts/run_promotion_readiness.py`)
+
 ---
 
 ## 👤 Author & Contact

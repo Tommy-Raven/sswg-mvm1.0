@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/blob/main/schemas/optimization_schema.json",
+  "title": "Optimization Knowledge Graph Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["anchor", "optimization_profile", "workflow_profile"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "$id": {
+      "type": "string"
+    },
+    "anchor": {
+      "type": "object",
+      "required": [
+        "anchor_id",
+        "anchor_version",
+        "scope",
+        "owner",
+        "status"
+      ],
+      "properties": {
+        "anchor_id": {"type": "string"},
+        "anchor_version": {"type": "string"},
+        "scope": {"type": "string"},
+        "owner": {"type": "string"},
+        "status": {
+          "type": "string",
+          "enum": ["draft", "sandbox", "canonical", "archived"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "optimization_profile": {
+      "type": "object",
+      "required": [
+        "domain",
+        "optimization_goal",
+        "parameters",
+        "mapping_relations"
+      ],
+      "properties": {
+        "domain": {"type": "string"},
+        "optimization_goal": {"type": "string"},
+        "system_interrelation_logic": {"type": "string"},
+        "parameters": {
+          "type": "object",
+          "required": ["constants", "variables"],
+          "properties": {
+            "constants": {
+              "type": "array",
+              "items": {"type": "object"}
+            },
+            "variables": {
+              "type": "array",
+              "items": {"type": "object"}
+            }
+          },
+          "additionalProperties": true
+        },
+        "mapping_relations": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        }
+      },
+      "additionalProperties": true
+    },
+    "workflow_profile": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "workflow_id",
+        "metadata",
+        "definitions",
+        "workflow_logic"
+      ],
+      "properties": {
+        "schema_version": {"type": "string"},
+        "workflow_id": {"type": "string"},
+        "metadata": {
+          "type": "object",
+          "required": ["intent", "last_updated"],
+          "properties": {
+            "intent": {"type": "string"},
+            "last_updated": {"type": "string"}
+          },
+          "additionalProperties": true
+        },
+        "definitions": {
+          "type": "object",
+          "required": ["constants", "variables"],
+          "properties": {
+            "constants": {
+              "type": "array",
+              "items": {"type": "object"}
+            },
+            "variables": {
+              "type": "array",
+              "items": {"type": "object"}
+            }
+          },
+          "additionalProperties": true
+        },
+        "workflow_logic": {
+          "type": "object",
+          "required": [
+            "recursion_depth_limit",
+            "termination_condition",
+            "execution_steps"
+          ],
+          "properties": {
+            "recursion_depth_limit": {"type": "integer", "minimum": 1},
+            "termination_condition": {"type": "string"},
+            "execution_steps": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

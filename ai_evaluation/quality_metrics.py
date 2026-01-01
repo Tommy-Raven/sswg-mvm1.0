@@ -20,6 +20,7 @@ New MVM-style scalar metrics:
 
 from __future__ import annotations
 
+import json
 from typing import Any, Dict, List
 
 _STOP_WORDS = {
@@ -45,9 +46,21 @@ _STOP_WORDS = {
     "this",
 }
 
+from ai_core.optimization_loader import load_optimization_map
+from ai_optimization.optimization_engine import OptimizationEngine
 from .semantic_analysis import SemanticAnalyzer
 
 _analyzer = SemanticAnalyzer()
+_optimization_engine = OptimizationEngine()
+
+
+def _load_optimization_profile() -> Dict[str, Any]:
+    try:
+        optimization_map = load_optimization_map()
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {}
+    profile = optimization_map.get("optimization_profile", {})
+    return profile if isinstance(profile, dict) else {}
 
 
 # ---------------------------------------------------------------------- #
@@ -268,6 +281,67 @@ def usability_metric(wf: Dict[str, Any]) -> float:
             usable += 1
 
     return usable / len(tasks)
+
+
+def throughput_metric(wf: Dict[str, Any]) -> float:
+    """
+    Deterministic throughput proxy based on optimization constants vs noise.
+
+    This metric is independent of the workflow content and derives its
+    weighting from the optimization ontology.
+    """
+    profile = _load_optimization_profile()
+    parameters = profile.get("parameters", {})
+    if not isinstance(parameters, dict):
+        return 0.0
+
+    constants = parameters.get("constants", [])
+    variables = parameters.get("variables", [])
+
+    hardware_constraints = len(constants) if isinstance(constants, list) else 0
+    noise_factor = 0
+    if isinstance(variables, list):
+        for variable in variables:
+            if not isinstance(variable, dict):
+                continue
+            examples = variable.get("examples", [])
+            if isinstance(examples, list):
+                noise_factor += len(examples)
+
+    if hardware_constraints <= 0:
+        return 0.0
+    return hardware_constraints / (1 + noise_factor)
+
+
+def epistemic_optimization_metric(wf: Dict[str, Any]) -> float:
+    """
+    Combine semantic verity with deterministic throughput signals.
+
+    The score reflects the tri-layer optimization state while honoring
+    the entropy budget defined by the optimization ontology.
+    """
+    semantic_score = (
+        clarity_metric(wf) + coherence_metric(wf) + specificity_metric(wf)
+    ) / 3.0
+    throughput_score = throughput_metric(wf)
+    deterministic_delta = abs(throughput_score - semantic_score)
+
+    optimization_state = _optimization_engine.compute_total_optimization(
+        semantic_delta=semantic_score,
+        deterministic_delta=deterministic_delta,
+    )
+    entropy_budget = _optimization_engine.entropy_budget_alpha()
+    if optimization_state.environmental_entropy > entropy_budget:
+        return 0.0
+
+    return max(
+        0.0,
+        min(
+            1.0,
+            optimization_state.total_optimization
+            * (1.0 - optimization_state.environmental_entropy),
+        ),
+    )
 
 
 # End of ai_evaluation/quality_metrics.py

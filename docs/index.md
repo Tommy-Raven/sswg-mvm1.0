@@ -115,6 +115,8 @@ data/outputs/
 | **Developer Docs** | CLI, modules, CI/CD, versioning |
 | **Visualization** | Mermaid & DAG explanations |
 | **Changelog** | Auto-generated version bumps |
+| **Evolution Bundle** | Milestone lineage through v1.2.0 |
+| **Version Lineage** | Build lineage from v0.1.0 through v1.2.0 |
 
 ---
 

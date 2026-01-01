@@ -1,16 +1,28 @@
 [anchor]
-anchor_id = "pyproject"
+anchor_id = "project-toml"
 anchor_version = "1.2.0+mvm"
 scope = "repo"
 owner = "Raven Recordings"
 status = "draft"
 
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "sswg-mvm"
 version = "1.2.0+mvm"
-description = "sswg-mvm packaging metadata"
-requires-python = ">=3.10"
+status = "active"
+release_stage = "pre-release"
+description = "sswg mvm is the minimum viable model for the sswg workflow generation system."
+
+[system]
+component = "sswg"
+minimum_viable_model = "mvm"
+
+[runtime]
+python = ">=3.10"
+
+[licensing]
+license = "proprietary (pre-release)"
+terms = "TERMS_OF_USE.md"
+
+[repository]
+url = "https://github.com/Tommy-Raven/SSWG-mvm1.0"
+default_branch = "work"

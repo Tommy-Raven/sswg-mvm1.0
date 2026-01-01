@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
 from ai_evaluation.evaluation_engine import evaluate_workflow_quality
+from ai_memory.benchmark_tracker import BenchmarkTracker
+from ai_optimization.optimization_engine import OptimizationEngine, OptimizationState
 from ai_evaluation.semantic_analysis import SemanticAnalyzer
 from ai_memory.feedback_integrator import FeedbackIntegrator
 from ai_memory.memory_store import MemoryStore
@@ -114,9 +116,11 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
         self.delta_calculator = SemanticDeltaCalculator()
         self.feedback = FeedbackIntegrator()
         self.memory_store = MemoryStore()
+        self.benchmark_tracker = BenchmarkTracker()
         self.history = HistoryManager()
         self.llm_generate = llm_generate
         self.contract = contract or RefinementContract()
+        self.optimization_engine = OptimizationEngine()
 
     def _ensure_schema_tags(self, workflow: Dict[str, Any]) -> str:
         """Ensure schema version metadata is present for downstream consumers."""
@@ -281,11 +285,42 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
             )
         return regenerated
 
-    def should_recurse(self, depth: int, score_delta: float) -> bool:
+    def should_recurse(
+        self,
+        depth: int,
+        score_delta: float,
+        recursion_limit: Optional[int] = None,
+    ) -> bool:
         """Return True when the recursion policy allows another cycle."""
-        if depth >= self.policy.max_depth:
+        max_depth = recursion_limit or self.policy.max_depth
+        if depth >= max_depth:
             return False
         return score_delta >= self.policy.min_improvement
+
+    def _dynamic_recursion_limit(self, optimization_state: OptimizationState) -> int:
+        """Compute a recursion limit adjusted by deterministic entropy signals."""
+        base_limit = self.policy.max_depth
+        ontology_limit = self.optimization_engine.recursion_depth_limit()
+        if ontology_limit is not None:
+            base_limit = min(base_limit, ontology_limit)
+
+        entropy = optimization_state.environmental_entropy
+        adjusted = max(1, int(round(base_limit * (1.0 - entropy))))
+        return adjusted
+
+    def _compute_optimization_state(
+        self,
+        baseline_report: Dict[str, Any],
+        candidate_report: Dict[str, Any],
+        semantic_delta: float,
+    ) -> OptimizationState:
+        throughput_before = baseline_report["quality"]["metrics"].get("throughput", 0.0)
+        throughput_after = candidate_report["quality"]["metrics"].get("throughput", 0.0)
+        deterministic_delta = abs(throughput_after - throughput_before)
+        return self.optimization_engine.compute_total_optimization(
+            semantic_delta=semantic_delta,
+            deterministic_delta=deterministic_delta,
+        )
 
     def refine_workflow(
         self,
@@ -378,10 +413,16 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
         semantic_delta = self.delta_calculator.delta(
             baseline_report["embedding"], candidate_report["embedding"]
         )
+        optimization_state = self._compute_optimization_state(
+            baseline_report,
+            candidate_report,
+            semantic_delta,
+        )
+        recursion_limit = self._dynamic_recursion_limit(optimization_state)
 
         llm_decision = candidate.get("recursion_metadata", {}).get("llm_decision")
         regenerate = llm_decision in {"accept", "revise"} and (
-            self.should_recurse(depth, score_delta)
+            self.should_recurse(depth, score_delta, recursion_limit=recursion_limit)
             or semantic_delta >= self.policy.min_semantic_delta
         )
 
@@ -430,6 +471,23 @@ class RecursionManager:  # pylint: disable=too-many-instance-attributes
         )
 
         self.memory_store.save(final_workflow)
+        self.benchmark_tracker.record_optimization_event(
+            lineage_context["workflow_id"],
+            optimization_state,
+            metadata={"depth": depth, "recursion_limit": recursion_limit},
+        )
+
+        candidate.setdefault("recursion_metadata", {}).setdefault(
+            "optimization_state",
+            {
+                "physical_determinism": optimization_state.physical_determinism,
+                "dynamic_adaptivity": optimization_state.dynamic_adaptivity,
+                "epistemic_recursion": optimization_state.epistemic_recursion,
+                "total_optimization": optimization_state.total_optimization,
+                "environmental_entropy": optimization_state.environmental_entropy,
+                "recursion_limit": recursion_limit,
+            },
+        )
 
         log_event(
             "mvm.recursion.cycle_completed",

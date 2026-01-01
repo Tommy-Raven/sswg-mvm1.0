@@ -12,6 +12,47 @@ anchor:
 This changelog tracks notable updates to the sswg-mvm repository. For run
 instructions and canonical workflow guidance, refer to `docs/RUNBOOK.md`.
 
+## [v1.2.0]
+
+### Added
+- Bounded cognition tooling: entropy controller, verity tensor, and benchmark evolution modules.
+- Phase 1.2 overview documentation for entropy-governed recursion.
+- Evolution bundle documenting the milestone lineage through v1.2.0.
+
+### Updated
+- Optimization-aware recursion and evaluation signals to align with entropy budgets and verity tracking.
+
+## [v1.1.0]
+
+### Added
+- Optimization subsystem with ontology-backed templates, schema, and loader.
+- Throughput and epistemic optimization metrics for workflow evaluation.
+- Cross-domain semantic mapping helpers and optimization telemetry logging.
+
+## [v1.0.0]
+
+### Added
+- Stable mvm recursion, evaluation, memory, and export pipeline.
+- CLI-integrated generation and validation workflows for reproducible artifacts.
+
+## [v0.9.0]
+
+### Added
+- Schema governance and orchestrator modules that enforce deterministic validation.
+- Module registry, dependency graph mapping, and anomaly detection tooling.
+
+## [v0.5.0]
+
+### Added
+- Recursion manager, phase controller integration, and semantic evaluation metrics.
+- Deterministic recursion depth management and schema validation before recursion.
+
+## [v0.1.0]
+
+### Added
+- Canonical workflow and template schemas.
+- Recursive template manifest and reflection-oriented template set.
+
 ## [v0.0.9mvm]
 
 ### Added
@@ -26,3 +67,8 @@ instructions and canonical workflow guidance, refer to `docs/RUNBOOK.md`.
 
 ### Notes
 - Pre-release licensing remains in effect. See `LICENSE.md` and `TERMS_OF_USE.md`.
+
+## [v0.0.0]
+
+### Added
+- Conceptual groundwork for workflow-as-cognition and synthetic verity.

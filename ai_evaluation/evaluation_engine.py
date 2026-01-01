@@ -46,8 +46,10 @@ def _register_default_metrics() -> None:
         "coverage": getattr(qm, "coverage_metric", None),
         "coherence": getattr(qm, "coherence_metric", None),
         "completeness": getattr(qm, "completeness_metric", None),
+        "epistemic_optimization": getattr(qm, "epistemic_optimization_metric", None),
         "intent_alignment": getattr(qm, "intent_alignment_metric", None),
         "specificity": getattr(qm, "specificity_metric", None),
+        "throughput": getattr(qm, "throughput_metric", None),
         "usability": getattr(qm, "usability_metric", None),
     }
 

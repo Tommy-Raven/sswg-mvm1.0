@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict, Optional, Tuple
 
+from ai_optimization.optimization_engine import OptimizationState
 from ai_monitoring.structured_logger import get_logger, log_event
 
 
@@ -176,3 +177,26 @@ class BenchmarkTracker:
         Return the known calibration benchmark definitions.
         """
         return dict(CALIBRATION_BENCHMARKS)
+
+    def record_optimization_event(
+        self,
+        workflow_id: str,
+        optimization_state: OptimizationState,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """
+        Record a deterministic optimization event for recursion tracking.
+        """
+        log_event(
+            self.logger,
+            "optimization_event",
+            {
+                "workflow_id": workflow_id,
+                "physical_determinism": optimization_state.physical_determinism,
+                "dynamic_adaptivity": optimization_state.dynamic_adaptivity,
+                "epistemic_recursion": optimization_state.epistemic_recursion,
+                "total_optimization": optimization_state.total_optimization,
+                "environmental_entropy": optimization_state.environmental_entropy,
+                "metadata": dict(metadata or {}),
+            },
+        )

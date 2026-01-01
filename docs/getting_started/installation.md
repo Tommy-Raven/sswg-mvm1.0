@@ -3,8 +3,8 @@
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/Tommy-Raven/AI_instructions_workflow
-cd AI_instructions_workflow
+git clone https://github.com/Tommy-Raven/sswg-mvm1.0
+cd sswg-mvm1.0
 ```
 
 ## Install Dependencies

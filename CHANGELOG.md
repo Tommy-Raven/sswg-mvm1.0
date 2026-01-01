@@ -22,6 +22,12 @@ instructions and canonical workflow guidance, refer to `docs/RUNBOOK.md`.
 ### Updated
 - Optimization-aware recursion and evaluation signals to align with entropy budgets and verity tracking.
 
+### Detailed (v1.2.0 release)
+- Introduced entropy governance terminology across overview, architecture, and subsystem documentation.
+- Documented verity tensor evaluation axes (semantic, deterministic, entropic) and bounded cognition stop conditions.
+- Expanded optimization subsystem guidance with ontology integration, telemetry schemas, and example outputs.
+- Added memory and benchmark evolution notes for cognitive thermodynamic telemetry.
+
 ## [v1.1.0]
 
 ### Added

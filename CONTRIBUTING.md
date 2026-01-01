@@ -57,3 +57,11 @@ The root [README.md](./README.md) and [docs/README.md](./docs/README.md) describ
 - For questions, use GitHub Discussions or the issue tracker (user: **@Tommy-Raven**).
 - Include reproduction details and environment notes (OS, Python version) when reporting bugs.
 - Celebrate wins by adding notable improvements to `CHANGELOG.md` when applicable.
+
+## New Development Guidelines (v1.2.0+)
+
+All new modules must:
+1. Define telemetry hooks for entropy and determinism.
+2. Respect bounded cognition principles — recursion must terminate gracefully.
+3. Include schema alignment with ontology definitions.
+4. Provide unit tests in `tests/test_<module>.py`.

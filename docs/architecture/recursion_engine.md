@@ -692,3 +692,19 @@ As mvm (software), the system should:
 - preserve failed variants for learning,
 - update prevention checks based on repeated incidents,
 - escalate to humans only when severity is high or ambiguity is irreducible.
+
+---
+
+## 🧪 Entropy Stop Condition (v1.2.0)
+
+Bounded cognition introduces an entropy-governed termination rule. Recursion halts when additional refinement increases entropy faster than verity gains:
+
+```
+Stop when: ∂V/∂E ≤ 0
+```
+
+Where:
+- **V** = verity (semantic × deterministic × entropic alignment)
+- **E** = entropy cost per recursion step
+
+**Operational rule:** when the verity gradient no longer exceeds entropy cost, the recursion manager exits and records the termination state in telemetry.

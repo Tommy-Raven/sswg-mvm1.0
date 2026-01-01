@@ -95,3 +95,20 @@ The recursive engine uses the graph to:
 - reorder phases  
 - detect “dead-end” phases  
 - enforce increasing granularity from P1 → Pn
+
+---
+
+# 🧠 Optimization + Verity Nodes (v1.2.0)
+
+The module graph now includes optimization and verity tensor nodes that feed recursion decisions:
+
+```mermaid
+flowchart TD
+  CORE[ai_core] --> REC[ai_recursive]
+  REC --> EVAL[ai_evaluation]
+  EVAL --> VT[ai_evaluation/verity_tensor.py]
+  VT --> OPT[ai_optimization]
+  OPT --> REC
+```
+
+These nodes ensure optimization telemetry and verity signals feed back into the recursion loop.

@@ -51,3 +51,7 @@ reports, follow the private reporting flow described in SECURITY.md.
 Project maintainers will investigate reports, apply corrective actions, and
 coordinate outcomes consistent with repository governance and compliance
 requirements.
+
+## Research Integrity
+
+Developers must maintain verity-first design ethics — no optimization shall reduce epistemic integrity.

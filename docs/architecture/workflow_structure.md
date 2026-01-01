@@ -80,3 +80,18 @@ MVM generates:
 | JSON | `workflow_id.json` |
 | Markdown | `workflow_id.md` |
 | Mermaid | Embedded inside Markdown |
+
+---
+
+# 🔁 Optimization + Entropy Signal Flow
+
+```mermaid
+flowchart LR
+  PH[Workflow Phases] --> EV[Evaluation Metrics]
+  EV --> VT[Verity Tensor]
+  VT --> OPT[Optimization Subsystem]
+  OPT --> EG[Entropy Governance]
+  EG --> PH
+```
+
+This flow keeps workflow structure aligned with optimization telemetry and bounded cognition gates.

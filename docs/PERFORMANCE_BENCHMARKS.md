@@ -164,3 +164,13 @@ under [`reproducibility/`](../reproducibility/) to align the run context.
 * Memory caching and garbage collection reduce overhead for large workflow sets.
 * Multithreaded execution increases throughput for parallel workflow generation.
 * Persistent memory analytics support long-term performance improvements.
+
+---
+
+## 🧠 Bounded Cognition Metrics (v1.2.0)
+
+| Metric | Description | Unit |
+| --- | --- | --- |
+| Verity Ratio | Determinism / Entropy | Scalar |
+| Entropy Budget | Max cognitive energy threshold | Float |
+| Throughput Gain | ΔVerity / ΔIteration | Ratio |

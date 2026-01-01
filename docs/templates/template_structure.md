@@ -84,3 +84,15 @@ wf = load_template("creative")
 ```
 
 Automatically normalizing everything into full workflow format.
+
+---
+
+# 🧩 Optimization Template Reference
+
+The optimization subsystem uses a dedicated ontology template:
+
+```
+data/templates/system_optimization_template.json
+```
+
+Use this template when defining optimization telemetry or bounded cognition parameters.

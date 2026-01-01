@@ -85,3 +85,23 @@ Regeneration triggers when:
 - embedding-based semantic memory  
 - grimoire pages (inter-template recollection)  
 - plugin ecosystem for persistent domains
+
+---
+
+# 📡 Telemetry Storage Extensions (v1.2.0)
+
+The memory subsystem now stores cognitive thermodynamic signals alongside lineage metadata.
+
+**New telemetry storage types:**
+
+- `entropy_log`
+- `determinism_curve`
+- `verity_curve`
+
+These logs persist with workflow lineage snapshots, enabling audit-ready reproduction of bounded cognition decisions.
+
+---
+
+# 🧪 Benchmark Evolution Tracking
+
+The module `ai_memory/benchmark_evolution.py` records verity and entropy trajectories across recursion runs. It provides the longitudinal record used to validate that bounded cognition converges without violating determinism.

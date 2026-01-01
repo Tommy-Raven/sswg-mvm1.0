@@ -9,7 +9,7 @@ Created by **Tommy Raven / Raven Recordings, LLC ©2025**
 </div>
 
 <p align="center">
-<a href="https://github.com/Tommy-Raven/AI_instructions_workflow">
+<a href="https://github.com/Tommy-Raven/sswg-mvm1.0">
 <img src="https://img.shields.io/badge/SSWG-MVM-v0.9.mvm.25-purple?style=flat-square">
 </a>
 <img src="https://img.shields.io/badge/Python-3.10+-blue?style=flat-square">
@@ -62,7 +62,7 @@ Clarity metrics, semantic checks, and dependency validation.
 # 🧩 Project Structure
 
 ```
-AI_instructions_workflow/
+sswg-mvm1.0/
 │
 ├── ai_core/              # Orchestration, workflow assembly
 ├── ai_recursive/         # Diff engine, variant synthesis

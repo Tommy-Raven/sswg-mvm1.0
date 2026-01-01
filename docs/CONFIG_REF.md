@@ -51,3 +51,18 @@ This document outlines configuration files, environment settings, and schema ref
 * JSON schema validation ensures module and workflow integrity.
 * Environment variables allow safe toggling of recursive execution and memory tracking.
 * Recommended workflow: clone → configure environment → validate schemas → run CLI or API.
+
+---
+
+## Bounded Cognition Configuration (v1.2.0)
+
+```yaml
+entropy:
+  max_budget: 1.0
+optimization:
+  ontology_path: data/templates/system_optimization_template.json
+telemetry:
+  record_verity_curves: true
+```
+
+These parameters enable entropy-governed recursion and verity curve capture.

@@ -12,7 +12,7 @@ setup(
     description="Recursive AI Instructional Workflow Generator (Grimoire v5.0)",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/Tommy-Raven/AI_instructions_workflow",
+    url="https://github.com/Tommy-Raven/sswg-mvm1.0",
     packages=find_packages(
         include=[
             "ai_core",

@@ -1,13 +1,13 @@
 ---
 anchor:
   anchor_id: readme
-  anchor_version: "1.1.0"
+  anchor_version: "1.2.0"
   scope: documentation
   owner: sswg
   status: draft
 ---
 
-# **sswg-mvm v0.0.9mvm**  
+# **sswg-mvm v1.2.0**  
 ### *sswg — Synthetic Synthesist of Workflow Generation (minimum viable model)*
 
 <div id="top"></div>
@@ -17,14 +17,14 @@ anchor:
 
 <div align="center">
 <h2>sswg-mvm</h2>
-<i>Recursive, Schema-Aligned Workflow Engine • Designed by Tommy Raven</i>
+<i>A schema-governed, entropy-aware recursive cognition engine • Designed by Tommy Raven</i>
 </div>
 
 <div align="center">
 
 ![Status](https://img.shields.io/badge/Status-Active-7E3ACE?style=for-the-badge)
 ![Build](https://img.shields.io/badge/Build-Stable-4B9CD3?style=for-the-badge)
-![Version](https://img.shields.io/badge/v0.0.9mvm-Pre--Release-9E3CE7?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.2.0--Bounded%20Cognition-blue)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
 ![Architecture](https://img.shields.io/badge/Architecture-Recursive_AI-black?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-Proprietary_(Pre--Release)-black?style=for-the-badge)
@@ -37,7 +37,7 @@ anchor:
 
 ## ⚖️ Legal At-A-Glance
 
-**Current Status (v0.0.9mvm)**  
+**Current Status (v1.2.0)**  
 - Proprietary • All rights reserved  
 - No redistribution, resale, hosting, or dataset extraction  
 - No forks or derivative systems  
@@ -71,12 +71,30 @@ Author: **Tommy Raven (Thomas Byers)**
 
 ---
 
+## ✨ Key Features (v1.2.0)
+
+- Bounded cognition via entropy control and termination guards.
+- Verity tensor metric for semantic, deterministic, and entropic alignment.
+- Ontology-aligned optimization subsystem for deterministic telemetry.
+
+---
+
 ## ▶️ Canonical Runbook
 
 **Primary entrypoint (how to run + expected outputs):**  
 docs/RUNBOOK.md
 
 Other docs are secondary/overview and should defer to the canonical runbook above.
+
+---
+
+## ⚡ Quick Start (Bounded Cognition)
+
+```bash
+python -m generator.recursion_manager --bounded
+```
+
+See [CHANGELOG.md](CHANGELOG.md) for the v1.2.0 release notes.
 
 ---
 

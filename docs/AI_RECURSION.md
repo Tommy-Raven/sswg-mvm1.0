@@ -92,3 +92,40 @@ For new developers and users:
 * Extend FastAPI endpoints for recursive workflow visualization
 * Include automatic derivative workflow tracking with lineage linking
 
+
+---
+
+## 📏 Verity Tensor Evaluation (v1.2.0)
+
+The evaluation system now computes a **verity tensor** with three axes:
+
+- **semantic** — alignment to intended meaning and phase clarity
+- **deterministic** — stability of metrics across runs
+- **entropic** — efficiency of cognition relative to entropy cost
+
+**Module reference:** `ai_evaluation/verity_tensor.py`
+
+### Example recursion event output
+
+```json
+{
+  "run_id": "recursion_2025_12_27",
+  "iteration": 4,
+  "verity_tensor": {
+    "semantic": 0.86,
+    "deterministic": 0.91,
+    "entropic": 0.79
+  },
+  "entropy_spent": 0.42,
+  "decision": "continue"
+}
+```
+
+### Combining metrics
+
+`ai_evaluation/evaluation_engine.py` aggregates metrics by:
+
+1. Calculating per-axis scores.
+2. Building the verity tensor.
+3. Producing a composite verity ratio (`deterministic / entropy`).
+4. Passing the result to the recursion manager for bounded cognition decisions.

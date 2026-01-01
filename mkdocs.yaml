@@ -1,10 +1,10 @@
 site_name: "SSWG–MVM Documentation"
 site_description: "Synthetic Synthesist of Workflow Generation — Minimum Viable Model (v.09.mvm.25)"
 site_author: "Tommy Raven / Raven Recordings, LLC © 2025"
-site_url: "https://tommy-raven.github.io/AI_instructions_workflow/"
+site_url: "https://tommy-raven.github.io/sswg-mvm1.0/"
 
-repo_name: "AI_instructions_workflow"
-repo_url: "https://github.com/Tommy-Raven/AI_instructions_workflow"
+repo_name: "sswg-mvm1.0"
+repo_url: "https://github.com/Tommy-Raven/sswg-mvm1.0"
 
 # --------------------------
 # BUILD / THEME
@@ -71,13 +71,22 @@ nav:
   - Home: index.md
   - Getting Started:
       - Overview: getting_started/overview.md
+      - Phase 1.2 (Bounded Cognition): overview/phase_1_2_entropy_governed_recursion.md
       - Installation: getting_started/installation.md
       - Running the MVM: getting_started/run_mvm.md
 
   - Architecture:
       - System Architecture: architecture/system_architecture.md
+      - Recursion Engine: architecture/recursion_engine.md
+      - Workflow Structure: architecture/workflow_structure.md
+      - Memory Versioning: architecture/memory_versioning.md
       - Folder Structure: architecture/folder_structure.md
       - Data Flow & Recursion Model: architecture/recursion_model.md
+      - Module Graph: architecture/module_graph.md
+
+  - Subsystem Specs:
+      - Optimization Framework: spec/optimization_framework_overview.md
+      - Entropy Governance: spec/entropy_governance_spec.md
 
   - Templates:
       - Creative Writing: templates/creative_writing.md

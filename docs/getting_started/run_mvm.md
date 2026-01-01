@@ -51,3 +51,15 @@ python3 -m generator.main --no-history
 ```bash
 python3 -m generator.main --help
 ```
+
+---
+
+# 🧠 Entropy-Governed Recursion (v1.2.0)
+
+Run bounded cognition with entropy governance enabled:
+
+```bash
+python -m generator.recursion_manager --bounded --entropy-budget 1.0
+```
+
+This mode halts recursion when verity gains no longer exceed entropy cost.

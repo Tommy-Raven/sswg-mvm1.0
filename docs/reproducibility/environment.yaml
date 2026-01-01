@@ -1,0 +1,19 @@
+name: sswg-mvm-docs
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pyyaml
+  - jsonschema
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - rich
+  - pip
+  - pip:
+      - networkx
+      - fastapi
+      - uvicorn
+      - prometheus-client

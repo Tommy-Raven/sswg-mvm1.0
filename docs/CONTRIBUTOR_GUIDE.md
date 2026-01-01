@@ -39,8 +39,8 @@ Welcome to the **SSWG-MVM**, an AI instructional workflow generator anchored on 
 
 Clone the repository:
 
-git clone [https://github.com/Tommy-Raven/AI_instructions_workflow.git](https://github.com/Tommy-Raven/AI_instructions_workflow.git)
-cd AI_instructions_workflow
+git clone [https://github.com/Tommy-Raven/sswg-mvm1.0.git](https://github.com/Tommy-Raven/sswg-mvm1.0.git)
+cd sswg-mvm1.0
 
 Install dependencies:
 
@@ -139,5 +139,5 @@ CI/CD uses GitHub Actions to enforce tests, code linting, and deployment checks.
 
 * GitHub Issues preferred for questions or support.
 * Author: Tommy Raven
-* Repository: [github.com/Tommy-Raven/AI_instructions_workflow](https://github.com/Tommy-Raven/AI_instructions_workflow)
+* Repository: [github.com/Tommy-Raven/sswg-mvm1.0](https://github.com/Tommy-Raven/sswg-mvm1.0)
 * Codename: SSWG-MVM

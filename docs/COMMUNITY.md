@@ -16,7 +16,7 @@ Licensing: Raven Recordings ©️ see: *LICENSE.md*
 ## Getting Started
 
 * **Explore the repository** — Review `README.md`, `docs/`, and example workflows in `data/templates/`.
-* **Clone the repo** — `git clone https://github.com/Tommy-Raven/AI_instructions_workflow.git`
+* **Clone the repo** — `git clone https://github.com/Tommy-Raven/sswg-mvm1.0.git`
 * **Install dependencies** — `pip install -r requirements.txt`
 * **Run tests** — `pytest tests/` to ensure your environment is working.
 
@@ -56,3 +56,9 @@ Licensing: Raven Recordings ©️ see: *LICENSE.md*
 * Recursive outputs teach subsequent workflows, creating an evolving knowledge base anchored on SSWG.
 * JSON and Markdown outputs are human- and machine-readable.
 * Use `generator/main.py` or FastAPI endpoints to explore SSWG-guided recursive workflow creation.
+
+---
+
+## 🔬 Cognitive Optimization Research
+
+The community welcomes contributors who want to explore bounded cognition, entropy governance, and verity metrics. If you are working on optimization telemetry, ontology alignment, or evaluation theory, open an issue or discussion labeled **cognitive-optimization** to coordinate research efforts.

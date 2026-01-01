@@ -34,3 +34,7 @@ When reporting, include:
 - Follow coordinated disclosure timelines agreed upon in the advisory thread.
 - Security changes must continue to respect sswg/mvm governance, determinism
   requirements, and validation gates defined in AGENTS.md and governance.yaml.
+
+## Entropy Governance Note
+
+The entropy controller mitigates runaway recursion and resource exhaustion vulnerabilities.

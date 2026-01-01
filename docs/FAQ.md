@@ -75,7 +75,17 @@ Licensing: Raven Recordings ©️ see: *LICENSE.md*
 **A:** See `CONTRIBUTOR_GUIDE.md` for contribution workflows, coding standards, and phase-based module ownership.
 
 **Q:** Where can I report bugs or request features?
-**A:** Open issues on the GitHub repository: [https://github.com/Tommy-Raven/AI_instructions_workflow](https://github.com/Tommy-Raven/AI_instructions_workflow).
+**A:** Open issues on the GitHub repository: [https://github.com/Tommy-Raven/sswg-mvm1.0](https://github.com/Tommy-Raven/sswg-mvm1.0).
 
 **Q:** Are there any learning resources?
 **A:** Documentation includes onboarding guides, API reference, and architecture overviews. Demo notebooks provide practical examples.
+
+---
+
+## Bounded Cognition & Verity
+
+**Q:** What is bounded cognition?
+**A:** Bounded cognition is the rule that recursion halts when additional refinement increases entropy faster than verity, preventing runaway iteration while preserving deterministic quality.
+
+**Q:** What is the verity tensor?
+**A:** The verity tensor is a three-axis metric (semantic, deterministic, entropic) used to evaluate whether recursion should continue or terminate.

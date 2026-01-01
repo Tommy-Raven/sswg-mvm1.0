@@ -331,18 +331,6 @@ class Orchestrator:
                 {"workflow_id": wf_id},
             )
 
-                # MVM decision: raise, but this could be downgraded later.
-                raise ValueError(f"Invalid workflow schema for {wf_id}")
-
-            log_event(
-                "orchestrator.validation_passed",
-                {"workflow_id": wf_id},
-            )
-            self.telemetry.record(
-                "validation_passed",
-                {"workflow_id": wf_id},
-            )
-
         # Save to memory and render dashboard
         self.memory.save(workflow.to_dict())
         self.dashboard.render()

@@ -15,12 +15,13 @@ import hashlib
 import json
 import os
 import platform
+import statistics
 import sys
 import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Iterable, List
 
 import yaml
 
@@ -50,6 +51,8 @@ class BenchmarkConfig:
     phase_iterations: int
     recursion_iterations: int
     resolve_handlers: bool
+    repeats: int
+    workload_templates: List[Path]
 
 
 def _hash_bytes(payload: bytes) -> str:
@@ -216,6 +219,66 @@ def _recursion_timing(parsed: Dict[str, Any], iterations: int) -> Dict[str, floa
     return {"total": elapsed, "avg_per_iteration": avg}
 
 
+def _count_tasks(phases: Iterable[Dict[str, Any]]) -> int:
+    return sum(len(phase.get("tasks", []) or []) for phase in phases)
+
+
+def _dependency_density(modules: Iterable[Dict[str, Any]]) -> Dict[str, float]:
+    module_list = list(modules)
+    node_count = len(module_list)
+    edge_count = sum(len(m.get("dependencies", []) or []) for m in module_list)
+    max_edges = node_count * (node_count - 1) if node_count > 1 else 0
+    density = edge_count / max_edges if max_edges else 0.0
+    return {
+        "nodes": float(node_count),
+        "edges": float(edge_count),
+        "max_edges": float(max_edges),
+        "density": density,
+    }
+
+
+def _characterize_workflow(workflow_path: Path) -> Dict[str, Any]:
+    payload = workflow_path.read_bytes()
+    workflow = json.loads(payload)
+    phases = workflow.get("phases", []) or []
+    modules = workflow.get("modules", []) or []
+    recursion = workflow.get("recursion", {}) or {}
+    lines = payload.count(b"\n") + (1 if payload else 0)
+
+    return {
+        "workflow_path": str(workflow_path.resolve()),
+        "workflow_id": workflow.get("workflow_id"),
+        "workflow_size": {
+            "bytes": len(payload),
+            "lines": lines,
+            "phases": len(phases),
+            "tasks": _count_tasks(phases),
+            "modules": len(modules),
+            "outputs": len(workflow.get("outputs", []) or []),
+        },
+        "recursion_depth": {
+            "depth_limit": recursion.get("depth_limit"),
+            "max_iterations": recursion.get("max_iterations"),
+        },
+        "dependency_density": _dependency_density(modules),
+    }
+
+
+def _characterize_workloads(paths: Iterable[Path]) -> Dict[str, Any]:
+    workloads = [_characterize_workflow(path) for path in paths]
+    return {
+        "anchor": {
+            "anchor_id": "workload_characterization",
+            "anchor_version": "1.0.0",
+            "scope": "benchmarking",
+            "owner": "scripts.benchmark_pipeline",
+            "status": "draft",
+        },
+        "workloads": workloads,
+        "workload_count": len(workloads),
+    }
+
+
 def _build_output(config: BenchmarkConfig) -> Dict[str, Any]:
     payload = _read_dataset(config.pdl_path)
     parsed = yaml.safe_load(payload)
@@ -255,6 +318,7 @@ def _build_output(config: BenchmarkConfig) -> Dict[str, Any]:
             "phase_iterations": config.phase_iterations,
             "recursion_iterations": config.recursion_iterations,
             "resolve_handlers": config.resolve_handlers,
+            "repeats": config.repeats,
         },
         "throughput": {
             "io_read_mb_s": io_read["mb_s"],
@@ -264,6 +328,64 @@ def _build_output(config: BenchmarkConfig) -> Dict[str, Any]:
         },
         "phase_timings_seconds": phase_timings,
         "recursion_timings_seconds": recursion_timings,
+        "workload_characterization": _characterize_workloads(config.workload_templates),
+    }
+
+
+def _flatten_metrics(report: Dict[str, Any]) -> Dict[str, float]:
+    metrics: Dict[str, float] = {}
+    for key, value in (report.get("throughput") or {}).items():
+        if isinstance(value, (int, float)):
+            metrics[f"throughput.{key}"] = float(value)
+    for key, value in (report.get("phase_timings_seconds") or {}).items():
+        if isinstance(value, (int, float)):
+            metrics[f"phase_timings_seconds.{key}"] = float(value)
+    for key, value in (report.get("recursion_timings_seconds") or {}).items():
+        if isinstance(value, (int, float)):
+            metrics[f"recursion_timings_seconds.{key}"] = float(value)
+    return metrics
+
+
+def _variance_summary(values: List[float]) -> Dict[str, float]:
+    if not values:
+        return {"mean": 0.0, "stdev": 0.0, "min": 0.0, "max": 0.0}
+    mean = statistics.mean(values)
+    stdev = statistics.pstdev(values) if len(values) > 1 else 0.0
+    return {
+        "mean": mean,
+        "stdev": stdev,
+        "min": min(values),
+        "max": max(values),
+    }
+
+
+def _build_variance_report(reports: List[Dict[str, Any]]) -> Dict[str, Any]:
+    aggregated: Dict[str, List[float]] = {}
+    for report in reports:
+        metrics = _flatten_metrics(report)
+        for key, value in metrics.items():
+            aggregated.setdefault(key, []).append(value)
+
+    return {
+        "anchor": {
+            "anchor_id": "benchmark_variance_report",
+            "anchor_version": "1.0.0",
+            "scope": "benchmarking",
+            "owner": "scripts.benchmark_pipeline",
+            "status": "draft",
+        },
+        "run_count": len(reports),
+        "metrics": {key: _variance_summary(values) for key, values in aggregated.items()},
+    }
+
+
+def _sample_run(report: Dict[str, Any]) -> Dict[str, Any]:
+    run = report.get("run", {}) or {}
+    return {
+        "run_id": run.get("run_id"),
+        "timestamp_utc": run.get("timestamp_utc"),
+        "throughput": report.get("throughput"),
+        "recursion_timings_seconds": report.get("recursion_timings_seconds"),
     }
 
 
@@ -326,6 +448,21 @@ def _parse_args() -> BenchmarkConfig:
         help="Number of iterations in recursion timing loop.",
     )
     parser.add_argument(
+        "--repeats",
+        type=int,
+        default=1,
+        help="Number of repeated runs to capture variance.",
+    )
+    parser.add_argument(
+        "--workload-templates",
+        nargs="+",
+        default=[
+            "data/templates/campfire_workflow.json",
+            "data/templates/technical_procedure_template.json",
+        ],
+        help="Workflow templates to characterize for workload sizing.",
+    )
+    parser.add_argument(
         "--resolve-handlers",
         action="store_true",
         default=True,
@@ -357,16 +494,41 @@ def _parse_args() -> BenchmarkConfig:
         phase_iterations=args.phase_iterations,
         recursion_iterations=args.recursion_iterations,
         resolve_handlers=args.resolve_handlers,
+        repeats=max(args.repeats, 1),
+        workload_templates=[Path(path) for path in args.workload_templates],
     )
 
 
 def main() -> int:
     config = _parse_args()
     try:
-        report = _build_output(config)
+        reports = []
+        for repeat_index in range(config.repeats):
+            run_id = config.run_id
+            if config.repeats > 1:
+                run_id = f"{config.run_id}-run-{repeat_index + 1}"
+            config_run = BenchmarkConfig(
+                pdl_path=config.pdl_path,
+                schema_dir=config.schema_dir,
+                output_path=config.output_path,
+                run_id=run_id,
+                timestamp_utc=config.timestamp_utc,
+                io_read_iterations=config.io_read_iterations,
+                io_write_iterations=config.io_write_iterations,
+                phase_iterations=config.phase_iterations,
+                recursion_iterations=config.recursion_iterations,
+                resolve_handlers=config.resolve_handlers,
+                repeats=config.repeats,
+                workload_templates=config.workload_templates,
+            )
+            reports.append(_build_output(config_run))
     except (OSError, ValueError, PDLValidationError, yaml.YAMLError) as exc:
         print(f"Benchmark pipeline failed: {exc}")
         return 1
+
+    report = reports[0]
+    report["run_samples"] = [_sample_run(run) for run in reports]
+    report["variance_report"] = _build_variance_report(reports)
 
     config.output_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"Benchmark report written to {config.output_path}")

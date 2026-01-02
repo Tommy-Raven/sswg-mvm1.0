@@ -160,7 +160,7 @@ def task_recursive_benchmark() -> TaskResult:
     """
     return run_command(
         "scripts.benchmark_pipeline",
-        [sys.executable, "scripts/benchmark_pipeline.py"],
+        [sys.executable, "-m", "scripts.benchmark_pipeline", "--repeats", "5"],
     )
 
 

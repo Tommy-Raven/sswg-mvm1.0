@@ -2,6 +2,16 @@
 
 **Canonical status (primary entrypoint for how to run + expected outputs):** This runbook is the single canonical guide for deterministic, audit-ready runs of the sswg/mvm pipeline. Other docs are secondary/overview and should defer here to avoid drift.
 
+## Golden path CLI (single deterministic flow)
+
+Run the canonical golden path with the CLI in a single, deterministic sequence:
+
+```bash
+sswg init && sswg run && sswg validate && sswg bundle
+```
+
+Defaults are deterministic: `sswg run` disables recursive refinement and history unless explicitly overridden.
+
 ## Deterministic Run Recipe
 
 ### 1) Validate the PDL phase set (required)

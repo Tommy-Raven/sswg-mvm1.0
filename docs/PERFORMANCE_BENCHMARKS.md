@@ -57,6 +57,10 @@ ranges live in [`ai_memory/benchmark_tracker.py`](../ai_memory/benchmark_tracker
 Environment references (hardware + software baselines, container specs) live
 under [`reproducibility/`](../reproducibility/) to align the run context.
 
+Benchmark reports now include:
+- repeated-run variance summaries (local CI runs five repeats)
+- workload characterization for workflow size, recursion depth, and dependency density
+
 ## ✅ Latest Measured Results (2025-12-27T09:07:21Z)
 
 **Raw results:** [`artifacts/performance/benchmarks_20251227_090721.json`](../artifacts/performance/benchmarks_20251227_090721.json)

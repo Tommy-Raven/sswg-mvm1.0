@@ -5,11 +5,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="ai-instructional-workflow-generator",  # Replace if needed
-    version="0.1.0",
+    name="sswg-mvm",
+    version="1.3.0+mvm",
     author="Tommy Byers (Tommy-Raven)",
     author_email="your.email@example.com",
-    description="Recursive AI Instructional Workflow Generator (Grimoire v5.0)",
+    description="sswg mvm is the minimum viable model for the sswg workflow generation system.",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Tommy-Raven/sswg-mvm1.0",
@@ -31,6 +31,10 @@ setup(
             "ai_validation.*",
             "ai_visualization",
             "ai_visualization.*",
+            "cli",
+            "cli.*",
+            "data",
+            "data.*",
             "generator",
             "generator.*",
             "modules",
@@ -41,7 +45,7 @@ setup(
             "schemas",
         ]
     ),
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     install_requires=[
         "networkx>=3.2",
         "pyyaml>=6.0",
@@ -58,7 +62,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "aiwf = cli:main",  # Assuming cli.py defines a main() function
+            "sswg = cli.cli:main",
         ],
     },
     include_package_data=True,

@@ -1,16 +1,37 @@
 [anchor]
 anchor_id = "project-toml"
-anchor_version = "1.2.0+mvm"
+anchor_version = "1.3.0+mvm"
 scope = "repo"
 owner = "Raven Recordings"
 status = "draft"
 
 [project]
 name = "sswg-mvm"
-version = "1.2.0+mvm"
+version = "1.3.0+mvm"
+description = "sswg mvm is the minimum viable model for the sswg workflow generation system."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "networkx>=3.2",
+  "pyyaml>=6.0",
+  "graphviz>=0.20.1",
+  "jsonschema>=4.19",
+  "sentence-transformers>=3.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "flake8>=7.0",
+  "black>=24.1",
+]
+
+[project.scripts]
+sswg = "cli.cli:main"
+
+[tool.sswg]
 status = "active"
 release_stage = "pre-release"
-description = "sswg mvm is the minimum viable model for the sswg workflow generation system."
 
 [system]
 component = "sswg"
@@ -26,3 +47,7 @@ terms = "TERMS_OF_USE.md"
 [repository]
 url = "https://github.com/Tommy-Raven/SSWG-mvm1.0"
 default_branch = "work"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"

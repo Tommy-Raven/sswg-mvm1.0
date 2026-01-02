@@ -14,6 +14,7 @@ from __future__ import annotations
 from .checkpoints import EvaluationCheckpoint, EvaluationCheckpointer
 from .evaluation_engine import evaluate_workflow_quality
 from .semantic_analysis import SemanticAnalyzer
+from .verity_tensor import compute_verity
 from .scoring_adapter import ScoreAdapter
 
 __all__ = [
@@ -22,6 +23,7 @@ __all__ = [
     "ScoreAdapter",
     "EvaluationCheckpoint",
     "EvaluationCheckpointer",
+    "compute_verity",
 ]
 
 

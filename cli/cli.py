@@ -190,6 +190,8 @@ def cmd_bundle(args: Namespace) -> None:
         str(args.audit_dir),
         "--manifest-path",
         str(args.manifest_path),
+        "--benchmark-log",
+        str(args.benchmark_log),
     ]
     exit_code = run(cmd)
     if exit_code != 0:
@@ -203,7 +205,10 @@ def build_parser() -> argparse.ArgumentParser:
     Returns:
         Configured CLI parser.
     """
-    parser = argparse.ArgumentParser(prog="sswg", description="SSWG project CLI")
+    parser = argparse.ArgumentParser(
+        prog="sswg",
+        description="sswg/mvm Golden Path CLI (init → run → validate → bundle)",
+    )
     subparsers = parser.add_subparsers(dest="cmd")
 
     # Phase command
@@ -241,7 +246,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     init = subparsers.add_parser(
         "init",
-        help="Initialize deterministic run prerequisites",
+        help="Initialize golden path prerequisites (deterministic setup)",
     )
     init.add_argument(
         "--pdl-path",
@@ -277,7 +282,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     run_cmd = subparsers.add_parser(
         "run",
-        help="Run deterministic workflow generation",
+        help="Run the deterministic golden path workflow generation",
     )
     run_cmd.add_argument(
         "--refine",
@@ -295,7 +300,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     validate = subparsers.add_parser(
         "validate",
-        help="Validate the canonical PDL phase set",
+        help="Validate the canonical PDL phase set for the golden path",
     )
     validate.add_argument(
         "--pdl-path",
@@ -313,7 +318,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     bundle = subparsers.add_parser(
         "bundle",
-        help="Build the audit bundle for the deterministic run",
+        help="Build the audit bundle for the golden path run",
     )
     bundle.add_argument(
         "--audit-spec",
@@ -332,6 +337,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("artifacts/audit/audit_bundle_manifest.json"),
         help="Audit bundle manifest path.",
+    )
+    bundle.add_argument(
+        "--benchmark-log",
+        type=Path,
+        default=Path("artifacts/performance/benchmarks_20251227_090721.json"),
+        help="Benchmark log path used for audit metrics.",
     )
     bundle.add_argument(
         "--run-id",

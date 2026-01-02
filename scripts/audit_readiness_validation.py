@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from generator.audit_bundle import validate_bundle
+from data.outputs.audit_bundle import validate_audit_bundle
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
@@ -46,7 +46,7 @@ def main() -> int:
         return 1
 
     manifest = json.loads(args.manifest_path.read_text(encoding="utf-8"))
-    results = validate_bundle(manifest)
+    results = validate_audit_bundle(manifest)
     if results["status"] != "pass":
         emitter.emit(
             FailureLabel(

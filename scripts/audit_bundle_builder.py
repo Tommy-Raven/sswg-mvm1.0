@@ -4,7 +4,7 @@ import argparse
 
 from pathlib import Path
 
-from generator.audit_bundle import build_bundle, load_audit_spec
+from data.outputs.audit_bundle import build_audit_bundle, load_audit_spec
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
@@ -34,6 +34,12 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/audit/audit_bundle_manifest.json"),
         help="Audit bundle manifest path.",
     )
+    parser.add_argument(
+        "--benchmark-log",
+        type=Path,
+        default=Path("artifacts/performance/benchmarks_20251227_090721.json"),
+        help="Benchmark log path used for audit metrics.",
+    )
     return parser.parse_args()
 
 
@@ -55,12 +61,26 @@ def main() -> int:
         return 1
 
     spec = load_audit_spec(args.audit_spec)
+    if not args.benchmark_log.exists():
+        emitter.emit(
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Benchmark log missing",
+                phase_id="validate",
+                evidence={"path": str(args.benchmark_log)},
+            ),
+            run_id=args.run_id,
+        )
+        print("Audit bundle build failed")
+        return 1
+
     bundle_dir = args.bundle_dir / args.run_id
-    build_bundle(
+    build_audit_bundle(
         spec=spec,
         run_id=args.run_id,
         bundle_dir=bundle_dir,
         manifest_path=args.manifest_path,
+        benchmark_log_path=args.benchmark_log,
     )
 
     print("Audit bundle build passed")

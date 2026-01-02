@@ -26,7 +26,11 @@ from generator.agent_policy import (
     detect_working_tree_changes,
     policy_state,
 )
-from generator.audit_bundle import build_bundle, load_audit_spec, validate_bundle
+from data.outputs.audit_bundle import (
+    build_audit_bundle,
+    load_audit_spec,
+    validate_audit_bundle,
+)
 from generator.budgeting import (
     collect_artifact_sizes,
     evaluate_budgets,
@@ -178,6 +182,12 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("governance/audit_bundle_spec.json"),
         help="Audit bundle spec path.",
+    )
+    parser.add_argument(
+        "--benchmark-log",
+        type=Path,
+        default=Path("artifacts/performance/benchmarks_20251227_090721.json"),
+        help="Benchmark log path used for audit metrics.",
     )
     parser.add_argument(
         "--repo-mode",
@@ -962,15 +972,25 @@ def main() -> int:
                 evidence={"path": str(args.audit_spec)},
             ),
         )
+    if not args.benchmark_log.exists():
+        return gate_failure(
+            FailureLabel(
+                Type="reproducibility_failure",
+                message="Benchmark log missing",
+                phase_id="validate",
+                evidence={"path": str(args.benchmark_log)},
+            ),
+        )
     audit_spec = load_audit_spec(args.audit_spec)
     audit_manifest_path = Path("artifacts/audit/audit_bundle_manifest.json")
-    audit_manifest = build_bundle(
+    audit_manifest = build_audit_bundle(
         spec=audit_spec,
         run_id=args.run_id,
         bundle_dir=Path("artifacts/audit") / args.run_id,
         manifest_path=audit_manifest_path,
+        benchmark_log_path=args.benchmark_log,
     )
-    audit_validation = validate_bundle(audit_manifest)
+    audit_validation = validate_audit_bundle(audit_manifest)
     if audit_validation["status"] != "pass":
         return gate_failure(
             FailureLabel(

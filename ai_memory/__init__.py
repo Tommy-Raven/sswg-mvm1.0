@@ -9,12 +9,14 @@ from .memory_store import MemoryStore
 from .feedback_integrator import FeedbackIntegrator
 from .anomaly_detector import AnomalyDetector
 from .benchmark_tracker import BenchmarkTracker
+from .entropy_controller import verify_entropy_budget
 
 __all__ = [
     "MemoryStore",
     "FeedbackIntegrator",
     "AnomalyDetector",
     "BenchmarkTracker",
+    "verify_entropy_budget",
 ]
 
 

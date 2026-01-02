@@ -40,3 +40,28 @@ class EntropyController:
             "mean_entropy": round(mean, 4),
             "remaining_budget": round(self.remaining_budget(), 4),
         }
+
+
+def verify_entropy_budget(
+    *,
+    controller: EntropyController | None = None,
+    entropy_values: list[float] | None = None,
+    max_entropy: float = 1.0,
+) -> Dict[str, Any]:
+    """
+    Validate entropy totals against the configured budget.
+    """
+    if controller is None:
+        controller = EntropyController(max_entropy=max_entropy)
+        for value in entropy_values or []:
+            controller.log_entropy(value)
+
+    summary = controller.summary()
+    within_budget = summary["total_entropy"] <= max_entropy
+    return {
+        "total_entropy": summary["total_entropy"],
+        "mean_entropy": summary["mean_entropy"],
+        "remaining_budget": summary["remaining_budget"],
+        "max_entropy": round(max_entropy, 4),
+        "within_budget": within_budget,
+    }

@@ -38,3 +38,18 @@ def summarize_tensor_inputs(
         "entropy": entropy,
         "verity_tensor": tensor,
     }
+
+
+def compute_verity(
+    *, semantic_score: float, det_score: float, entropy: float
+) -> Dict[str, Any]:
+    """
+    Compute a verity payload with the canonical tensor output.
+    """
+    verity = compute_verity_tensor(semantic_score, det_score, entropy)
+    return {
+        "semantic": semantic_score,
+        "determinism": det_score,
+        "entropy": entropy,
+        "verity": verity,
+    }

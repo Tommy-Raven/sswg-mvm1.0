@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_index
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🐦 SSWG-MVM — Synthetic Synthesist of Workflow Generation  
 ### *Minimum Viable Model Documentation*  
 Created by **Tommy Raven / Raven Recordings, LLC ©2025**

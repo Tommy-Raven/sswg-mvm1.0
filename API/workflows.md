@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_workflows
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧩 Workflow API
 
 Workflow-related endpoints and functions allow external systems to invoke

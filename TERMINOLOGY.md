@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: terminology
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Repository Terminology (Authoritative)
 
 > **Authority:** This glossary is the authoritative source for terminology used across this repository.

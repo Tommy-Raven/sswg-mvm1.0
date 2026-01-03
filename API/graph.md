@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_graph
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🔗 Dependency Graph API (ai_graph/)  
 ### Graph Construction, Validation & Autocorrect
 

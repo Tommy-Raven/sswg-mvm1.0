@@ -1,4 +1,13 @@
 ---
+anchor:
+  anchor_id: github_issue_template_bug_report
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
+---
 name: Bug report
 about: Create a report to help us improve
 title: ""

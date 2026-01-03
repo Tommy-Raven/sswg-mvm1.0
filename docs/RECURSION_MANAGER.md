@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_recursion_manager
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Recursion Manager
 
 ## Purpose

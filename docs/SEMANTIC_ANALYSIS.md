@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_semantic_analysis
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 sswg-mvm; version 1.0+ (living document)
 Date: 12-22-2025
 Document title: SEMANTIC_ANALYSIS.md

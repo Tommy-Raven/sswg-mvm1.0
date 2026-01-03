@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: ai_validation_ai_validation
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ai_validation — Validation Layer for SSWG MVM
 
 The `ai_validation` package provides the core validation and safety checks

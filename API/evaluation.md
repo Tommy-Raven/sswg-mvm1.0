@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_evaluation
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📏 Evaluation API (ai_evaluation/)  
 ### Workflow Quality Metrics
 

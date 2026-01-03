@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_templates_technical_procedure
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🛠 Technical Procedure Template  
 ### Domain: Engineering  
 ### Template ID: `technical_procedure`
@@ -46,7 +55,7 @@ Tasks:
 ---
 
 ## **P3 — Testing, Validation & Documentation**
-Confirm procedure accuracy and reproducibility.
+Confirm workflow accuracy and reproducibility.
 
 Tasks:
 - Pilot test with observation  

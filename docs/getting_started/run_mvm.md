@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_getting_started_run_mvm
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Running SSWG-MVM
 
 **Canonical runbook (how to run + expected outputs):** `docs/RUNBOOK.md` is the primary entrypoint. This document is secondary/overview and should defer to the canonical runbook to avoid drift.

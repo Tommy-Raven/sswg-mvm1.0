@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_schema_tracking
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Schema Tracking & Version Control — Updated
 
 ## Purpose

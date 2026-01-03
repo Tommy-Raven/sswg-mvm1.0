@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_visualization
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🎨 Visualization API (ai_visualization/)  
 ### Mermaid · Graphviz · Markdown
 

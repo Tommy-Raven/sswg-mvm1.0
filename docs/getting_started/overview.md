@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_getting_started_overview
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Getting Started with SSWG-MVM
 
 This section introduces the Minimum Viable Model for the Synthetic Synthesist of Workflow Generation (SSWG-MVM).  

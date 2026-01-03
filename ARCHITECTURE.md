@@ -1,3 +1,11 @@
+---
+anchor:
+  anchor_id: architecture
+  anchor_version: "1.2.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
 
 # System Architecture
 
@@ -89,6 +97,19 @@ Gates do not optimize freely; they enforce constraints.
 
 ---
 
+## Reference Loop (Pre-Promotion Control)
+
+The `run_reference_loop` control loop (implemented in `generator/reference_loop.py`) runs **outside** the 9-phase PDL pipeline. It is explicitly **non-phase**, yet **promotion-gating**: its outcomes must be satisfied before a run can be promoted.
+
+This loop contributes pre-promotion evidence to audit bundles, including:
+- benchmark evolution summaries (verity, entropy, determinism trajectories)
+- entropy budget verification summaries
+- convergence summaries and the final run output snapshot
+
+These artifacts are used to validate promotion readiness without collapsing or replacing any canonical phase in the PDL pipeline.
+
+---
+
 ## Lineage & Evidence Management
 
 Every artifact is versioned and traceable.
@@ -154,7 +175,7 @@ Formal guarantees are documented in `docs/FORMAL_GUARANTEES.md`.
 ## Non-Goals
 
 The system explicitly does not:
-- provide step-by-step instructions
+- provide non-operational outputs framed as step sequences
 - act autonomously outside enforced bounds
 - infer or trust user authority or intent
 - generate operational procedures
@@ -164,4 +185,3 @@ The system explicitly does not:
 ## Summary
 
 The **sswg-mvm** architecture is a governance-first substrate for recursive artifact generation. Its design prioritizes control, auditability, and safety over flexibility or convenience.
-

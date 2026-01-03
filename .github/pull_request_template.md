@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: github_pull_request_template
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 
 SSWG Pull Request Template
 

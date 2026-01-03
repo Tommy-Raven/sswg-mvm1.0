@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: ai_evaluation_ai_evaluation
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ai_evaluation — Quality, Scoring, and Semantic Checks (SSWG MVM)
 
 The `ai_evaluation` package is responsible for assigning *quality signals*

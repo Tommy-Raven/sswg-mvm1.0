@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: ai_memory_ai_memory
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ai_memory — Memory, Feedback, and Benchmarks (SSWG MVM)
 
 The `ai_memory` package is responsible for *state that persists across runs*:

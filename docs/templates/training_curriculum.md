@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_templates_training_curriculum
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📚 Training Curriculum Template  
 ### Domain: Education  
 ### Template ID: `training_curriculum`

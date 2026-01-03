@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_architecture_module_graph
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🕸 Module Graph Architecture  
 
 The SSWG-MVM system models all workflows as **Directed Acyclic Graphs (DAGs)**.  

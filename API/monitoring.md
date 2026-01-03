@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_monitoring
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📡 Monitoring API (ai_monitoring/)  
 ### Logging · Telemetry · Performance Alerts
 

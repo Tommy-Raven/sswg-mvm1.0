@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: reproducibility_readme
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 1. environment.yaml
 Path:
 

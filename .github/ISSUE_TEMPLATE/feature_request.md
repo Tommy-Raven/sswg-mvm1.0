@@ -1,4 +1,13 @@
 ---
+anchor:
+  anchor_id: github_issue_template_feature_request
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
+---
 name: Feature request
 about: Propose an improvement aligned with sswg/mvm principles
 title: ""

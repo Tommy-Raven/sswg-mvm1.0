@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_human_readable_layer
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 sswg-mvm; version 1.0+ (living document)
 Date: 12-23-2025
 Document title: Remediation — Refine Human-Readable Layer Generation (Expanded)
@@ -249,7 +258,7 @@ These tie readability to real outcomes rather than aesthetics.
 
 The Minimum viable model (MVM) for human-readable layer refinement is:
 
-1. Two-layer output: a short overview/checklist + a detailed step-by-step expansion.
+1. Two-layer output: a short overview/checklist + a detailed structured expansion.
 2. Explicit checks per step: each step includes a verification cue (how to know it worked).
 3. Constraint surfacing rule: critical constraints appear in the first screenful and reappear at relevant steps.
 4. Fidelity check: confirm every structured requirement is represented in the human layer (no omissions, no inventions).

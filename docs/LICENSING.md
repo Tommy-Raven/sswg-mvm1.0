@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_licensing
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Licensing
 
 ### All canonical skeleton files are proprietary and intended solely for internal SSWG development purposes.

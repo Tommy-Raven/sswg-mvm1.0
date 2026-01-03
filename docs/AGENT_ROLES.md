@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_agent_roles
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Agent Roles and Cross-Role Communication
 
 This project relies on distinct agent roles to avoid self-confirmation bias and maintain high-quality outputs. Each role has a focused mandate, explicit authority limits, and defined hand-off points to keep generation, critique, and curation independent.

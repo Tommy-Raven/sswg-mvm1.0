@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: generator_generator
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # generator/ — SSWG Workflow Generator (MVM Layer)
 
 The `generator` package orchestrates a single end-to-end generation run:

@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_validation
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ✔ Validation API (ai_validation/)  
 ### JSON Schema Enforcement & Regression Tests
 

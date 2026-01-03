@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_getting_started_installation
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Installation
 
 ## Clone the Repository

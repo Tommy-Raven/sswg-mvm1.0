@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_core
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧬 Core API (ai_core/)
 ### Orchestrator, Phase Controller, Module Registry
 

@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: meta_knowledge_repo_meta_knowledge_repo
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # meta_knowledge_repo — long-term creative memory (MVM)
 
 The meta knowledge repository is the **single source of truth** for

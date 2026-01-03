@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_quickstart
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Quickstart Guide — SSWG-MVM
 
 Welcome to **SSWG-MVM (Synthetic Synthesist of Workflow Generation — Minimum Viable Model)**.

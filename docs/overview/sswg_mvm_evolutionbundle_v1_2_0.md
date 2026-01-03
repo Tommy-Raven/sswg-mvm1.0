@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_overview_sswg_mvm_evolutionbundle_v1_2_0
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧭 sswg-mvm Evolution Bundle v1.2.0
 
 This document chronicles the canonical milestone lineage of the sswg-mvm

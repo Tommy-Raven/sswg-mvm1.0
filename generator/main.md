@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: generator_main
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 #!/usr/bin/env python3
 
 """

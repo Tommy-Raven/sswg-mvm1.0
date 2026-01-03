@@ -157,7 +157,7 @@ Benchmark reports now include:
 * Campfire outputs:
   * [`data/profiling/campfire_workflow/campfire_workflow.json`](../data/profiling/campfire_workflow/campfire_workflow.json)
   * [`data/profiling/campfire_workflow/campfire_workflow.md`](../data/profiling/campfire_workflow/campfire_workflow.md)
-* Technical procedure outputs:
+* Technical workflow outputs:
   * [`data/profiling/technical_procedure_template/unnamed_workflow.json`](../data/profiling/technical_procedure_template/unnamed_workflow.json)
   * [`data/profiling/technical_procedure_template/unnamed_workflow.md`](../data/profiling/technical_procedure_template/unnamed_workflow.md)
 

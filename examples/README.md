@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: examples_readme
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Examples
 
 These scripts demonstrate how to run the visualization utilities without

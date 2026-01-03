@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_templates_overview
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📚 Workflow Template Library  
 ### SSWG-MVM — Modular Instruction Blueprint System
 

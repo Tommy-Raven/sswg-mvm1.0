@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: agents
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # AGENTS.md — sswg / mvm Compliance Operations Manual (v0.0.9mvm)
 
 This document defines **mandatory** behaviors for all contributors, automation agents, CI runners, and tooling that touch this repository.
@@ -25,12 +34,55 @@ Language is intentionally normative (**MUST / SHALL / SHOULD**) to function as a
 
 ---
 
+## 0.1 Terminology Authority & Enforcement (Mandatory)
+
+`TERMINOLOGY.md` is the authoritative source of meaning for all terms used in this repository.
+
+All agents (human or automated) **MUST** treat terminology definitions as normative, not descriptive.
+
+If a term is defined in `TERMINOLOGY.md`, its definition **MUST** be used consistently across:
+
+- documentation
+- code comments
+- schemas
+- logs
+- CLI output
+- audit bundles
+
+If a concept is not defined in `TERMINOLOGY.md`, agents **MUST NOT**:
+
+- introduce it implicitly,
+- substitute a colloquial synonym,
+- or infer meaning from common usage.
+
+Ambiguous language **MUST** be rewritten to use glossary-defined terms.
+
+Failure to comply with terminology authority is a governance violation.
+
+---
+
 ## 1) Naming Discipline (Required)
 
 - **sswg / mvm / nvm** refer to software components / behaviors (lowercase).
 - **SSWG / MVM / NVM** refer to governance mindsets / mental models (uppercase).
 
 Any documentation, logs, schemas, or code that violates this naming discipline **SHOULD** be corrected during the same change set.
+
+---
+
+## 1.1 Forbidden and Restricted Language (Terminology Guardrails)
+
+The following categories of language are restricted and **MUST NOT** appear unless explicitly defined and scoped in `TERMINOLOGY.md`:
+
+- implied agency (e.g., “the system decides”, “the model chooses”)
+- trusted intent (e.g., “safe user”, “authorized request”)
+- operational instruction language (e.g., “step-by-step”, “procedure”, “how to perform”)
+- implicit permission language (e.g., “allowed to”, “can be used for” without scope)
+
+If such language appears, agents **MUST**:
+
+- flag it as a defect, or
+- rewrite it using approved glossary terms (e.g., `descriptive_output`, `non_authoritative_signal`, `gate_failure`).
 
 ---
 
@@ -198,6 +250,24 @@ Promotion **MUST** be blocked if:
 
 ---
 
+## 6.4 Terminology Drift Detection (Required)
+
+Any change that introduces or modifies language **MUST** be evaluated for terminology drift.
+
+Terminology drift is defined as:
+
+- use of undefined terms,
+- redefinition of glossary terms,
+- or semantic weakening of established definitions.
+
+Terminology drift **MUST** be treated as a regression.
+
+Regressions **MUST** block promotion until corrected.
+
+Agents **SHOULD** prefer refactoring language over adding new terms.
+
+---
+
 ## 7) Canonical Schema Contracts (PDL)
 
 ### 7.1 Required schemas
@@ -271,6 +341,24 @@ A gate failure **MUST**:
 
 ---
 
+## 9.1 Terminology Compliance Gate (Promotion Blocking)
+
+Promotion, release, or canonical marking **MUST** be blocked if terminology compliance fails.
+
+Terminology compliance includes:
+
+- alignment with `TERMINOLOGY.md`,
+- absence of forbidden language (§1.1),
+- and consistent use of defined terms.
+
+Tooling **MAY** automate this check.
+
+Manual review **MUST** default to the most restrictive interpretation.
+
+Failure **MUST** be treated as a governance failure, not a stylistic issue.
+
+---
+
 ## 10) Failure Labeling Standard (Hard-Fail, Typed, Auditable)
 
 ### 10.1 Required failure label fields
@@ -295,6 +383,14 @@ On any failure, the failing phase **MUST** emit a failure label containing:
 ### 10.4 Interpret phase labeling (nondeterministic)
 - `interpret` outputs **MUST** be labeled nondeterministic and **MUST** reference measured artifacts only.
 - `interpret` **MUST NOT** mutate measurement outputs or canonical anchors.
+
+### 10.5 Entropy budget violations (promotion-gating)
+- Entropy budget violations **MUST** be treated as promotion-gating hard failures.
+- The owning phase is `validate`.
+- The failure label **MUST** include:
+  - `Type: deterministic_failure`
+  - `phase_id: validate`
+  - a deterministic message such as `entropy_budget_exceeded`.
 
 ---
 

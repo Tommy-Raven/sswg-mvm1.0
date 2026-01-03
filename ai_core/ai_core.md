@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: ai_core_ai_core
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ai_core — Orchestration Spine for SSWG MVM
 
 The `ai_core` package is the orchestration backbone of the SSWG system.  

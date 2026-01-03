@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_runbook
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Deterministic Runbook (sswg/mvm)
 
 **Canonical status (primary entrypoint for how to run + expected outputs):** This runbook is the single canonical guide for deterministic, audit-ready runs of the sswg/mvm pipeline. Other docs are secondary/overview and should defer here to avoid drift.

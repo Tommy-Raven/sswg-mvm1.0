@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: ai_monitoring_ai_monitoring
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ai_monitoring — Telemetry & Observability for SSWG MVM
 
 The `ai_monitoring` package is the observability layer of SSWG:

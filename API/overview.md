@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_overview
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧩 SSWG-MVM API Overview  
 ### Developer Reference · v.09.mvm.25
 

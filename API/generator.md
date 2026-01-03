@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_generator
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ⚙ Generator Module (generator/)  
 ### Core Pipeline for Workflow Transformation
 

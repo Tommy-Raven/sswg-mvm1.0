@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_memory
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧠 Memory API (ai_memory/)  
 ### Persistence · Feedback Integration · Benchmark Tracking
 

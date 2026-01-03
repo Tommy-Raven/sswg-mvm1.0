@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_overview_version_lineage_0_1_0_to_1_2_0
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📌 Version Lineage — v0.1.0 → v1.2.0
 
 This document lists the canonical build lineage for sswg-mvm releases from

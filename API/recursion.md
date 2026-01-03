@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_recursion
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🔁 Recursion API (ai_recursive/)  
 ### Version Diff Engine · Variant Generator · Memory Adapter
 

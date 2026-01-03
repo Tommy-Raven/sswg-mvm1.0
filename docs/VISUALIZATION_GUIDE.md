@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_visualization_guide
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Visualization Guide — AI Instructions Workflow Generator
 
 ## Overview

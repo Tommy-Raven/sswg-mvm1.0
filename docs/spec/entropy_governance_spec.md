@@ -39,6 +39,14 @@ Entropy budgets are defined per run and decremented on each recursion step. If t
 if entropy_spent + entropy_step > entropy_budget: halt
 ```
 
+### Failure labeling & phase ownership
+
+Entropy budget violations are **promotion-gating** and must hard-fail execution. The owning phase is `validate`, and enforcement must emit a failure label with:
+
+- `Type: deterministic_failure`
+- `phase_id: validate`
+- `message: entropy_budget_exceeded` (or an equivalent deterministic message for audit review)
+
 ---
 
 ## 🧾 Recursive Termination Rule (Pseudocode)

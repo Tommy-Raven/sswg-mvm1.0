@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_badges
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Project Badges
 
 ## Build & CI

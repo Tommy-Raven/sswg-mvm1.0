@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_templates_creative_writing
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🖋 Creative Writing Template  
 ### Domain: Literary Arts  
 ### Template ID: `creative_writing`

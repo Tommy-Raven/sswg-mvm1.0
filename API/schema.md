@@ -1,4 +1,13 @@
 ---
+anchor:
+  anchor_id: api_schema
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
+---
 
 ## **docs/api/schemas.md**
 ```markdown

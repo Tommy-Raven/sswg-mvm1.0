@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: schemas_schemas
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 Below is a fully rewritten, updated schema.md, aligned with:
 * SSWG-MVM philosophy
 * `ts/dtr` versioning logic
@@ -254,7 +263,7 @@ Required: clarity_score, completeness_score, cohesion_score
 • notes – string (free text)
 
 Strictness: additionalProperties = true
-Evaluation metrics are allowed to grow.
+Evaluation metrics may expand under declared scope.
 
 Referenced by:
 • workflow_schema.json → evaluation

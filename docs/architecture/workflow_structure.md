@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_architecture_workflow_structure
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📜 Workflow Structure Specification
 
 SSWG-MVM workflows follow a strict, schema-aligned structure.

@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: ai_recursive_ai_recursive
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ai_recursive — Recursive Refinement Layer (SSWG MVM)
 
 The `ai_recursive` package is responsible for **iterative improvement** of

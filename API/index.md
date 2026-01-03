@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: api_index
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 📡 SSWG–MVM API Overview
 
 The SSWG–MVM API exposes a stable interface for programmatic workflow

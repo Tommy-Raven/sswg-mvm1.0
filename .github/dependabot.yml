@@ -47,7 +47,7 @@ updates:
         update-types:
           - "security"
         # These receive the “security” prefix automatically
-        # and are allowed to open more PRs even if others are pending
+        # and will open more PRs even if others are pending
         open-pull-requests-limit: 5
 
   # ───────────────────────────────────────────────

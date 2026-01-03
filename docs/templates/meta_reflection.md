@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_templates_meta_reflection
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧠 Meta-Reflection Template  
 ### Domain: Metacognition  
 ### Template ID: `meta_reflection`

@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_compliance_compliance_checklist
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # Promotion Readiness Checklist
 
 | Gate | Command | Artifact | Pass criteria |

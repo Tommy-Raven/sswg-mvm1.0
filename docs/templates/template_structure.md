@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_templates_template_structure
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧱 Template Structure Specification
 
 All templates follow a strict JSON structure which MVM then validates and expands.

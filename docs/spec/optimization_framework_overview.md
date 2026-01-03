@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: optimization_framework_overview
+  anchor_version: "1.2.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # ⚙️ sswg-mvm Optimization Framework
 
 ## Purpose
@@ -58,6 +67,17 @@ Telemetry is computed across the tri-layer stack:
 - **Entropy Governance Layer** — entropy budgets, verity gradients, and stop conditions.
 
 Each telemetry cycle emits a combined verity record alongside deterministic performance metrics.
+
+### Verity mean (relative, context-bound signal)
+
+`verity_mean` is the **unweighted mean** of the verity series captured in benchmark logs and surfaced in audit bundles (matching the calculation in `data/outputs/audit_bundle.py`). It is a **relative, context-bound signal** that summarizes a single run’s verity history and **is not comparable across runs** unless the benchmark context, inputs, and scoring configuration are identical.
+
+`verity_mean` is **non-authoritative on its own** and must be interpreted alongside the benchmark log, entropy budget, and determinism context to avoid false conclusions.
+
+**Recommended use (avoid threshold misuse):**
+- Use `verity_mean` only as a within-run summary for the same benchmark configuration.
+- Pair it with the benchmark history and entropy budget to justify promotion or termination decisions.
+- Avoid hard global thresholds; instead, document the benchmark context and compare against prior runs under the same conditions.
 
 ---
 

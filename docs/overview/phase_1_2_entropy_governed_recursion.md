@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_overview_phase_1_2_entropy_governed_recursion
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # 🧠 Phase 1.2 — Entropy-Governed Recursion (Bounded Cognition)
 
 ## Overview

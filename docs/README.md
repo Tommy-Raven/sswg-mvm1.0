@@ -1,3 +1,12 @@
+---
+anchor:
+  anchor_id: docs_readme
+  anchor_version: "1.0.0"
+  scope: docs
+  owner: sswg
+  status: draft
+---
+
 # SSWG-MVM (SSWG Skeleton)
 
 SSWG-MVM (Synthetic Synthesist of Workflow Generation â€” Minimum Viable Model) is a **meta-educational AI system** for generating, evaluating, and evolving both AI- and human-formatted instructional workflows.

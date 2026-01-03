@@ -15,11 +15,12 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "deterministic_required": { "type": "boolean", "const": true },
                 "schema_validation_required": { "type": "boolean", "const": true },
                 "invariants_required": { "type": "boolean", "const": true },
                 "bijectivity_check_required": { "type": "boolean" }
               },
-              "required": ["schema_validation_required", "invariants_required"]
+              "required": ["deterministic_required", "schema_validation_required", "invariants_required"]
             }
           },
           "required": ["constraints"]

@@ -29,6 +29,7 @@ Language is intentionally normative (**MUST / SHALL / SHOULD**) to function as a
   - ❌ fail
 - For frontend visual changes, agents **MUST** capture screenshots via the browser tool and **MUST** cite the artifact.
 - Agents **MUST** honor instruction precedence: system > developer > user > AGENTS, with deeper `AGENTS.md` overriding parent scopes.
+- Agents **MUST** delegate validation, parsing, and normalization logic to the shared cores in `ai_cores/` and respect nested scope hierarchy (§19.9).
 - If any placeholders or TODOs remain in the final diff, agents **MUST** include a **Notes** section after **Testing**; agents **MUST** omit the section otherwise.
 - When changes are made, agents **MUST** commit them, then **MUST** invoke `make_pr` with an appropriate title and body; agents **MUST NOT** leave committed changes without calling `make_pr`, and agents **MUST NOT** call `make_pr` without commits.
 

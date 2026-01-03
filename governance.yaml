@@ -26,3 +26,12 @@ governance:
       - schema_validation
       - phase_validation
       - reproducibility_validation
+
+  evidence_bundles:
+    required: true
+    scope: all_runs
+
+  ci_enforcement:
+    - rule_id: core_validation_delegation
+      requirement: validation_and_parsing_delegates_to_ai_cores
+      scope: [cli, scripts]

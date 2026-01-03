@@ -17,6 +17,8 @@ setup(
         include=[
             "ai_conductor",
             "ai_conductor.*",
+            "ai_cores",
+            "ai_cores.*",
             "ai_evaluation",
             "ai_evaluation.*",
             "ai_graph",

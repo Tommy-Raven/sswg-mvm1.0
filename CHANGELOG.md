@@ -28,6 +28,17 @@ instructions and canonical workflow guidance, refer to `docs/RUNBOOK.md`.
 - Expanded optimization subsystem guidance with ontology integration, telemetry schemas, and example outputs.
 - Added memory and benchmark evolution notes for cognitive thermodynamic telemetry.
 
+## [v1.2.1-core-refactor]
+
+### Added
+- Core modularization release aligning validation, export, audit, module registry, and evaluation helpers under `ai_cores/`.
+
+### Updated
+- Orchestration package renamed to `ai_conductor/` with imports updated across code and docs.
+
+### Notes
+- Example commit message: “Refactor: Introduced shared core modules for deterministic validation and invariant enforcement strictification per AGENTS.md §19.9”.
+
 ## [v1.1.0]
 
 ### Added

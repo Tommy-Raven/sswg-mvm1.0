@@ -34,6 +34,8 @@ When reporting, include:
 - Follow coordinated disclosure timelines agreed upon in the advisory thread.
 - Security changes must continue to respect sswg/mvm governance, determinism
   requirements, and validation gates defined in AGENTS.md and governance.yaml.
+- Fail-closed handling applies to security-relevant validation; uncertainty or
+  invalid state results in halt and rejection.
 
 ## Entropy Governance Note
 

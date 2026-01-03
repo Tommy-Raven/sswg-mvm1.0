@@ -48,9 +48,7 @@ def main() -> int:
             Type="schema_failure",
             message="Experiment scope validation failed",
             phase_id="validate",
-            evidence={
-                "errors": errors
-            },
+            evidence={"errors": errors},
         )
         FailureEmitter(Path("artifacts/failures")).emit(failure, run_id=args.run_id)
         print(f"Experiment scope validation failed: {failure.as_dict()}")

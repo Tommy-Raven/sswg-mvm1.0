@@ -69,10 +69,16 @@ class SemanticDeltaCalculator:
             )
             return
 
-        sentence_transformers = importlib.import_module("sentence_transformers")
-        self.model = sentence_transformers.SentenceTransformer(model_name)
-        self._util = sentence_transformers.util
-        logger.info("Loaded SentenceTransformer model: %s", model_name)
+        try:
+            sentence_transformers = importlib.import_module("sentence_transformers")
+            self.model = sentence_transformers.SentenceTransformer(model_name)
+            self._util = sentence_transformers.util
+            logger.info("Loaded SentenceTransformer model: %s", model_name)
+        except Exception as exc:  # pragma: no cover
+            logger.warning(
+                "sentence-transformers unavailable; using lexical semantic delta (%s).",
+                exc,
+            )
 
     def _flatten_workflow(self, workflow: Dict[str, Any]) -> str:
         """Flatten workflow content into a plain text representation."""

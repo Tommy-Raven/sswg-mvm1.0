@@ -34,6 +34,7 @@ _handler = logging.StreamHandler()
 _handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
 logger.addHandler(_handler)
 
+
 class ModuleRegistry(ModuleRegistryCore):
     """
     In-memory registry of modules used by the ai_conductor orchestrator.

@@ -81,7 +81,8 @@ class DependencyGraph:
 
         node_count = len(self.modules)
         edge_count = sum(
-            len(module.get("dependencies", []) or []) for module in self.modules.values()
+            len(module.get("dependencies", []) or [])
+            for module in self.modules.values()
         )
         max_nodes = self._graph_limits["max_nodes"]
         max_edges = self._graph_limits["max_edges"]

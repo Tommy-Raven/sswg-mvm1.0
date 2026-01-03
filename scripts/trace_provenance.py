@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ai_cores.cli_arg_parser_core import build_parser, parse_args
 
+
 def _parse_args() -> argparse.Namespace:
     parser = build_parser("Trace provenance for a run or artifact.")
     parser.add_argument(

@@ -46,6 +46,8 @@ def _normalize_iterable(values: Iterable[Any]) -> list[Any]:
     return normalized
 
 
-def parse_args(parser: argparse.ArgumentParser, argv: list[str] | None = None) -> argparse.Namespace:
+def parse_args(
+    parser: argparse.ArgumentParser, argv: list[str] | None = None
+) -> argparse.Namespace:
     """Parse and normalize arguments using the shared core."""
     return normalize_args(parser.parse_args(argv))

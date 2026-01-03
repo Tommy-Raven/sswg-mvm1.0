@@ -124,7 +124,7 @@ def main() -> int:
     }
 
     override_used = False
-    if not candidate_checkpoint.passed and args.allow - breaking - override:
+    if not candidate_checkpoint.passed and args.allow_breaking_override:
         override_used = True
 
     report = {

@@ -24,6 +24,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Callable, Dict, List, Tuple
 
+from meta_knowledge_repo.versioning import get_current_version
+
 logger = logging.getLogger("ai_validation.version_migrator")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
@@ -34,15 +36,6 @@ MigrationFunc = Callable[[Dict[str, Any]], Dict[str, Any]]
 
 # (from_version, to_version) -> migration_function
 _MIGRATIONS: Dict[Tuple[str, str], MigrationFunc] = {}
-
-try:
-    # Optional: current version hint from meta_knowledge_repo
-    from meta_knowledge_repo.versioning import get_current_version
-except Exception:  # fallback if not wired yet
-
-    def get_current_version() -> str:  # type: ignore[no-redef]
-        return "0.0.0-MVM"
-
 
 # --------------------------------------------------------------------------- #
 # Registration API

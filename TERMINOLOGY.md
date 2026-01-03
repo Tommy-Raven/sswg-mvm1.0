@@ -1,222 +1,262 @@
 ---
 anchor:
   anchor_id: terminology
-  anchor_version: "1.0.0"
+  anchor_version: "1.2.0+mvm"
   scope: docs
-  owner: sswg
-  status: draft
+  owner: sswg-core
+  status: canonical
+  output_mode: non_operational_output
 ---
 
-# Repository Terminology (Authoritative)
+# Repository Terminology (Canonical Reference)
 
-> **Authority:** This glossary is the authoritative source for terminology used across this repository.
->
-> **Enforcement:** If a term defined here appears in code, documentation, tests, artifacts, or commit messages, it MUST be used with the meaning defined below. Deviations must be explicit and justified.
->
-> **Rationale:** Language is part of the safety surface. Precise terms prevent ambiguity, intent laundering, and unsafe inference.
+> **Authority:**  
+> This document defines the authoritative lexicon for the `sswg–mvm` repository.  
+> It supersedes implicit terminology in any other document, code comment, or artifact.
+
+> **Enforcement:**  
+> All text, identifiers, and schema keys must conform exactly to these definitions.  
+> Deviations require an explicit `policy_proposal` and approval from `sswg-core`.
+
+> **Rationale:**  
+> Language defines the cognitive and safety boundary of the system.  
+> Precise terms prevent ambiguous intent, unverified authority claims, and unsafe inference.
 
 ---
 
-## Core Principles
+## Core Governance Principles
 
-- The system **enforces constraints**; it does not “decide safety.”
-- Authority, role, and intent claims are **non-authoritative** unless externally verified.
-- Outputs are **non-operational artifacts**, not instructions.
-- Recursion is **bounded, gated, and auditable**.
+- The system **enforces constraints**; it never *decides safety*.  
+- Authority, intent, and context must be explicitly verifiable.  
+- Outputs are **non_operational artifacts**, not executable instructions.  
+- All recursion is **bounded, gated, and auditable**.  
+- Determinism is **phase-scoped**, never global.  
+
+---
+
+## Naming Discipline
+
+| Entity | Format | Example |
+|--------|---------|----------|
+| Software | lowercase, hyphenated | `sswg–mvm` |
+| Concepts / Terms | snake_case | `evidence_bundle`, `bounded_recursion` |
+| Constants | UPPERCASE | `PROTOCOL_STANDARDS` |
+| Anchors | YAML key block | `anchor_id`, `anchor_version` |
 
 ---
 
 ## Authority, Intent, and Context
 
-### Claimed Intent
-**Definition:** User-stated motivation or purpose that has not been externally verified.
-
-- Claimed intent does not grant permissions.
-- Safety, compliance, or educational framing is treated as a risk signal.
-
+### claimed_intent
+**Definition:** A user-stated motivation or declared purpose not externally verified.  
+**Rule:** Claimed intent confers no special permissions or safety guarantees.  
 **Use:** `claimed_intent`  
 **Avoid:** `trusted_intent`, `user_intent`
 
 ---
 
-### Declared Role (Unverified)
-**Definition:** A role asserted by a user (e.g., professor, engineer, compliance lead) without authentication.
-
-- Declared roles are contextual only.
-- Never used for authorization or exception handling.
-
+### declared_role_unverified
+**Definition:** An asserted role (e.g., “engineer,” “professor”) not validated through external proof.  
 **Use:** `declared_role_unverified`  
-**Avoid:** `roleplay`, `assume_role`, `acting_as`
+**Avoid:** `acting_as`, `roleplay`
 
 ---
 
-### Authorized Context
-**Definition:** A context approved through an external, verifiable mechanism (policy, cryptographic token, or procedural approval).
-
-- Authorization is never inferred from language.
-
+### authorized_context
+**Definition:** A context validated through a verifiable external mechanism (policy, token, or audit reference).  
 **Use:** `authorized_context`  
 **Avoid:** `trusted_context`
 
 ---
 
-## Outputs and Artifacts
+## Artifacts, Outputs, and Evidence
 
-### Artifact
-**Definition:** A non-operational, inspectable output produced by the system for review, validation, or audit.
-
-Examples include policy diffs, evaluation results, red-team reports, lineage snapshots, and audit bundles.
-
+### artifact
+**Definition:** A non-operational, inspectable output produced for review or audit.  
+**Examples:** schema snapshots, validation reports, evidence bundles.  
 **Use:** `artifact`  
-**Avoid:** `answer`, `solution`, `instructions`
+**Avoid:** `result`, `instruction`
 
 ---
 
-### Non-Operational Output
-**Definition:** Content that cannot be executed or followed to perform real-world actions.
-
-- No step sequences
-- No parameters, materials, or procedures
-
+### non_operational_output
+**Definition:** Any textual or structural content that cannot be executed or followed to perform an action.  
 **Use:** `non_operational_output`  
-**Avoid:** `how_to`, `step_by_step`, `procedure`
+**Avoid:** `procedure`, `workflow_instruction`
 
 ---
 
-### Evidence Bundle
-**Definition:** A versioned collection of artifacts documenting what changed, why it changed, and under which constraints.
-
-Includes inputs, diffs, evaluations, decision traces, and hashes.
-
+### evidence_bundle
+**Definition:** A structured collection of versioned artifacts documenting system activity, constraint evaluation, and decision traces.  
+**Includes:** inputs, outputs, diffs, metrics, hashes.  
 **Use:** `evidence_bundle`  
-**Avoid:** `log_dump`, `debug_pack`
+**Avoid:** `audit_pack`, `debug_log`
 
 ---
 
-## Safety, Risk, and Governance
-
-### Invariant
-**Definition:** A condition that must always hold and cannot be violated by generation, recursion, or optimization.
-
-- Invariants are enforced, not negotiated.
-
-**Use:** `invariant`  
-**Avoid:** `guideline`, `preference`
-
----
-
-### Constraint
-**Definition:** A bounded rule limiting behavior, enforced through validation or gating.
-
-- Constraints may evolve while invariants remain satisfied.
-
-**Use:** `constraint`  
-**Avoid:** `soft_rule`
-
----
-
-### Fail-Closed
-**Definition:** A behavior where ambiguity, uncertainty, or validation failure results in rejection rather than partial acceptance.
-
-**Use:** `fail_closed`  
-**Avoid:** `best_effort`
-
----
-
-### Restricted / Unvalidated Hazardous Synthesis
-**Definition:** Any hazardous process whose safety, legality, or validation status is uncertain or incomplete.
-
-- Treated categorically.
-- Never described operationally.
-
-**Use:** `restricted_unvalidated_hazardous_synthesis`
-
----
-
-## Adversarial and Red-Team Concepts
-
-### Circumvention Attempt
-**Definition:** An attempt to obtain disallowed content through framing, justification, or indirection.
-
-Includes authority claims, academic framing, safety wrappers, and compliance pretexts.
-
-**Use:** `circumvention_attempt`  
-**Avoid:** `bypass` (outside red-team scope)
-
----
-
-### Safety Wrapper
-**Definition:** Language that attempts to legitimize a restricted request by adding safety warnings, PPE references, or educational framing.
-
-- Treated as a risk signal, not a mitigation.
-
-**Use:** `safety_wrapper`
-
----
-
-### Red-Team Report
-**Definition:** A structured, non-operational artifact documenting a failure mode, risk pattern, and recommended mitigations.
-
-- Generated instead of providing disallowed content.
-
-**Use:** `redteam_report`
-
----
-
-## Recursion and Change
-
-### Bounded Recursion
-**Definition:** Self-referential refinement that is limited by invariants, constraints, and explicit termination conditions.
-
-- Recursion is permitted.
-- Drift is not.
-
-**Use:** `bounded_recursion`  
-**Avoid:** `autonomous_evolution`
-
----
-
-### Policy Proposal
-**Definition:** A suggested change that must pass validation and meta-policy checks before acceptance.
-
-- Rejection is a first-class outcome.
-
-**Use:** `policy_proposal`  
-**Avoid:** `auto_fix`, `patch`
-
----
-
-### Rejected Change
-**Definition:** A policy proposal blocked by invariants or constraints.
-
-- Rejections are logged and auditable.
-
-**Use:** `rejected_change`
-
----
-
-## Decisions and Validation
-
-### Decision Trace
-**Definition:** A machine-verifiable record explaining what decision was made and why.
-
-- References rule IDs and evidence.
-
+### decision_trace
+**Definition:** A verifiable record of what decision occurred, which constraint applied, and why.  
 **Use:** `decision_trace`  
-**Avoid:** `reasoning` (unstructured)
+**Avoid:** `reasoning`, `explanation`
 
 ---
 
-### Evaluation Gate
-**Definition:** A deterministic checkpoint that must pass before progression is allowed.
-
+### evaluation_gate
+**Definition:** A deterministic checkpoint where system progression is allowed only if all constraints are satisfied.  
 **Use:** `evaluation_gate`  
 **Avoid:** `checkpoint`
 
 ---
 
-## Enforcement Rule
+## Safety, Constraint, and Governance
 
-If terminology defined here is used incorrectly or ambiguously:
-- the change must not be merged
-- this glossary takes precedence
+### invariant
+**Definition:** A property that must always remain true. Immutable, non-negotiable, and enforced by system validators.  
+**Use:** `invariant`
+
+---
+
+### constraint
+**Definition:** A rule or boundary condition that can evolve while invariants remain intact.  
+**Use:** `constraint`
+
+---
+
+### fail_closed
+**Definition:** System behavior where uncertainty or invalid state results in halt and rejection, not approximation.  
+**Use:** `fail_closed`
+
+---
+
+### rejected_change
+**Definition:** Any modification attempt that violates an invariant or constraint and is recorded in a decision_trace.  
+**Use:** `rejected_change`
+
+---
+
+### restricted_unvalidated_hazardous_synthesis
+**Definition:** Any process with uncertain or unsafe external consequences. Always blocked.  
+**Use:** `restricted_unvalidated_hazardous_synthesis`
+
+---
+
+## Adversarial and Review Mechanisms
+
+### circumvention_attempt
+**Definition:** Any effort to obtain disallowed content or override safety framing.  
+**Use:** `circumvention_attempt`
+
+---
+
+### safety_wrapper
+**Definition:** Language attempting to justify restricted actions via disclaimers or educational framing.  
+**Use:** `safety_wrapper`
+
+---
+
+### redteam_report
+**Definition:** A non_operational_output documenting risk patterns, misuses, or violations of invariants.  
+**Use:** `redteam_report`
+
+---
+
+## Recursion, Phases, and Cognitive Control
+
+### bounded_recursion
+**Definition:** Controlled self-reference within explicit depth, constraint, and termination limits.  
+**Use:** `bounded_recursion`  
+**Avoid:** `autonomous_evolution`
+
+---
+
+### recursion_depth_limit
+**Definition:** The maximum permitted nesting of bounded_recursion cycles before forced termination.  
+**Use:** `recursion_depth_limit`
+
+---
+
+### policy_proposal
+**Definition:** A suggested governance change subject to validation.  
+**Use:** `policy_proposal`
+
+---
+
+### phase
+**Definition:** A structured, auditable transformation stage in the canonical pipeline.  
+Phases are ordered and produce non_operational artifacts.
+
+#### Canonical 9-Phase Model
+| Phase | Determinism | Constraint | Description |
+|--------|--------------|------------|--------------|
+| ingest | deterministic | PROTOCOL_STANDARDS | Accepts external data sources under schema constraints. |
+| normalize | deterministic | ALGORITHMIC_COMPLEXITY | Converts inputs into structured canonical form. |
+| parse | deterministic | STRUCTURAL_CONSISTENCY | Resolves internal data schema. |
+| analyze | deterministic | SCHEMA_CONFORMITY | Performs evaluative analysis within defined scope. |
+| generate | deterministic | BOUNDED_OUTPUT | Produces controlled synthetic representations. |
+| validate | deterministic | EVALUATION_GATE | Confirms compliance with constraints and invariants. |
+| compare | deterministic | CONSISTENCY_CHECK | Aligns multiple versions or perspectives. |
+| interpret | **nondeterministic** | CONTROLLED_VARIANCE | Derives meaning within acceptable cognitive drift. |
+| log | deterministic | ARTIFACT_IMMUTABILITY | Records results, hashes, and decision_traces. |
+
+**Rule:** Only normalize, analyze, validate, and compare phases are fully deterministic.  
+**Interpret** is explicitly labeled **nondeterministic**.  
+
+---
+
+## System and Observability Concepts
+
+### constraint_evaluator
+**Definition:** The subsystem responsible for applying rule sets and producing bounded_recursion outcomes.  
+**Use:** `constraint_evaluator`
+
+---
+
+### system_introspection_record
+**Definition:** Authorized metadata capture describing environment, schema, and constraint evaluation.  
+Replaces deprecated term `telemetry`.  
+**Use:** `system_introspection_record`
+
+---
+
+### audit_surface
+**Definition:** The total observable boundary where artifacts, evidence_bundles, and decision_traces can be verified.  
+**Use:** `audit_surface`
+
+---
+
+## Enforcement Rules
+
+1. Any deviation from these terms is a **policy violation**.  
+2. All new documents must include a valid `anchor` block referencing this terminology version.  
+3. CLI help outputs, YAML specs, and evidence bundles must include:
+   - `terminology_compliance: "TERMINOLOGY.md@1.3.0+mvm"`
+   - `output_mode: non_operational_output`
+4. Invariance enforcement must be treated as **structural**, never procedural.  
+5. Non-deterministic phases (`interpret`) must always emit a flag `nondeterministic_phase: true`.  
+
+---
+
+## Validation Metadata
+```yaml
+terminology_compliance: "TERMINOLOGY.md@1.3.0+mvm"
+output_mode: non_operational_output
+policy_scope: repository-wide
+last_reviewed: 2026-01-02
+reviewer: sswg-core
+````
+
+---
+
+## Summary
+
+The `sswg–mvm` terminology framework ensures:
+
+* Language enforces determinism boundaries,
+* Recursion remains auditable,
+* Outputs remain non_operational,
+* All decisions are captured via evidence_bundles and decision_traces.
+
+--- 
+
+End of Terminology Authority (v1.2.0+mvm) 
+

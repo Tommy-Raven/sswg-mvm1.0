@@ -1,0 +1,45 @@
+anchor:
+  anchor_id: phase_constraints
+  anchor_version: "1.0.0"
+  scope: schemas
+  owner: sswg
+  status: draft
+terminology_compliance: "TERMINOLOGY.md@1.3.0+mvm"
+output_mode: non_operational_output
+phases:
+  ingest:
+    determinism: deterministic
+    constraint: PROTOCOL_STANDARDS
+    determinism_required: false
+  normalize:
+    determinism: deterministic
+    constraint: ALGORITHMIC_COMPLEXITY
+    determinism_required: true
+  parse:
+    determinism: deterministic
+    constraint: STRUCTURAL_CONSISTENCY
+    determinism_required: false
+  analyze:
+    determinism: deterministic
+    constraint: SCHEMA_CONFORMITY
+    determinism_required: true
+  generate:
+    determinism: deterministic
+    constraint: BOUNDED_OUTPUT
+    determinism_required: false
+  validate:
+    determinism: deterministic
+    constraint: EVALUATION_GATE
+    determinism_required: true
+  compare:
+    determinism: deterministic
+    constraint: CONSISTENCY_CHECK
+    determinism_required: true
+  interpret:
+    determinism: nondeterministic
+    constraint: CONTROLLED_VARIANCE
+    determinism_required: false
+  log:
+    determinism: deterministic
+    constraint: ARTIFACT_IMMUTABILITY
+    determinism_required: false

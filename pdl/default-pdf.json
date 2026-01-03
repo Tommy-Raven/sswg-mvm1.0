@@ -137,6 +137,7 @@
       ],
       "handler": "pdl.handlers.validate",
       "constraints": {
+        "deterministic_required": true,
         "schema_validation_required": true,
         "invariants_required": true
       }

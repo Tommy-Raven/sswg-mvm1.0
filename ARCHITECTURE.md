@@ -64,6 +64,7 @@ This layer enforces:
 - Invariant preservation
 
 Schema validation is centralized in `ai_validation/schema_core.py` and shared across validation entrypoints.
+Dependency resolution is centralized in `ai_core/dependency_core.py`.
 
 Violations result in **fail-closed rejection** and a recorded decision trace.
 

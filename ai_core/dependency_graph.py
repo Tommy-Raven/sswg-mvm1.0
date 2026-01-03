@@ -21,7 +21,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, Iterable, List
 
-from ai_graph.dependency_mapper import DependencyGraph as _GraphImpl
+from ai_core.dependency_core import DependencyGraph as _GraphImpl
 
 logger = logging.getLogger("ai_core.dependency_graph")
 logger.setLevel(logging.INFO)

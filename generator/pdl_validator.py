@@ -22,6 +22,7 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
+PHASE_CONSTRAINTS_PATH = SCHEMAS_DIR / "phase_constraints.yaml"
 
 
 @dataclass
@@ -89,6 +90,121 @@ def _load_pdl_yaml(path: Path) -> Dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError("PDL document must parse to a mapping object")
     return data
+
+
+def _load_phase_constraints(schema_dir: Path) -> Dict[str, Any]:
+    """Load the phase constraints mapping from disk."""
+    constraints_path = schema_dir / PHASE_CONSTRAINTS_PATH.name
+    if not constraints_path.exists():
+        raise PDLValidationError(
+            PDLFailureLabel(
+                Type="io_failure",
+                message="Phase constraints file not found",
+                evidence={"path": str(constraints_path)},
+            )
+        )
+    try:
+        payload = yaml.safe_load(constraints_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise PDLValidationError(
+            PDLFailureLabel(
+                Type="io_failure",
+                message=str(exc),
+                evidence={"path": str(constraints_path)},
+            )
+        ) from exc
+    if not isinstance(payload, dict):
+        raise PDLValidationError(
+            PDLFailureLabel(
+                Type="schema_failure",
+                message="Phase constraints document must be a mapping",
+                evidence={"path": str(constraints_path)},
+            )
+        )
+    phases = payload.get("phases")
+    if not isinstance(phases, dict):
+        raise PDLValidationError(
+            PDLFailureLabel(
+                Type="schema_failure",
+                message="Phase constraints missing required phases mapping",
+                evidence={"path": str(constraints_path)},
+            )
+        )
+    return phases
+
+
+def _validate_phase_constraints(
+    phases: list[dict[str, Any]],
+    *,
+    schema_dir: Path,
+) -> None:
+    phase_constraints = _load_phase_constraints(schema_dir)
+    phase_map = {phase.get("name"): phase for phase in phases if isinstance(phase, dict)}
+    for phase_name, constraints_spec in phase_constraints.items():
+        if phase_name not in phase_map:
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="schema_failure",
+                    message="PDL missing phase required by phase constraints",
+                    evidence={"phase": phase_name},
+                )
+            )
+        if not isinstance(constraints_spec, dict):
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="schema_failure",
+                    message="Phase constraints entry must be a mapping",
+                    evidence={"phase": phase_name},
+                )
+            )
+        determinism = constraints_spec.get("determinism")
+        determinism_required = constraints_spec.get("determinism_required")
+        if determinism not in {"deterministic", "nondeterministic"}:
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="schema_failure",
+                    message="Phase constraints determinism must be deterministic or nondeterministic",
+                    evidence={"phase": phase_name, "determinism": determinism},
+                )
+            )
+        if not isinstance(determinism_required, bool):
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="schema_failure",
+                    message="Phase constraints determinism_required must be boolean",
+                    evidence={"phase": phase_name, "determinism_required": determinism_required},
+                )
+            )
+        phase_constraints_payload = phase_map[phase_name].get("constraints", {})
+        if determinism_required:
+            if phase_constraints_payload.get("deterministic_required") is not True:
+                raise PDLValidationError(
+                    PDLFailureLabel(
+                        Type="schema_failure",
+                        message="Determinism required for phase",
+                        evidence={"phase": phase_name},
+                    )
+                )
+        elif phase_constraints_payload.get("deterministic_required") is True:
+            raise PDLValidationError(
+                PDLFailureLabel(
+                    Type="schema_failure",
+                    message="Determinism must not be required for phase",
+                    evidence={"phase": phase_name},
+                )
+            )
+        if determinism == "nondeterministic":
+            if (
+                phase_constraints_payload.get("output_must_be_labeled_nondeterministic")
+                is not True
+            ):
+                raise PDLValidationError(
+                    PDLFailureLabel(
+                        Type="schema_failure",
+                        message="Nondeterministic phases must be labeled as nondeterministic",
+                        evidence={"phase": phase_name},
+                    )
+                )
 
 
 def _validate_handler_paths(phases: list[dict[str, Any]]) -> None:
@@ -169,6 +285,8 @@ def validate_pdl_object(
             )
         )
     phases = pdl_obj.get("phases", [])
+    if isinstance(phases, list):
+        _validate_phase_constraints(phases, schema_dir=schema_dir)
     if resolve_handlers and isinstance(phases, list):
         _validate_handler_paths(phases)
 

@@ -125,4 +125,6 @@ def execute_pdl_run(
     }
     report_path = report_dir / f"pdl_run_{context['inputs_hash']}.json"
     report_path.write_text(json.dumps(report_payload, indent=2), encoding="utf-8")
-    return PDLRunResult(run_id=run_id, report_path=report_path, phase_status=phase_status)
+    return PDLRunResult(
+        run_id=run_id, report_path=report_path, phase_status=phase_status
+    )

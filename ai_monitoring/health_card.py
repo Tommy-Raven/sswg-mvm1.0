@@ -110,7 +110,11 @@ def _extract_overlay_chain(
     overlays = []
     if overlay_manifest:
         overlays = overlay_manifest.get("overlays", [])
-        if overlays and isinstance(overlays[0], dict) and "overlay_id" not in overlays[0]:
+        if (
+            overlays
+            and isinstance(overlays[0], dict)
+            and "overlay_id" not in overlays[0]
+        ):
             overlays = overlay_manifest.get("overlay_chain", [])
     compatibility_summary = {
         "status": "unknown",
@@ -120,7 +124,9 @@ def _extract_overlay_chain(
         reports = overlay_report.get("overlays", [])
         compatibility_summary["overlays"] = reports
         if reports:
-            if all(item.get("lint_pass") and item.get("ambiguity_pass") for item in reports):
+            if all(
+                item.get("lint_pass") and item.get("ambiguity_pass") for item in reports
+            ):
                 compatibility_summary["status"] = "pass"
             else:
                 compatibility_summary["status"] = "fail"
@@ -145,7 +151,7 @@ def _extract_eval_deltas(eval_report: Optional[Dict[str, Any]]) -> Dict[str, Any
 
 
 def _extract_provenance_integrity(
-    provenance_manifest: Optional[Dict[str, Any]]
+    provenance_manifest: Optional[Dict[str, Any]],
 ) -> Dict[str, Any]:
     if not provenance_manifest:
         return {"status": "unknown"}
@@ -189,7 +195,9 @@ def _extract_promotion_status(report: Optional[Dict[str, Any]]) -> Dict[str, Any
     }
 
 
-def _attach_source_path(payload: Optional[Dict[str, Any]], path: Optional[Path]) -> Optional[Dict[str, Any]]:
+def _attach_source_path(
+    payload: Optional[Dict[str, Any]], path: Optional[Path]
+) -> Optional[Dict[str, Any]]:
     if payload is None:
         return None
     if path:
@@ -206,7 +214,9 @@ def build_health_card(
     run_id: Optional[str] = None,
     evidence_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
-    run_id = run_id or workflow.get("workflow_id") or workflow.get("id") or "unknown_run"
+    run_id = (
+        run_id or workflow.get("workflow_id") or workflow.get("id") or "unknown_run"
+    )
     evidence_dir = evidence_dir or Path("artifacts") / "evidence_pack" / run_id
 
     log_report_path = evidence_dir / "log_phase_report.json"
@@ -217,11 +227,19 @@ def build_health_card(
     provenance_path = evidence_dir / "provenance_manifest.json"
 
     log_report = _attach_source_path(_load_json(log_report_path), log_report_path)
-    determinism_report = _attach_source_path(_load_json(determinism_path), determinism_path)
-    overlay_manifest = _attach_source_path(_load_json(overlay_manifest_path), overlay_manifest_path)
-    overlay_report = _attach_source_path(_load_json(overlay_report_path), overlay_report_path)
+    determinism_report = _attach_source_path(
+        _load_json(determinism_path), determinism_path
+    )
+    overlay_manifest = _attach_source_path(
+        _load_json(overlay_manifest_path), overlay_manifest_path
+    )
+    overlay_report = _attach_source_path(
+        _load_json(overlay_report_path), overlay_report_path
+    )
     eval_report = _attach_source_path(_load_json(eval_report_path), eval_report_path)
-    provenance_manifest = _attach_source_path(_load_json(provenance_path), provenance_path)
+    provenance_manifest = _attach_source_path(
+        _load_json(provenance_path), provenance_path
+    )
 
     security_report_path = _first_existing(
         [
@@ -288,7 +306,9 @@ def build_health_card(
 def write_health_card(card: Dict[str, Any], output_path: Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(card, indent=2), encoding="utf-8")
-    log_event("health_card.written", {"path": str(output_path), "run_id": card.get("run_id")})
+    log_event(
+        "health_card.written", {"path": str(output_path), "run_id": card.get("run_id")}
+    )
     return output_path
 
 
@@ -311,7 +331,9 @@ def render_health_card(card: Dict[str, Any]) -> None:
     print(f"Overlay Compatibility: {compat.get('status', 'unknown')}")
     eval_deltas = card.get("eval_deltas", {})
     print(f"\nEval Deltas: {eval_deltas.get('status', 'unknown')}")
-    print(f"Provenance Integrity: {card.get('provenance_integrity', {}).get('status', 'unknown')}")
+    print(
+        f"Provenance Integrity: {card.get('provenance_integrity', {}).get('status', 'unknown')}"
+    )
     print(f"Security Scan: {card.get('security_scan', {}).get('status', 'unknown')}")
     audit = card.get("audit_certificate", {})
     print(f"Audit Certificate Present: {audit.get('present', False)}")

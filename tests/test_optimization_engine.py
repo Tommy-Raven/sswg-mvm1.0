@@ -22,5 +22,7 @@ def test_recursive_optimization_cycle() -> None:
 def test_combined_verity_score() -> None:
     adapter = OptimizationAdapter()
     dummy_summary = {"verity_ratio": 3.25}
-    combined = adapter.compute_combined_verity(semantic_score=0.82, summary=dummy_summary)
+    combined = adapter.compute_combined_verity(
+        semantic_score=0.82, summary=dummy_summary
+    )
     assert combined > 0

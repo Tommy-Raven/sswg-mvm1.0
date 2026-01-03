@@ -139,7 +139,9 @@ def _validate_phase_constraints(
     schema_dir: Path,
 ) -> None:
     phase_constraints = _load_phase_constraints(schema_dir)
-    phase_map = {phase.get("name"): phase for phase in phases if isinstance(phase, dict)}
+    phase_map = {
+        phase.get("name"): phase for phase in phases if isinstance(phase, dict)
+    }
     for phase_name, constraints_spec in phase_constraints.items():
         if phase_name not in phase_map:
             raise PDLValidationError(
@@ -172,7 +174,10 @@ def _validate_phase_constraints(
                 PDLFailureLabel(
                     Type="schema_failure",
                     message="Phase constraints determinism_required must be boolean",
-                    evidence={"phase": phase_name, "determinism_required": determinism_required},
+                    evidence={
+                        "phase": phase_name,
+                        "determinism_required": determinism_required,
+                    },
                 )
             )
         phase_constraints_payload = phase_map[phase_name].get("constraints", {})

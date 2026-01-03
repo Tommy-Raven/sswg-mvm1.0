@@ -92,7 +92,9 @@ class OptimizationEngine:
         Determinism metric derived from constants/variables ratio.
         Represents how stable system configuration is.
         """
-        hardware_constant = len(self.constants) if isinstance(self.constants, list) else 0
+        hardware_constant = (
+            len(self.constants) if isinstance(self.constants, list) else 0
+        )
         complexity_factor = sum(
             len(variable.get("examples", []))
             for variable in self.variables
@@ -105,7 +107,9 @@ class OptimizationEngine:
         """
         Deterministic entropy proxy derived from variable example counts.
         """
-        constants = max(len(self.constants), 1) if isinstance(self.constants, list) else 1
+        constants = (
+            max(len(self.constants), 1) if isinstance(self.constants, list) else 1
+        )
         examples_count = 0
         for variable in self.variables:
             if not isinstance(variable, dict):
@@ -141,7 +145,9 @@ class OptimizationEngine:
             environmental_entropy=round(environmental_entropy, 4),
         )
 
-    def optimize_heuristics(self, workflow: Dict[str, Any], noise: float) -> Dict[str, Any]:
+    def optimize_heuristics(
+        self, workflow: Dict[str, Any], noise: float
+    ) -> Dict[str, Any]:
         """
         Adjust workflow parameters based on measured noise.
         Simulates heuristic tuning to restore stability.
@@ -155,7 +161,9 @@ class OptimizationEngine:
     # ─────────────────────────────────────────────
     #  Memory + Metrics Updates
     # ─────────────────────────────────────────────
-    def update_metrics(self, memory_store: Dict[str, List[float]]) -> tuple[float, float]:
+    def update_metrics(
+        self, memory_store: Dict[str, List[float]]
+    ) -> tuple[float, float]:
         """
         Updates system memory with new determinism and entropy readings.
         """
@@ -165,7 +173,9 @@ class OptimizationEngine:
         memory_store.setdefault("entropy", []).append(entropy)
         return deterministic, entropy
 
-    def get_telemetry_summary(self, memory_store: Dict[str, List[float]]) -> Dict[str, Any]:
+    def get_telemetry_summary(
+        self, memory_store: Dict[str, List[float]]
+    ) -> Dict[str, Any]:
         """
         Summarizes recent optimization telemetry into averaged results.
         """
@@ -190,7 +200,9 @@ class OptimizationEngine:
     # ─────────────────────────────────────────────
     #  Recursion Control Logic
     # ─────────────────────────────────────────────
-    def recursive_optimization_loop(self, workflow: Dict[str, Any]) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    def recursive_optimization_loop(
+        self, workflow: Dict[str, Any]
+    ) -> tuple[Dict[str, Any], Dict[str, Any]]:
         """
         Executes recursive feedback loop based on workflow logic definition.
         """

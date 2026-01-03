@@ -25,7 +25,9 @@ class OptimizationAdapter:
         result["optimization_summary"] = summary
         return result
 
-    def compute_combined_verity(self, semantic_score: float, summary: Dict[str, Any]) -> float:
+    def compute_combined_verity(
+        self, semantic_score: float, summary: Dict[str, Any]
+    ) -> float:
         """
         Combines semantic verity (clarity/coherence) with deterministic stability.
         """

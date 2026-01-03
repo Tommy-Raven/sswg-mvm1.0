@@ -54,7 +54,9 @@ def _validate_anchor(data: Dict[str, Any], issues: List[Dict[str, str]]) -> None
         return
     for key in ("anchor_id", "anchor_version", "scope", "owner", "status"):
         if key not in anchor:
-            issues.append(_issue("invariant", f"anchor.{key} is required", f"anchor.{key}"))
+            issues.append(
+                _issue("invariant", f"anchor.{key} is required", f"anchor.{key}")
+            )
 
 
 def _validate_terminology(data: Dict[str, Any], issues: List[Dict[str, str]]) -> None:
@@ -85,7 +87,9 @@ def _validate_terminology(data: Dict[str, Any], issues: List[Dict[str, str]]) ->
 def _validate_phase_model(data: Dict[str, Any], issues: List[Dict[str, str]]) -> None:
     phase_model = data.get("phase_model")
     if not isinstance(phase_model, dict):
-        issues.append(_issue("invariant", "phase_model block is required", "phase_model"))
+        issues.append(
+            _issue("invariant", "phase_model block is required", "phase_model")
+        )
         return
     if phase_model.get("canonical_order") != CANONICAL_ORDER:
         issues.append(
@@ -97,7 +101,9 @@ def _validate_phase_model(data: Dict[str, Any], issues: List[Dict[str, str]]) ->
         )
     phases = phase_model.get("phases")
     if not isinstance(phases, list):
-        issues.append(_issue("invariant", "phases list is required", "phase_model.phases"))
+        issues.append(
+            _issue("invariant", "phases list is required", "phase_model.phases")
+        )
         return
     phase_names = [phase.get("name") for phase in phases if isinstance(phase, dict)]
     if phase_names != CANONICAL_ORDER:
@@ -133,7 +139,11 @@ def _validate_phase_model(data: Dict[str, Any], issues: List[Dict[str, str]]) ->
             constraints = phase.get("constraints", {})
             metrics = constraints.get("overlap_metrics_allowed")
             if metrics is not None:
-                invalid = [metric for metric in metrics if metric not in ALLOWED_COMPARE_METRICS]
+                invalid = [
+                    metric
+                    for metric in metrics
+                    if metric not in ALLOWED_COMPARE_METRICS
+                ]
                 if invalid:
                     issues.append(
                         _issue(

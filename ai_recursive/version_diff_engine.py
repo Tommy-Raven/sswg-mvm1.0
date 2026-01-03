@@ -124,9 +124,7 @@ def compute_diff_summary(
         rendered: list[str] = []
         for task in tasks:
             if isinstance(task, dict):
-                rendered.append(
-                    str(task.get("description") or task.get("id") or task)
-                )
+                rendered.append(str(task.get("description") or task.get("id") or task))
             else:
                 rendered.append(str(task))
         return "\n".join(rendered)

@@ -54,9 +54,7 @@ def _entropy_totals(values: Iterable[float]) -> Dict[str, float]:
 
 def _manifest_checksum(manifest: Dict[str, Any]) -> str:
     payload = {key: value for key, value in manifest.items() if key != "checksum"}
-    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode(
-        "utf-8"
-    )
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return _sha256_bytes(encoded)
 
 

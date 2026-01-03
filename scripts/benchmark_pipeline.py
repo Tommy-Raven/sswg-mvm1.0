@@ -375,7 +375,9 @@ def _build_variance_report(reports: List[Dict[str, Any]]) -> Dict[str, Any]:
             "status": "draft",
         },
         "run_count": len(reports),
-        "metrics": {key: _variance_summary(values) for key, values in aggregated.items()},
+        "metrics": {
+            key: _variance_summary(values) for key, values in aggregated.items()
+        },
     }
 
 
@@ -481,7 +483,10 @@ def _parse_args() -> BenchmarkConfig:
     if output_path is None:
         output_dir = Path("artifacts/performance")
         output_dir.mkdir(parents=True, exist_ok=True)
-        output_path = output_dir / f"benchmarks_{timestamp_utc.replace(':', '').replace('-', '').replace('Z', '')}.json"
+        output_path = (
+            output_dir
+            / f"benchmarks_{timestamp_utc.replace(':', '').replace('-', '').replace('Z', '')}.json"
+        )
 
     return BenchmarkConfig(
         pdl_path=args.pdl,

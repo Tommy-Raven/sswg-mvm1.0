@@ -34,11 +34,10 @@ except Exception:  # pragma: no cover
     class HistoryManager:  # type: ignore[no-redef]
         def record_transition(
             self,
-            parent_workflow: str,
-            child_workflow: str,
-            modifications,
+            parent_workflow_id: str,
+            child_workflow_id: str,
             score_delta: float,
-            metadata=None,
+            modifications=None,
         ):
             return None
 
@@ -64,11 +63,10 @@ class RecursiveMemoryAdapter:
         """
         self.memory.save(child_workflow)
         self.history.record_transition(
-            parent_workflow=parent_id,
-            child_workflow=child_workflow.get("workflow_id", "<unnamed>"),
-            modifications=list(modifications),
+            parent_workflow_id=parent_id,
+            child_workflow_id=child_workflow.get("workflow_id", "<unnamed>"),
             score_delta=score_delta,
-            metadata={"recursive": True},
+            modifications=list(modifications),
         )
 
     def load_latest(self, workflow_id: str) -> Optional[Dict[str, Any]]:

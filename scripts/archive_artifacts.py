@@ -5,15 +5,14 @@ import json
 from pathlib import Path
 from typing import Any
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.anchor_registry import AnchorRegistry, enforce_anchor
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Archive canonical artifacts with manifest."
-    )
+    parser = build_parser("Archive canonical artifacts with manifest.")
     parser.add_argument(
         "--artifact-paths",
         type=Path,
@@ -45,7 +44,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--reason", type=str, default="retention_policy", help="Archival reason."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _load_payload(path: Path) -> dict[str, Any]:

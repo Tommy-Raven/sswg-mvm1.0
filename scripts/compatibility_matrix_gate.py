@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 
@@ -11,9 +13,7 @@ from overlay_ops import OverlayOperationError, load_artifact, load_overlays, wri
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Compatibility matrix gate for overlays."
-    )
+    parser = build_parser("Compatibility matrix gate for overlays.")
     parser.add_argument(
         "--run-id", type=str, default="compat-matrix", help="Run identifier."
     )
@@ -53,7 +53,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/compatibility/compatibility_matrix_report.json"),
         help="Output report path.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _emit_failure(emitter: FailureEmitter, run_id: str, failure: FailureLabel) -> int:

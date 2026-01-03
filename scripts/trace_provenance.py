@@ -4,11 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Trace provenance for a run or artifact."
-    )
+    parser = build_parser("Trace provenance for a run or artifact.")
     parser.add_argument(
         "--provenance-path",
         type=Path,
@@ -27,7 +26,7 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help="Artifact anchor_id or path to trace.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

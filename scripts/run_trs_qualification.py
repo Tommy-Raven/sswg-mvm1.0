@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.determinism import replay_determinism_check
 from generator.environment import check_environment_drift, environment_fingerprint
 from generator.failure_emitter import FailureEmitter, FailureLabel
@@ -15,7 +16,7 @@ from overlay_ops import load_artifact, load_overlays, write_json
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run trs qualification gates.")
+    parser = build_parser("Run trs qualification gates.")
     parser.add_argument("--run-id", type=str, default="trs-run", help="Run identifier.")
     parser.add_argument(
         "--corpus-path",
@@ -47,7 +48,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/trs/trs_certificate.json"),
         help="Output certificate path.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _emit_failure(emitter: FailureEmitter, run_id: str, failure: FailureLabel) -> int:

@@ -4,11 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Generate run health summary from telemetry."
-    )
+    parser = build_parser("Generate run health summary from telemetry.")
     parser.add_argument(
         "--telemetry-path",
         type=Path,
@@ -21,7 +20,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/telemetry/run_health_summary.md"),
         help="Output summary path.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

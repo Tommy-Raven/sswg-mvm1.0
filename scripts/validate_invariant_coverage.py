@@ -7,6 +7,7 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.invariant_registry import (
     build_coverage_report,
@@ -17,7 +18,7 @@ from generator.invariant_registry import (
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate invariant coverage.")
+    parser = build_parser("Validate invariant coverage.")
     parser.add_argument(
         "--invariants-path",
         type=Path,
@@ -42,7 +43,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier for emitted failure labels.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

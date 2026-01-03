@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from ai_evaluation.checkpoints import EvaluationCheckpointer
+from cli.cli_arg_parser_core import build_parser, parse_args
 from jsonschema import Draft202012Validator
 from generator.determinism import (
     bijectivity_check,
@@ -67,7 +68,7 @@ from generator.sanitizer import sanitize_payload
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run promotion readiness gates.")
+    parser = build_parser("Run promotion readiness gates.")
     parser.add_argument(
         "--run-id",
         type=str,
@@ -208,7 +209,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("experiments/exp_scope.json"),
         help="Experiment scope declaration path.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _gate_failure(

@@ -3,14 +3,13 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.environment import check_environment_drift
 from generator.failure_emitter import FailureEmitter
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Check environment drift against dependency lock."
-    )
+    parser = build_parser("Check environment drift against dependency lock.")
     parser.add_argument(
         "--lock-path",
         type=Path,
@@ -23,7 +22,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier for failure logs.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

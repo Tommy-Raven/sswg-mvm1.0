@@ -5,11 +5,12 @@ import json
 from pathlib import Path
 
 from data.outputs.audit_bundle import validate_audit_bundle
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate audit bundle readiness.")
+    parser = build_parser("Validate audit bundle readiness.")
     parser.add_argument(
         "--manifest-path",
         type=Path,
@@ -25,7 +26,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id", type=str, default="audit-validate", help="Run identifier."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

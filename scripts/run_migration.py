@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 from generator.pdl_validator import PDLValidationError, validate_pdl_object
@@ -19,9 +20,7 @@ from overlay_ops import (
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Run deterministic migration for overlay compatibility."
-    )
+    parser = build_parser("Run deterministic migration for overlay compatibility.")
     parser.add_argument(
         "--run-id", type=str, default="migration-run", help="Run identifier."
     )
@@ -55,7 +54,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/migrations/migration_report.json"),
         help="Output path for migration report.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _emit_failure(emitter: FailureEmitter, run_id: str, failure: FailureLabel) -> int:

@@ -4,12 +4,13 @@ import argparse
 
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from data.outputs.audit_bundle import build_audit_bundle, load_audit_spec
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build audit evidence bundle.")
+    parser = build_parser("Build audit evidence bundle.")
     parser.add_argument(
         "--audit-spec",
         type=Path,
@@ -40,7 +41,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/performance/benchmarks_20251227_090721.json"),
         help="Benchmark log path used for audit metrics.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

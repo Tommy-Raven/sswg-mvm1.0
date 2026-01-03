@@ -25,6 +25,7 @@ from typing import Any, Callable, Dict, Iterable, List
 
 import yaml
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.pdl_validator import PDLValidationError, validate_pdl_file
 
 PHASE_ORDER = (
@@ -392,9 +393,7 @@ def _sample_run(report: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _parse_args() -> BenchmarkConfig:
-    parser = argparse.ArgumentParser(
-        description="Reproducible benchmark pipeline for sswg-mvm.",
-    )
+    parser = build_parser("Reproducible benchmark pipeline for sswg-mvm.")
     parser.add_argument(
         "--pdl",
         type=Path,
@@ -477,7 +476,7 @@ def _parse_args() -> BenchmarkConfig:
         help="Disable handler resolution checks.",
     )
 
-    args = parser.parse_args()
+    args = parse_args(parser)
     timestamp_utc = args.timestamp_utc or _format_timestamp()
     output_path = args.output
     if output_path is None:

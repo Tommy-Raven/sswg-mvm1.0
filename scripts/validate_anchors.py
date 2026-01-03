@@ -4,12 +4,13 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.anchor_registry import AnchorRegistry, enforce_anchor
 from generator.failure_emitter import FailureEmitter
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate canonical anchors.")
+    parser = build_parser("Validate canonical anchors.")
     parser.add_argument("artifact_path", type=Path, help="Artifact JSON path.")
     parser.add_argument(
         "--registry",
@@ -23,7 +24,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier for failure logs.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

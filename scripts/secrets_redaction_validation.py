@@ -3,14 +3,13 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.secret_scanner import load_allowlist, scan_paths
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Scan repo artifacts for secret exposure."
-    )
+    parser = build_parser("Scan repo artifacts for secret exposure.")
     parser.add_argument(
         "--scan-dirs",
         type=Path,
@@ -34,7 +33,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id", type=str, default="secrets-scan", help="Run identifier."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

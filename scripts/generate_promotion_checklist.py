@@ -5,13 +5,12 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Generate promotion checklist artifact."
-    )
+    parser = build_parser("Generate promotion checklist artifact.")
     parser.add_argument(
         "--promotion-id", type=str, required=True, help="Promotion identifier."
     )
@@ -39,7 +38,7 @@ def _parse_args() -> argparse.Namespace:
         default="approve",
         help="Promotion decision.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

@@ -6,13 +6,12 @@ import shlex
 from pathlib import Path
 from subprocess import run as subprocess_run
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Run documentation reproducibility checks."
-    )
+    parser = build_parser("Run documentation reproducibility checks.")
     parser.add_argument(
         "--runbook-path",
         type=Path,
@@ -22,7 +21,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id", type=str, default="docs-repro", help="Run identifier."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _load_runbook(path: Path) -> dict:

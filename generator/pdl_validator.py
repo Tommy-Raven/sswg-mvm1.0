@@ -15,6 +15,8 @@ from importlib.util import find_spec
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from cli.cli_arg_parser_core import build_parser, parse_args
+
 import yaml
 from jsonschema import Draft202012Validator, RefResolver
 
@@ -399,9 +401,7 @@ def _write_validation_report(
 
 def _parse_args() -> argparse.Namespace:
     """Parse command line arguments for PDL validation."""
-    parser = argparse.ArgumentParser(
-        description="Validate a PDL YAML file against the PDL schema.",
-    )
+    parser = build_parser("Validate a PDL YAML file against the PDL schema.")
     parser.add_argument(
         "pdl_path",
         type=Path,
@@ -439,8 +439,7 @@ def _parse_args() -> argparse.Namespace:
         action="store_false",
         help="Disable handler resolution checks.",
     )
-    args = parser.parse_args()
-    return args
+    return parse_args(parser)
 
 
 def _main() -> int:

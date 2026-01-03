@@ -23,6 +23,11 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, List
 
+from ai_core.optimization_loader import load_optimization_map
+from ai_optimization.optimization_engine import OptimizationEngine
+
+from .semantic_analysis import SemanticAnalyzer
+
 _STOP_WORDS = {
     "a",
     "an",
@@ -45,10 +50,6 @@ _STOP_WORDS = {
     "that",
     "this",
 }
-
-from ai_core.optimization_loader import load_optimization_map
-from ai_optimization.optimization_engine import OptimizationEngine
-from .semantic_analysis import SemanticAnalyzer
 
 _analyzer = SemanticAnalyzer()
 _optimization_engine = OptimizationEngine()

@@ -5,13 +5,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Generate artifact index for retention tracking."
-    )
+    parser = build_parser("Generate artifact index for retention tracking.")
     parser.add_argument(
         "--artifacts-dir",
         type=Path,
@@ -30,7 +29,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/artifact_index.json"),
         help="Artifact index output path.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _load_json(path: Path) -> dict[str, Any] | None:

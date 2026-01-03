@@ -4,6 +4,7 @@ import argparse
 import re
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
@@ -19,9 +20,7 @@ DISALLOWED_PATTERNS = [
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Scan generated artifacts for disallowed content."
-    )
+    parser = build_parser("Scan generated artifacts for disallowed content.")
     parser.add_argument(
         "--scan-dirs",
         type=Path,
@@ -32,7 +31,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id", type=str, default="redaction-scan", help="Run identifier."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _scan_file(path: Path) -> list[str]:

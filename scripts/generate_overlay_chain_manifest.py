@@ -4,12 +4,13 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.anchor_registry import AnchorRegistry
 from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate overlay chain manifest.")
+    parser = build_parser("Generate overlay chain manifest.")
     parser.add_argument(
         "--registry",
         type=Path,
@@ -34,7 +35,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

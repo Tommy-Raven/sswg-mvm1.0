@@ -4,12 +4,13 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.determinism import replay_determinism_check, write_determinism_report
 from generator.failure_emitter import FailureEmitter
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run deterministic replay gate.")
+    parser = build_parser("Run deterministic replay gate.")
     parser.add_argument(
         "--phase-outputs",
         type=Path,
@@ -28,7 +29,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/evidence_pack/determinism_report.json"),
         help="Output path for determinism report.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

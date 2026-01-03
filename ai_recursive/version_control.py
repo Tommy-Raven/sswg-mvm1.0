@@ -69,11 +69,10 @@ def create_child_version(
     child["version"] = new_version
 
     history.record_transition(
-        parent_workflow=parent_id,
-        child_workflow=child_id,
-        modifications=list(modifications),
+        parent_workflow_id=parent_id,
+        child_workflow_id=child_id,
         score_delta=score_delta,
-        metadata={"parent_version": parent_version, "child_version": new_version},
+        modifications=list(modifications),
     )
 
     return child

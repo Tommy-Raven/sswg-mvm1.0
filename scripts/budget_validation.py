@@ -6,6 +6,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.budgeting import (
     collect_artifact_sizes,
     evaluate_budgets,
@@ -15,7 +16,7 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate performance budgets.")
+    parser = build_parser("Validate performance budgets.")
     parser.add_argument(
         "--budget-spec",
         type=Path,
@@ -43,7 +44,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id", type=str, default="budget-validate", help="Run identifier."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

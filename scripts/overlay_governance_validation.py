@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.overlay_governance import (
     build_overlay_promotion_report,
@@ -13,7 +14,7 @@ from generator.overlay_governance import (
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Overlay governance validation gate.")
+    parser = build_parser("Overlay governance validation gate.")
     parser.add_argument(
         "--overlays-dir",
         type=Path,
@@ -38,7 +39,7 @@ def _parse_args() -> argparse.Namespace:
         default=Path("artifacts/overlays/overlay_promotion_report.json"),
         help="Output path for overlay promotion report.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

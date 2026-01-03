@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.agent_policy import (
     build_policy_manifest,
     detect_working_tree_changes,
@@ -16,9 +17,7 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Validate AGENTS.md policy compliance."
-    )
+    parser = build_parser("Validate AGENTS.md policy compliance.")
     parser.add_argument(
         "--repo-root",
         type=Path,
@@ -43,7 +42,7 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         help="Optional file containing executed commands to validate.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

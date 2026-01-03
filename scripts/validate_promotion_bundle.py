@@ -6,13 +6,12 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Validate promotion bundle completeness."
-    )
+    parser = build_parser("Validate promotion bundle completeness.")
     parser.add_argument(
         "--checklist-path",
         type=Path,
@@ -48,7 +47,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--run-id", type=str, default="promotion-validate", help="Run identifier."
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _load_json(path: Path) -> dict:

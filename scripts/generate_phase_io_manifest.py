@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter
 from generator.phase_io import (
     build_phase_io_manifest,
@@ -14,7 +15,7 @@ from generator.phase_io import (
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate phase IO manifest.")
+    parser = build_parser("Generate phase IO manifest.")
     parser.add_argument("pdl_path", type=Path, help="PDL YAML path.")
     parser.add_argument(
         "--observed",
@@ -34,7 +35,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier for failure logs.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

@@ -6,13 +6,14 @@ from pathlib import Path
 from typing import Dict
 
 from ai_evaluation.checkpoints import EvaluationCheckpointer
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.evaluation_spec import validate_evaluation_spec
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run evaluation checkpoint gate.")
+    parser = build_parser("Run evaluation checkpoint gate.")
     parser.add_argument(
         "--eval-spec",
         type=Path,
@@ -54,7 +55,7 @@ def _parse_args() -> argparse.Namespace:
         action="store_true",
         help="Allow breaking overlay override for regressions.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def _load_metrics(path: Path) -> Dict[str, float]:

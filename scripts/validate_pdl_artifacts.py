@@ -3,11 +3,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.pdl_validator import PDLValidationError, validate_pdl_file_with_report
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Validate all PDL artifacts.")
+    parser = build_parser("Validate all PDL artifacts.")
     parser.add_argument(
         "--pdl-dir",
         type=Path,
@@ -32,7 +33,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier for report output.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

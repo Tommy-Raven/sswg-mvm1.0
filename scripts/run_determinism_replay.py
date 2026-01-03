@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.determinism import (
     bijectivity_check,
     replay_determinism_check,
@@ -14,7 +15,7 @@ from generator.failure_emitter import FailureEmitter
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run determinism replay harness.")
+    parser = build_parser("Run determinism replay harness.")
     parser.add_argument(
         "--phase-outputs",
         type=Path,
@@ -45,7 +46,7 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help="Phase id to inject nondeterminism into for testing.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

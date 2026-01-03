@@ -6,6 +6,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, RefResolver
 
+from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
@@ -20,9 +21,7 @@ def _get_validator(schema_dir: Path) -> Draft202012Validator:
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Validate experiment scope declaration."
-    )
+    parser = build_parser("Validate experiment scope declaration.")
     parser.add_argument("scope_path", type=Path, help="Experiment scope JSON path.")
     parser.add_argument(
         "--schema-dir",
@@ -36,7 +35,7 @@ def _parse_args() -> argparse.Namespace:
         default="local-run",
         help="Run identifier for failure logs.",
     )
-    return parser.parse_args()
+    return parse_args(parser)
 
 
 def main() -> int:

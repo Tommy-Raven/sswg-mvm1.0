@@ -63,6 +63,8 @@ This layer enforces:
 - Root contract adherence
 - Invariant preservation
 
+Schema validation is centralized in `ai_validation/schema_core.py` and shared across validation entrypoints.
+
 Violations result in **fail-closed rejection** and a recorded decision trace.
 
 ---

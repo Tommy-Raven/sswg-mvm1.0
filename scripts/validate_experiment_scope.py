@@ -4,20 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, RefResolver
+from ai_validation.schema_core import validate_artifact
 
 from cli.cli_arg_parser_core import build_parser, parse_args
 from generator.failure_emitter import FailureEmitter, FailureLabel
-
-
-def _get_validator(schema_dir: Path) -> Draft202012Validator:
-    schema = json.loads(
-        (schema_dir / "experiment-scope.json").read_text(encoding="utf-8")
-    )
-    base_uri = schema_dir.as_uri().rstrip("/") + "/"
-    return Draft202012Validator(
-        schema, resolver=RefResolver(base_uri=base_uri, referrer=schema)
-    )
 
 
 def _parse_args() -> argparse.Namespace:
@@ -52,22 +42,14 @@ def main() -> int:
         return 1
 
     scope = json.loads(args.scope_path.read_text(encoding="utf-8"))
-    validator = _get_validator(args.schema_dir)
-    errors = sorted(validator.iter_errors(scope), key=lambda e: e.path)
+    errors = validate_artifact(scope, args.schema_dir, "experiment-scope.json")
     if errors:
         failure = FailureLabel(
             Type="schema_failure",
             message="Experiment scope validation failed",
             phase_id="validate",
             evidence={
-                "errors": [
-                    {
-                        "message": error.message,
-                        "path": list(error.path),
-                        "schema_path": list(error.schema_path),
-                    }
-                    for error in errors
-                ]
+                "errors": errors
             },
         )
         FailureEmitter(Path("artifacts/failures")).emit(failure, run_id=args.run_id)

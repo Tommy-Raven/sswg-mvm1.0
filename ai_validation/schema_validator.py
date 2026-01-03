@@ -12,6 +12,7 @@ Conventions:
 - Schemas declare `$schema` as JSON Schema Draft 2020-12.
 - `$ref` values are relative filenames (e.g. "metadata_schema.json"),
   which are resolved against the local SCHEMAS_DIR.
+- Core schema loading and validation helpers live in ai_validation/schema_core.py.
 """
 
 from __future__ import annotations
@@ -21,7 +22,9 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, List
 
-from jsonschema import Draft202012Validator, RefResolver, ValidationError
+from jsonschema import ValidationError
+
+from ai_validation.schema_core import get_validator, load_schema
 
 logger = logging.getLogger("ai_validation.schema_validator")
 logger.setLevel(logging.INFO)
@@ -44,27 +47,14 @@ def _load_schema(path: Path) -> Dict[str, Any]:
         FileNotFoundError: If the schema file does not exist.
         json.JSONDecodeError: If the schema file is not valid JSON.
     """
-    if not path.exists():
-        raise FileNotFoundError(f"Schema file not found: {path}")
-    return json.loads(path.read_text(encoding="utf-8"))
+    return load_schema(path.parent, path.name)
 
 
-def _get_validator(schema_name: str) -> Draft202012Validator:
+def _get_validator(schema_name: str):
     """
     Construct a Draft 2020-12 validator for the given schema file.
-
-    - Resolves the schema from SCHEMAS_DIR / schema_name.
-    - Uses a RefResolver with a file:// base URI so that relative $ref
-      values (e.g. "metadata_schema.json") resolve to sibling files.
     """
-    schema_path = SCHEMAS_DIR / schema_name
-    schema = _load_schema(schema_path)
-
-    # Base URI for resolving relative $ref values, e.g. "metadata_schema.json"
-    base_uri = SCHEMAS_DIR.as_uri().rstrip("/") + "/"
-    resolver = RefResolver(base_uri=base_uri, referrer=schema)
-
-    return Draft202012Validator(schema, resolver=resolver)
+    return get_validator(SCHEMAS_DIR, schema_name)
 
 
 def validate_workflow(

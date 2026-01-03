@@ -111,3 +111,9 @@ def trust_rank(trust_tier: str) -> int:
     """Return the ordinal rank for a trust tier (lower is weaker)."""
 
     return TRUST_WEIGHT.get(trust_tier, -1)
+
+
+def get_current_version() -> str:
+    """Return the canonical repository version string."""
+
+    return "1.2.0+mvm"

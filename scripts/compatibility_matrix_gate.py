@@ -9,7 +9,12 @@ from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
 
 from compatibility_checks import evaluate_compatibility
-from overlay_ops import OverlayOperationError, load_artifact, load_overlays, write_json
+from scripts.overlay_ops import (
+    OverlayOperationError,
+    load_artifact,
+    load_overlays,
+    write_json,
+)
 
 
 def _parse_args() -> argparse.Namespace:

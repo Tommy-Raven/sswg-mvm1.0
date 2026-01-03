@@ -1,1 +1,1 @@
-"""Utility scripts for repository maintenance and validation."""
+"""Package for repository scripts."""

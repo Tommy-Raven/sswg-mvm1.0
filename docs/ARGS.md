@@ -1,4 +1,4 @@
----
+--- 
 anchor:
   anchor_id: cli_reference
   anchor_version: "1.3.0+mvm"
@@ -12,7 +12,7 @@ anchor:
 
 ## Scope and terminology alignment
 
-This document is a non_operational_output. Terminology follows `TERMINOLOGY.md@1.0.0` and uses glossary-defined terms such as `evidence_bundle`, `decision_trace`, `evaluation_gate`, and `bounded_recursion`.
+This document is a non_operational_output. Terminology follows `TERMINOLOGY.md` and uses glossary-defined terms such as `evidence_bundle`, `decision_trace`, `evaluation_gate`, and `bounded_recursion`.
 
 ## CLI reference summary
 
@@ -67,3 +67,7 @@ Determinism is phase-scoped. The phases `normalize`, `analyze`, `validate`, and 
 ## Deterministic evidence_bundle note
 
 Deterministic phases produce reproducible `evidence_bundle` outputs under fixed schema conditions and validated inputs.
+
+## PDL validation outputs (non_operational_output)
+
+The `validate` command emits a `decision_trace` and a `pdl_validation_report` artifact. A syntactically valid PDL aligned to `full_9_phase` yields `result: pass` in the report with no schema errors. Schema-alignment failures yield `result: fail` with `Type: schema_failure` in the associated failure label.

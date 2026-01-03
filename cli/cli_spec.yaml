@@ -1,0 +1,144 @@
+anchor:
+  anchor_id: cli_spec
+  anchor_version: "1.2.0+mvm"
+  scope: config
+  owner: sswg-core
+  status: canonical
+
+terminology:
+  terminology_compliance: "TERMINOLOGY.md"
+  output_mode: non_operational_output
+
+cli:
+  name: sswg
+  reference: docs/ARGS.md
+  commands:
+    - name: phase
+      summary: "Phase selection against the canonical phase set."
+      parameters:
+        - name: name
+          description: "Phase name aligned to full_9_phase."
+    - name: init
+      summary: "Deterministic prerequisite declarations for artifact paths."
+      parameters:
+        - name: pdl_path
+          description: "Path reference to the PDL document."
+        - name: schema_dir
+          description: "Path reference to schema definitions."
+        - name: out_dir
+          description: "Artifact path for outputs."
+        - name: audit_dir
+          description: "Artifact path for audit evidence_bundle."
+        - name: audit_failures_dir
+          description: "Artifact path for audit failure labels."
+    - name: run
+      summary: "bounded_recursion scope declaration for the canonical phase set."
+      parameters:
+        - name: refine
+          description: "bounded_recursion flag for refinement."
+        - name: history
+          description: "bounded_recursion flag for history capture."
+    - name: validate
+      summary: "Schema validation declaration for the canonical PDL phase set."
+      parameters:
+        - name: pdl_path
+          description: "Path reference to the PDL document."
+        - name: schema_dir
+          description: "Path reference to schema definitions."
+    - name: bundle
+      summary: "Evidence bundle aggregation declaration."
+      parameters:
+        - name: audit_spec
+          description: "Path reference to audit bundle specification."
+        - name: audit_dir
+          description: "Artifact path for audit evidence_bundle."
+        - name: manifest_path
+          description: "Path reference to audit manifest."
+        - name: benchmark_log
+          description: "Path reference to performance benchmark logs."
+        - name: run_id
+          description: "Run identifier for decision_trace correlation."
+    - name: add-artifact
+      summary: "Additive artifact declaration."
+      parameters:
+        - name: path
+          description: "Artifact path for additive creation."
+        - name: content
+          description: "Artifact content payload."
+    - name: fork
+      summary: "Branch metadata declaration."
+      parameters:
+        - name: name
+          description: "Branch identifier."
+    - name: merge-request
+      summary: "Merge request declaration against canonical branch."
+      parameters:
+        - name: branch
+          description: "Source branch identifier."
+
+phase_model:
+  pipeline_profile: full_9_phase
+  canonical_order:
+    - ingest
+    - normalize
+    - parse
+    - analyze
+    - generate
+    - validate
+    - compare
+    - interpret
+    - log
+  deterministic_phases:
+    - normalize
+    - analyze
+    - validate
+    - compare
+  phases:
+    - name: ingest
+      deterministic_required: false
+      constraints:
+        no_interpretation: true
+        no_mutation_of_canonical: true
+    - name: normalize
+      deterministic_required: true
+      constraints:
+        deterministic_required: true
+        alignment_rules_required: true
+    - name: parse
+      deterministic_required: false
+      constraints:
+        schema_binding_required: true
+        no_generation: true
+    - name: analyze
+      deterministic_required: true
+      constraints:
+        deterministic_required: true
+        no_generative_tools_for_measurement: true
+    - name: generate
+      deterministic_required: false
+      constraints:
+        outputs_must_be_declarative: true
+        no_measurement_keys_generated_stochastically: true
+    - name: validate
+      deterministic_required: true
+      constraints:
+        schema_validation_required: true
+        invariants_required: true
+    - name: compare
+      deterministic_required: true
+      constraints:
+        deterministic_required: true
+        overlap_metrics_allowed:
+          - iou
+          - jaccard
+    - name: interpret
+      deterministic_required: false
+      constraints:
+        must_reference_measured_artifacts: true
+        output_must_be_labeled_nondeterministic: true
+    - name: log
+      deterministic_required: false
+      constraints:
+        run_id_required: true
+        inputs_hash_required: true
+        phase_status_required: true

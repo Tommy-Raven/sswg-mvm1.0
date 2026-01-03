@@ -52,6 +52,7 @@ _DEFAULT_PHASE_CONSTRAINTS = {
         "no_measurement_keys_generated_stochastically": True,
     },
     "validate": {
+        "deterministic_required": True,
         "schema_validation_required": True,
         "invariants_required": True,
     },

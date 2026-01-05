@@ -9,6 +9,7 @@ from pathlib import Path
 
 from ai_evaluation.checkpoints import EvaluationCheckpointer
 from ai_cores.cli_arg_parser_core import build_parser, parse_args
+from ai_cores.deprecation_core import find_deprecation_banner_violations
 from jsonschema import Draft202012Validator
 from generator.determinism import (
     bijectivity_check,
@@ -296,6 +297,20 @@ def main() -> int:
     policy_manifest_path.write_text(
         json.dumps(policy_manifest, indent=2), encoding="utf-8"
     )
+
+    deprecation_violations = find_deprecation_banner_violations(repo_root)
+    if deprecation_violations:
+        violation_path = str(deprecation_violations[0])
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="deprecation_violation",
+                message="Deprecated governance file lacks required non-authoritative banner",
+                phase_id="deprecation_banner_validation",
+                path=violation_path,
+            ),
+        )
 
     if not args.invariants_path.exists():
         return _gate_failure(

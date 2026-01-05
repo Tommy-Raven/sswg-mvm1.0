@@ -15,13 +15,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--checklist-path",
         type=Path,
-        default=Path("artifacts/governance/promotion_checklist.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Promotion checklist path.",
     )
     parser.add_argument(
         "--protocol-path",
         type=Path,
-        default=Path("governance/canon_promotion_protocol.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Promotion protocol path.",
     )
     parser.add_argument(
@@ -41,7 +45,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--schema-dir",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Schema directory.",
     )
     parser.add_argument(
@@ -71,7 +77,23 @@ def _validate_schema(path: Path, schema_path: Path) -> list[dict]:
 
 def main() -> int:
     args = _parse_args()
-    emitter = FailureEmitter(Path("artifacts/governance/failures"))
+    emitter = FailureEmitter(Path("artifacts/failures"))
+    if args.checklist_path is None or args.protocol_path is None or args.schema_dir is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: required paths must be supplied explicitly",
+                phase_id="validate",
+                evidence={
+                    "checklist_path": str(args.checklist_path),
+                    "protocol_path": str(args.protocol_path),
+                    "schema_dir": str(args.schema_dir),
+                },
+            ),
+            run_id=args.run_id,
+        )
+        print("Promotion bundle validation failed")
+        return 1
 
     missing = [str(path) for path in args.evidence_paths if not path.exists()]
     if missing:

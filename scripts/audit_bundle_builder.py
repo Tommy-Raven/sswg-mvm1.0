@@ -14,7 +14,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--audit-spec",
         type=Path,
-        default=Path("governance/audit_bundle_spec.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Audit bundle specification path.",
     )
     parser.add_argument(
@@ -47,6 +49,18 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/audit/failures"))
+    if args.audit_spec is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: audit spec path must be supplied explicitly",
+                phase_id="validate",
+                evidence={"audit_spec": str(args.audit_spec)},
+            ),
+            run_id=args.run_id,
+        )
+        print("Audit bundle build failed")
+        return 1
 
     if not args.audit_spec.exists():
         emitter.emit(

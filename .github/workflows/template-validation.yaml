@@ -4,13 +4,15 @@ on:
   push:
     paths:
       - "data/templates/**"
-      - "schemas/**"
+      # GOVERNANCE SOURCE REMOVED
+      # Canonical governance will be resolved from directive_core/docs/
       - "ai_validation/**"
       - ".github/workflows/template-validations.yaml"
   pull_request:
     paths:
       - "data/templates/**"
-      - "schemas/**"
+      # GOVERNANCE SOURCE REMOVED
+      # Canonical governance will be resolved from directive_core/docs/
       - "ai_validation/**"
       - ".github/workflows/template-validations.yaml"
 

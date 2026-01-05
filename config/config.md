@@ -9,4 +9,5 @@ anchor:
 
 Package for YAML configurations (e.g., graph limits for dependency_core).
 
-Terminology aligns with `TERMINOLOGY.md` and outputs remain non_operational_output.
+# GOVERNANCE SOURCE REMOVED
+# Canonical governance will be resolved from directive_core/docs/

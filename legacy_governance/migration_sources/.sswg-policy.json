@@ -1,0 +1,23 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "anchor": {
+    "anchor_id": "sswg-policy",
+    "anchor_version": "1.0.0",
+    "scope": "root",
+    "owner": "sswg",
+    "status": "draft"
+  },
+  "canonical_version": "1.2.0",
+  "agent_policies": [
+    "AGENTS.md",
+    "TERMINOLOGY.md"
+  ],
+  "ethos_enforced": true,
+  "validation_core": "ai_cores/cli_spec_validator_core.py"
+}

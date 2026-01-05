@@ -1,0 +1,65 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "$id": "https://schemas.sswg.local/budget-spec.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg budget specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "anchor",
+    "budget_id",
+    "budget_version",
+    "phase_budgets",
+    "artifact_budgets",
+    "max_total_duration_sec",
+    "evolution_policy"
+  ],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sandbox", "canonical", "archived"] }
+      }
+    },
+    "budget_id": { "type": "string" },
+    "budget_version": { "type": "string" },
+    "phase_budgets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["max_duration_sec"],
+        "properties": {
+          "max_duration_sec": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "artifact_budgets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artifact_class", "paths", "max_size_mb"],
+        "properties": {
+          "artifact_class": { "type": "string" },
+          "paths": { "type": "array", "items": { "type": "string" } },
+          "max_size_mb": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "max_total_duration_sec": { "type": "number", "minimum": 0 },
+    "evolution_policy": { "type": "string" }
+  }
+}

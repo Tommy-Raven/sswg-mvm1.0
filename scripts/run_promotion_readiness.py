@@ -22,11 +22,7 @@ from generator.failure_emitter import (
     FailureLabel,
     validate_failure_label,
 )
-from generator.agent_policy import (
-    build_policy_manifest,
-    detect_working_tree_changes,
-    policy_state,
-)
+from generator.agent_policy import detect_working_tree_changes
 from data.outputs.audit_bundle import (
     build_audit_bundle,
     load_audit_spec,
@@ -78,43 +74,57 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--pdl-path",
         type=Path,
-        default=Path("pdl/example_full_9_phase.yaml"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="PDL path to validate.",
     )
     parser.add_argument(
         "--schema-dir",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Schema directory.",
     )
     parser.add_argument(
         "--invariants-path",
         type=Path,
-        default=Path("invariants.yaml"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Invariant declarations path.",
     )
     parser.add_argument(
         "--invariants-registry",
         type=Path,
-        default=Path("schemas/invariants_registry.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Invariant registry path.",
     )
     parser.add_argument(
         "--phase-outputs",
         type=Path,
-        default=Path("tests/fixtures/phase_outputs.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Phase outputs fixture for determinism replay.",
     )
     parser.add_argument(
         "--measurement-ids",
         type=Path,
-        default=Path("tests/fixtures/measurement_ids.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Measurement identifiers fixture.",
     )
     parser.add_argument(
         "--observed-io",
         type=Path,
-        default=Path("tests/fixtures/observed_io.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Observed IO fixture for phase IO manifest.",
     )
     parser.add_argument(
@@ -132,13 +142,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--eval-baseline",
         type=Path,
-        default=Path("tests/fixtures/eval_baseline.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Baseline evaluation metrics JSON.",
     )
     parser.add_argument(
         "--eval-candidate",
         type=Path,
-        default=Path("tests/fixtures/eval_candidate.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Candidate evaluation metrics JSON.",
     )
     parser.add_argument(
@@ -169,19 +183,25 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--budget-spec",
         type=Path,
-        default=Path("governance/budget_spec.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Budget specification path.",
     )
     parser.add_argument(
         "--allowlist-path",
         type=Path,
-        default=Path("governance/secret_allowlist.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Secret allowlist path.",
     )
     parser.add_argument(
         "--audit-spec",
         type=Path,
-        default=Path("governance/audit_bundle_spec.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Audit bundle spec path.",
     )
     parser.add_argument(
@@ -200,7 +220,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--runbook-path",
         type=Path,
-        default=Path("docs/runbook.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Runbook path for docs reproducibility checks.",
     )
     parser.add_argument(
@@ -263,21 +285,37 @@ def main() -> int:
     evidence_dir = args.evidence_dir / args.run_id
     evidence_dir.mkdir(parents=True, exist_ok=True)
     failure_emitter = FailureEmitter(evidence_dir / "failures")
-    repo_root = Path(".")
-    root_agents = repo_root / "AGENTS.md"
-    if not root_agents.exists():
+    required_paths: dict[str, Path | None] = {
+        "pdl_path": args.pdl_path,
+        "schema_dir": args.schema_dir,
+        "invariants_path": args.invariants_path,
+        "invariants_registry": args.invariants_registry,
+        "phase_outputs": args.phase_outputs,
+        "measurement_ids": args.measurement_ids,
+        "observed_io": args.observed_io,
+        "eval_baseline": args.eval_baseline,
+        "eval_candidate": args.eval_candidate,
+        "budget_spec": args.budget_spec,
+        "allowlist_path": args.allowlist_path,
+        "audit_spec": args.audit_spec,
+        "runbook_path": args.runbook_path,
+    }
+    missing_paths = [key for key, value in required_paths.items() if value is None]
+    if missing_paths:
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
         return _gate_failure(
             failure_emitter,
             args.run_id,
             FailureLabel(
-                Type="tool_mismatch",
-                message="Root AGENTS.md missing from repository",
+                Type="io_failure",
+                message="Governance source removed: required paths must be supplied explicitly",
                 phase_id="validate",
-                evidence={"path": str(root_agents)},
+                evidence={"missing_paths": missing_paths},
             ),
         )
     if args.repo_mode == "qa-readonly":
-        changes = detect_working_tree_changes(repo_root)
+        changes = detect_working_tree_changes(Path("."))
         if changes:
             return _gate_failure(
                 failure_emitter,
@@ -289,13 +327,6 @@ def main() -> int:
                     evidence={"changes": changes},
                 ),
             )
-    policy = policy_state(repo_root, args.repo_mode)
-    policy_manifest = build_policy_manifest(policy, effective_scope=root_agents)
-    policy_manifest_path = Path("artifacts/policy/policy_manifest.json")
-    policy_manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    policy_manifest_path.write_text(
-        json.dumps(policy_manifest, indent=2), encoding="utf-8"
-    )
 
     if not args.invariants_path.exists():
         return _gate_failure(

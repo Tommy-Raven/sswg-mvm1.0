@@ -21,7 +21,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--schema-path",
         type=Path,
-        default=Path("schemas/run-telemetry.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Telemetry schema path.",
     )
     parser.add_argument(
@@ -33,6 +35,18 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/telemetry/failures"))
+    if args.schema_path is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: schema path must be supplied explicitly",
+                phase_id="log",
+                evidence={"schema_path": str(args.schema_path)},
+            ),
+            run_id=args.run_id,
+        )
+        print("Telemetry validation failed: missing schema path")
+        return 1
 
     if not args.telemetry_path.exists():
         emitter.emit(

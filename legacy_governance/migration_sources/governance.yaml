@@ -1,0 +1,44 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+governance:
+  repository_role: canonical_sswg_repo
+
+  directories:
+    immutable:
+      - generator/
+      - cli/
+      - pdl/
+      - reproducibility/
+    additive_only:
+      - artifacts/
+      - data/
+      - docs/
+
+  change_control:
+    required:
+      - branch_or_fork
+      - validation_pass
+      - review
+    forbidden:
+      - direct_main_mutation
+      - artifact_rewrites
+
+  validation_gates:
+    pre_merge:
+      - schema_validation
+      - phase_validation
+      - reproducibility_validation
+
+  evidence_bundles:
+    required: true
+    scope: all_runs
+
+  ci_enforcement:
+    - rule_id: core_validation_delegation
+      requirement: validation_and_parsing_delegates_to_ai_cores
+      scope: [cli, scripts]

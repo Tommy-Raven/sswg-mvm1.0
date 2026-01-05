@@ -15,7 +15,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--runbook-path",
         type=Path,
-        default=Path("docs/runbook.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Runbook JSON path.",
     )
     parser.add_argument(
@@ -31,6 +33,18 @@ def _load_runbook(path: Path) -> dict:
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/docs/failures"))
+    if args.runbook_path is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: runbook path must be supplied explicitly",
+                phase_id="validate",
+                evidence={"runbook_path": str(args.runbook_path)},
+            ),
+            run_id=args.run_id,
+        )
+        print("Docs repro check failed")
+        return 1
 
     if not args.runbook_path.exists():
         emitter.emit(

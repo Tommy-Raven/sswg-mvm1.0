@@ -10,16 +10,9 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
-TARGETS = [
-    "sswg.yaml",
-    "mvm.yaml",
-    "execution_policy.yaml",
-    "guarantees.yaml",
-    "governance.yaml",
-    "invariants.yaml",
-    "root_contract.yaml",
-    "ai_system_prompt.txt",
-]
+# GOVERNANCE SOURCE REMOVED
+# Canonical governance will be resolved from directive_core/docs/
+TARGETS: list[str] = []
 
 DISALLOWED_UPPER = [re.compile(r"\bSSWG\b"), re.compile(r"\bMVM\b")]
 LOWERCASE_TERMS = ["configs", "repos", "workflows", "schemas", "tooling"]

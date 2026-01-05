@@ -14,7 +14,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--phase-outputs",
         type=Path,
-        default=Path("tests/fixtures/phase_outputs.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Phase outputs fixture.",
     )
     parser.add_argument(
@@ -34,6 +36,9 @@ def _parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = _parse_args()
+    if args.phase_outputs is None:
+        print("Determinism replay gate failed: phase outputs must be supplied explicitly")
+        return 1
     phase_outputs = json.loads(args.phase_outputs.read_text(encoding="utf-8"))
     failure, report = replay_determinism_check(
         run_id=args.run_id,

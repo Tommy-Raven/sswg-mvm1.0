@@ -1,0 +1,51 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+# =============================================================================
+# SSWG — Reproducible Conda Environment
+# -----------------------------------------------------------------------------
+# This file defines the canonical environment used for:
+#   * CLI execution (typer-based command system)
+#   * Generator core (rich, yaml, jsonschema, gitpython)
+#   * PDL compilation / workflow phase loading
+#
+# The environment is intentionally minimal; all heavy dependencies stay out
+# until the project’s plugin system expands.
+# =============================================================================
+
+name: sswg
+
+channels:
+  - defaults       # Standard Conda channel for core packages
+  - conda-forge    # Adds broader compatibility for cross-platform use
+
+dependencies:
+  # ---------------------------------------------------------------------------
+  # Core Language & Tooling
+  # ---------------------------------------------------------------------------
+  - python=3.11           # Compatible with Typer & Rich; stable for tooling
+  - pip=23.3.1            # Matches lockfile generation pipeline
+
+  # ---------------------------------------------------------------------------
+  # Native Conda Dependencies (minimal to avoid solver issues)
+  # ---------------------------------------------------------------------------
+
+  # ---------------------------------------------------------------------------
+  # Pip Dependencies
+  # These install under the conda environment to ensure deterministic behavior.
+  # Versions mirror `requirements.lock` and must stay in sync.
+  # ---------------------------------------------------------------------------
+  - pip:
+      - pyyaml==6.0.2         # YAML loading for PDL/phase configs
+      - jsonschema==4.23.0    # Validation engine for PDL specifications
+      - rich==13.7.1          # CLI formatting, logs, tree views
+      - gitpython==3.1.43     # Repository-aware operations in generator phases
+      - typer==0.12.3         # CLI framework powering sswg command-line entry
+
+# =============================================================================
+# End of File
+# =============================================================================

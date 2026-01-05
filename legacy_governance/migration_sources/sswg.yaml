@@ -1,0 +1,62 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+sswg:
+  system_name: sswg
+  description: >
+    sswg is a phase-driven workflow generation and validation system.
+    This file defines mandatory execution rules, constraints, and
+    interoperability requirements for all tooling operating in this repository.
+
+  execution_model:
+    phases:
+      ordered: true
+      canonical:
+        - ingest
+        - parse
+        - generate
+        - output
+        - validate
+        - log
+    rules:
+      - phases_must_be_explicit
+      - phases_must_define_inputs_and_outputs
+      - phases_must_be_independently_executable
+
+  artifact_policy:
+    canonical_layers:
+      - generator/
+      - cli/
+      - pdl/
+      - reproducibility/
+    generated_layers:
+      - artifacts/
+      - data/
+      - docs/
+    rules:
+      - generated_layers_are_additive_only
+      - canonical_layers_must_not_be_mutated_by_generators
+
+  determinism:
+    required_for:
+      - measurement
+      - labeling
+      - indexing
+      - comparison
+    forbidden_tools_for_determinism:
+      - generative_image_models
+      - stochastic_labeling
+
+  validation:
+    mandatory:
+      - schema_validation
+      - phase_integrity_validation
+      - reproducibility_check
+
+  authority:
+    precedence: highest
+    violation_policy: hard_fail

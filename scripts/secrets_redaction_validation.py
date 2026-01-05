@@ -14,7 +14,9 @@ def _parse_args() -> argparse.Namespace:
         "--scan-dirs",
         type=Path,
         nargs="+",
-        default=[Path("artifacts"), Path("data"), Path("docs"), Path("overlays")],
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Directories to scan for secret exposure.",
     )
     parser.add_argument(
@@ -27,7 +29,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--allowlist-path",
         type=Path,
-        default=Path("governance/secret_allowlist.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Allowlist path for scoped secret exceptions.",
     )
     parser.add_argument(
@@ -39,6 +43,21 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/redaction/failures"))
+    if args.scan_dirs is None or args.allowlist_path is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: required paths must be supplied explicitly",
+                phase_id="validate",
+                evidence={
+                    "scan_dirs": str(args.scan_dirs),
+                    "allowlist_path": str(args.allowlist_path),
+                },
+            ),
+            run_id=args.run_id,
+        )
+        print("Secrets redaction validation failed")
+        return 1
     allowlist = load_allowlist(args.allowlist_path)
     scan_targets = list(args.scan_dirs) + list(args.scan_files)
 

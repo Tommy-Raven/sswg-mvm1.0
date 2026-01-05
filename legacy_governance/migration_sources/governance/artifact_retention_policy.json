@@ -1,0 +1,39 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "anchor": {
+    "anchor_id": "artifact_retention_policy",
+    "anchor_version": "1.0.0",
+    "scope": "governance",
+    "owner": "governance.artifacts",
+    "status": "draft"
+  },
+  "policy_id": "retention_policy_v1",
+  "policy_version": "1.0.0",
+  "retention_classes": [
+    "provenance",
+    "evaluation",
+    "compare_deltas",
+    "failure_logs",
+    "telemetry"
+  ],
+  "durations": {
+    "draft": "30d",
+    "sandbox": "90d",
+    "canonical": "indefinite",
+    "archived": "indefinite"
+  },
+  "allowed_redactions": ["credentials", "tokens", "secrets"],
+  "classification_rules": [
+    { "anchor_id": "provenance_manifest", "retention_class": "provenance" },
+    { "anchor_id": "evaluation_report", "retention_class": "evaluation" },
+    { "anchor_id": "compare_output", "retention_class": "compare_deltas" },
+    { "anchor_id": "run_telemetry", "retention_class": "telemetry" },
+    { "anchor_id": "failure_label", "retention_class": "failure_logs" }
+  ]
+}

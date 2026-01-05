@@ -1,0 +1,64 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "$id": "https://schemas.sswg.local/artifact-retention-policy.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg artifact retention policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["anchor", "policy_id", "policy_version", "retention_classes", "durations", "classification_rules"],
+  "properties": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_id", "anchor_version", "scope", "owner", "status"],
+      "properties": {
+        "anchor_id": { "type": "string" },
+        "anchor_version": { "type": "string" },
+        "scope": { "type": "string" },
+        "owner": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "sandbox", "canonical", "archived"] }
+      }
+    },
+    "policy_id": { "type": "string" },
+    "policy_version": { "type": "string" },
+    "retention_classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "durations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["draft", "sandbox", "canonical", "archived"],
+      "properties": {
+        "draft": { "type": "string" },
+        "sandbox": { "type": "string" },
+        "canonical": { "type": "string" },
+        "archived": { "type": "string" }
+      }
+    },
+    "allowed_redactions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "classification_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["anchor_id", "retention_class"],
+        "properties": {
+          "anchor_id": { "type": "string" },
+          "retention_class": { "type": "string" }
+        }
+      }
+    }
+  }
+}

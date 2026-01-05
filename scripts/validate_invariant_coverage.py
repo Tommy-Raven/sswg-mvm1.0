@@ -22,14 +22,18 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--invariants-path",
         type=Path,
-        default=Path("invariants.yaml"),
-        help="Path to invariants.yaml.",
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
+        help="Path to invariants file.",
     )
     parser.add_argument(
         "--registry-path",
         type=Path,
-        default=Path("schemas/invariants_registry.json"),
-        help="Path to the invariants registry JSON.",
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
+        help="Path to the invariants registry JSON file.",
     )
     parser.add_argument(
         "--report-path",
@@ -49,6 +53,21 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/failures"))
+
+    if args.invariants_path is None or args.registry_path is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: invariants paths must be supplied explicitly",
+                phase_id="validate",
+                evidence={
+                    "invariants_path": str(args.invariants_path),
+                    "registry_path": str(args.registry_path),
+                },
+            ),
+            run_id=args.run_id,
+        )
+        return 1
 
     if not args.invariants_path.exists():
         emitter.emit(

@@ -25,13 +25,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--baseline-artifact",
         type=Path,
-        default=Path("pdl/example_full_9_phase.yaml"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Baseline artifact path.",
     )
     parser.add_argument(
         "--candidate-artifact",
         type=Path,
-        default=Path("pdl/example_full_9_phase.yaml"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Candidate artifact path.",
     )
     parser.add_argument(
@@ -43,13 +47,17 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--schema-dir",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Schema directory.",
     )
     parser.add_argument(
         "--phase-outputs",
         type=Path,
-        default=Path("tests/fixtures/phase_outputs.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Phase outputs fixture for rollback determinism proof.",
     )
     parser.add_argument(
@@ -70,6 +78,27 @@ def _emit_failure(emitter: FailureEmitter, run_id: str, failure: FailureLabel) -
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/compatibility/failures"))
+    if (
+        args.baseline_artifact is None
+        or args.candidate_artifact is None
+        or args.schema_dir is None
+        or args.phase_outputs is None
+    ):
+        return _emit_failure(
+            emitter,
+            args.run_id,
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: required paths must be supplied explicitly",
+                phase_id="validate",
+                evidence={
+                    "baseline_artifact": str(args.baseline_artifact),
+                    "candidate_artifact": str(args.candidate_artifact),
+                    "schema_dir": str(args.schema_dir),
+                    "phase_outputs": str(args.phase_outputs),
+                },
+            ),
+        )
 
     try:
         baseline = load_artifact(args.baseline_artifact)

@@ -1,0 +1,43 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "anchor": {
+    "anchor_id": "budget_spec",
+    "anchor_version": "1.0.0",
+    "scope": "governance",
+    "owner": "performance.budgets",
+    "status": "draft"
+  },
+  "budget_id": "phase_budget_v1",
+  "budget_version": "1.0.0",
+  "phase_budgets": {
+    "ingest": { "max_duration_sec": 300 },
+    "normalize": { "max_duration_sec": 300 },
+    "parse": { "max_duration_sec": 300 },
+    "analyze": { "max_duration_sec": 300 },
+    "generate": { "max_duration_sec": 300 },
+    "validate": { "max_duration_sec": 300 },
+    "compare": { "max_duration_sec": 300 },
+    "interpret": { "max_duration_sec": 300 },
+    "log": { "max_duration_sec": 300 }
+  },
+  "artifact_budgets": [
+    {
+      "artifact_class": "telemetry",
+      "paths": ["artifacts/telemetry/run_telemetry.json"],
+      "max_size_mb": 5
+    },
+    {
+      "artifact_class": "provenance",
+      "paths": ["artifacts/provenance/provenance_manifest.json"],
+      "max_size_mb": 5
+    }
+  ],
+  "max_total_duration_sec": 1800,
+  "evolution_policy": "overlay_only"
+}

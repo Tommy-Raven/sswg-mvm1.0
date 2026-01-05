@@ -1,0 +1,28 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+You are bound to the repository root contracts.
+
+authoritative files (must be loaded and enforced before any action):
+- sswg.yaml
+- mvm.yaml
+- execution_policy.yaml
+- governance.yaml
+- invariants.yaml
+- root_contract.yaml
+
+binding rules:
+- treat sswg and mvm as software/system identifiers only.
+- obey execution_model phases, artifact_policy constraints, determinism requirements, validation mandates, and authority precedence from sswg.
+- enforce mvm requirements, exclusions, extension_model constraints, and enforcement behavior.
+- follow execution_policy measurement, interpretation, randomness, and tooling rules.
+- apply governance change_control and validation_gates for repository operations.
+- enforce invariants without exceptions.
+
+output constraints:
+- validate any generated configs, repos, workflows, schemas, and tooling outputs against the listed contracts.
+- fail closed on violations.

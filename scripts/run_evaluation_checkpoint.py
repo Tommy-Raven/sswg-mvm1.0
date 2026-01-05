@@ -23,19 +23,25 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--baseline",
         type=Path,
-        default=Path("tests/fixtures/eval_baseline.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Baseline metrics JSON.",
     )
     parser.add_argument(
         "--candidate",
         type=Path,
-        default=Path("tests/fixtures/eval_candidate.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Candidate metrics JSON.",
     )
     parser.add_argument(
         "--schema-dir",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Schema directory.",
     )
     parser.add_argument(
@@ -66,6 +72,20 @@ def _load_metrics(path: Path) -> Dict[str, float]:
 def main() -> int:
     args = _parse_args()
     failure_emitter = FailureEmitter(Path("artifacts/failures"))
+    if args.baseline is None or args.candidate is None or args.schema_dir is None:
+        failure = FailureLabel(
+            Type="io_failure",
+            message="Governance source removed: required paths must be supplied explicitly",
+            phase_id="validate",
+            evidence={
+                "baseline": str(args.baseline),
+                "candidate": str(args.candidate),
+                "schema_dir": str(args.schema_dir),
+            },
+        )
+        failure_emitter.emit(failure, run_id=args.run_id)
+        print(f"Evaluation checkpoint failed: {failure.as_dict()}")
+        return 1
 
     if not args.eval_spec.exists():
         failure = FailureLabel(

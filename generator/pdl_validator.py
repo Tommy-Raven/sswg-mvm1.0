@@ -23,8 +23,10 @@ from ai_cores.cli_arg_parser_core import build_parser, parse_args
 
 from generator.failure_emitter import FailureEmitter, FailureLabel
 from generator.hashing import hash_data
+from generator.utils.repo_root import find_repo_root
 
-SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "schemas"
+REPO_ROOT = find_repo_root()
+SCHEMAS_DIR = REPO_ROOT / "schemas"
 PHASE_CONSTRAINTS_PATH = SCHEMAS_DIR / "phase_constraints.yaml"
 
 

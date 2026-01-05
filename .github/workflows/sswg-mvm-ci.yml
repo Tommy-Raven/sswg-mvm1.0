@@ -3,16 +3,10 @@ name: SSWG MVM CI & Validation
 on:
   push:
     paths:
-      - "sswg.yaml"
-      - "mvm.yaml"
-      - "execution_policy.yaml"
-      - "governance.yaml"
-      - "invariants.yaml"
-      - "root_contract.yaml"
-      - "ai_system_prompt.txt"
+      # GOVERNANCE SOURCE REMOVED
+      # Canonical governance will be resolved from directive_core/docs/
       - "data/templates/**"
       - "ai_validation/**"
-      - "schemas/**"
       - "generator/**"
       - "ai_graph/**"
       - "ai_visualization/**"
@@ -20,16 +14,10 @@ on:
       - ".github/workflows/sswg-mvm-ci.yml"
   pull_request:
     paths:
-      - "sswg.yaml"
-      - "mvm.yaml"
-      - "execution_policy.yaml"
-      - "governance.yaml"
-      - "invariants.yaml"
-      - "root_contract.yaml"
-      - "ai_system_prompt.txt"
+      # GOVERNANCE SOURCE REMOVED
+      # Canonical governance will be resolved from directive_core/docs/
       - "data/templates/**"
       - "ai_validation/**"
-      - "schemas/**"
       - "generator/**"
       - "ai_graph/**"
       - "ai_visualization/**"
@@ -68,7 +56,9 @@ jobs:
 
       - name: PDL validation (example phase set)
         run: |
-          python -m generator.pdl_validator pdl/example_full_9_phase.yaml schemas --report-dir artifacts/validation --run-id ci-run
+          # GOVERNANCE SOURCE REMOVED
+          # Canonical governance will be resolved from directive_core/docs/
+          echo "PDL validation disabled: governance source removed"
 
       - name: Golden-path end-to-end run
         run: |
@@ -92,7 +82,9 @@ jobs:
 
       - name: PDL schema validation gate
         run: |
-          python scripts/validate_pdl_artifacts.py --pdl-dir pdl --schema-dir schemas --report-dir artifacts/validation --run-id ci-run
+          # GOVERNANCE SOURCE REMOVED
+          # Canonical governance will be resolved from directive_core/docs/
+          echo "PDL schema validation disabled: governance source removed"
 
       - name: Promotion readiness gate
         run: |

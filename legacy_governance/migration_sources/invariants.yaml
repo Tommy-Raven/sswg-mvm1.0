@@ -1,0 +1,29 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+invariants:
+  - id: deterministic_measurement
+    rule: >
+      Any output used for measurement, indexing, or comparison must be
+      produced by a deterministic process.
+
+  - id: bijective_identifiers
+    rule: >
+      Identifiers used for labeling must be unique, gap-free, and reproducible.
+
+  - id: artifacts_not_canonical
+    rule: >
+      Generated artifacts must not redefine or overwrite canonical structures.
+
+  - id: validation_required
+    rule: >
+      Outputs that fail validation must not be promoted or reused.
+
+  - id: quarantine_on_failure
+    rule: >
+      Workflows with critical or major incidents must remain quarantined
+      until recovery steps complete and validation passes.

@@ -20,7 +20,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--policy-path",
         type=Path,
-        default=Path("governance/artifact_retention_policy.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Artifact retention policy path.",
     )
     parser.add_argument(
@@ -53,6 +55,11 @@ def _classification_lookup(policy: dict[str, Any]) -> dict[str, str]:
 
 def main() -> int:
     args = _parse_args()
+    if args.policy_path is None:
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        print("Artifact index generation failed: policy path must be supplied explicitly")
+        return 1
     policy = _load_json(args.policy_path) or {}
     classification_map = _classification_lookup(policy)
     entries = []

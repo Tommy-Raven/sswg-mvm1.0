@@ -1,0 +1,33 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+anchor:
+  anchor_id: api-contract
+  anchor_version: 0.0.9mvm
+  scope: repo
+  owner: Raven Recordings
+  status: draft
+
+public:
+  - generator/main.py
+  - generator.main.run_mvm
+  - generator/pdl_validator.py
+
+compliance_internal:
+  - scripts/run_promotion_readiness.py
+  - scripts/validate_pdl_artifacts.py
+  - scripts/replay_determinism_gate.py
+  - scripts/audit_bundle_builder.py
+
+developer_internal:
+  - ai_conductor/cli.py
+  - ai_validation/*
+  - ai_visualization/*
+
+experimental:
+  - config/cli.py
+  - API/workflows.py

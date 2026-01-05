@@ -1,0 +1,38 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/analyze.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: analyze",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "analyze" },
+            "type": { "const": "analysis" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "deterministic_required": { "type": "boolean", "const": true },
+                "bijective_ids_required": { "type": "boolean" },
+                "no_generative_tools_for_measurement": { "type": "boolean", "const": true }
+              },
+              "required": ["deterministic_required", "no_generative_tools_for_measurement"]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

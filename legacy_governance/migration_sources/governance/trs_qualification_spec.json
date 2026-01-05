@@ -1,0 +1,22 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "anchor": {
+    "anchor_id": "trs_qualification_spec",
+    "anchor_version": "1.0.0",
+    "scope": "trs",
+    "owner": "governance.trs_program",
+    "status": "draft"
+  },
+  "trs_spec_id": "trs_qualification_v1",
+  "trs_spec_version": "1.0.0",
+  "determinism_invariants": ["normalize", "analyze", "validate", "compare"],
+  "compatibility_scope": "v1 and back",
+  "required_replay_proofs": ["determinism_replay", "environment_replay"],
+  "required_artifact_lineage": ["provenance_manifest", "overlay_chain_manifest", "trs_corpus_pack"]
+}

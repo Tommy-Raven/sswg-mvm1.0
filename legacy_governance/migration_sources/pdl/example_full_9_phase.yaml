@@ -1,0 +1,142 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+pipeline_profile: full_9_phase
+phases:
+  - name: ingest
+    type: data
+    enabled: true
+    description: "Collect and register raw inputs without interpretation."
+    inputs:
+      - id: raw_payload
+        type: blob
+        description: "Source material for the run."
+    outputs:
+      - id: ingested_payload
+        type: blob
+        description: "Raw inputs preserved for later phases."
+    handler: pdl.handlers.ingest
+    constraints:
+      no_interpretation: true
+      no_mutation_of_canonical: true
+  - name: normalize
+    type: normalize
+    enabled: true
+    description: "Normalize inputs into canonical forms."
+    inputs:
+      - id: ingested_payload
+        type: blob
+    outputs:
+      - id: normalized_payload
+        type: blob
+    handler: pdl.handlers.normalize
+    constraints:
+      deterministic_required: true
+      alignment_rules_required: true
+  - name: parse
+    type: parse
+    enabled: true
+    description: "Bind normalized payloads to schema-aware structures."
+    inputs:
+      - id: normalized_payload
+        type: blob
+    outputs:
+      - id: parsed_payload
+        type: structured
+    handler: pdl.handlers.parse
+    constraints:
+      schema_binding_required: true
+      no_generation: true
+  - name: analyze
+    type: analysis
+    enabled: true
+    description: "Compute deterministic measurements from parsed artifacts."
+    inputs:
+      - id: parsed_payload
+        type: structured
+    outputs:
+      - id: analysis_metrics
+        type: metrics
+    handler: pdl.handlers.analyze
+    constraints:
+      deterministic_required: true
+      bijective_ids_required: true
+      no_generative_tools_for_measurement: true
+  - name: generate
+    type: generation
+    enabled: true
+    description: "Generate declarative outputs derived from analysis."
+    inputs:
+      - id: analysis_metrics
+        type: metrics
+    outputs:
+      - id: draft_output
+        type: artifact
+    handler: pdl.handlers.generate
+    constraints:
+      outputs_must_be_declarative: true
+      no_measurement_keys_generated_stochastically: true
+  - name: validate
+    type: validation
+    enabled: true
+    description: "Validate schemas and invariants on generated artifacts."
+    inputs:
+      - id: draft_output
+        type: artifact
+    outputs:
+      - id: validated_output
+        type: artifact
+    handler: pdl.handlers.validate
+    constraints:
+      deterministic_required: true
+      schema_validation_required: true
+      invariants_required: true
+      bijectivity_check_required: true
+  - name: compare
+    type: comparison
+    enabled: true
+    description: "Compare outputs against baselines deterministically."
+    inputs:
+      - id: validated_output
+        type: artifact
+    outputs:
+      - id: comparison_report
+        type: report
+    handler: pdl.handlers.compare
+    constraints:
+      deterministic_required: true
+      overlap_metrics_allowed:
+        - iou
+  - name: interpret
+    type: interpretation
+    enabled: true
+    description: "Interpret measured artifacts with labeled nondeterminism."
+    inputs:
+      - id: comparison_report
+        type: report
+    outputs:
+      - id: interpretation_summary
+        type: summary
+    handler: pdl.handlers.interpret
+    constraints:
+      must_reference_measured_artifacts: true
+      output_must_be_labeled_nondeterministic: true
+  - name: log
+    type: logging
+    enabled: true
+    description: "Record run metadata, hashes, and phase status."
+    inputs:
+      - id: interpretation_summary
+        type: summary
+    outputs:
+      - id: audit_log
+        type: log
+    handler: pdl.handlers.log
+    constraints:
+      run_id_required: true
+      inputs_hash_required: true
+      phase_status_required: true

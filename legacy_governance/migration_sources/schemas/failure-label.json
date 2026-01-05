@@ -1,0 +1,30 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "$id": "https://schemas.sswg.local/failure-label.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg failure label",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["Type", "message", "phase_id"],
+  "properties": {
+    "Type": {
+      "type": "string",
+      "enum": [
+        "deterministic_failure",
+        "schema_failure",
+        "io_failure",
+        "tool_mismatch",
+        "reproducibility_failure"
+      ]
+    },
+    "message": { "type": "string" },
+    "phase_id": { "type": "string" },
+    "evidence": { "type": "object" }
+  }
+}

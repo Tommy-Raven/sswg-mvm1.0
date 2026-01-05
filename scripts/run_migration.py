@@ -27,7 +27,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--artifact",
         type=Path,
-        default=Path("pdl/example_full_9_phase.yaml"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Artifact path (PDL YAML/JSON) to migrate.",
     )
     parser.add_argument(
@@ -39,7 +41,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--schema-dir",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Schema directory for validation.",
     )
     parser.add_argument(
@@ -66,6 +70,20 @@ def _emit_failure(emitter: FailureEmitter, run_id: str, failure: FailureLabel) -
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/migrations/failures"))
+    if args.artifact is None or args.schema_dir is None:
+        return _emit_failure(
+            emitter,
+            args.run_id,
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: required paths must be supplied explicitly",
+                phase_id="validate",
+                evidence={
+                    "artifact": str(args.artifact),
+                    "schema_dir": str(args.schema_dir),
+                },
+            ),
+        )
     try:
         artifact = load_artifact(args.artifact)
         overlays = load_overlays(args.overlays_dir)

@@ -65,9 +65,9 @@ jobs:
 
       - name: 🧪 Validate PDL defaults
         run: |
-          python -m generator.pdl_validator pdl/default-pdf.yaml --resolve-handlers
-          python -m generator.pdl_validator pdl/example_full_9_phase.yaml --resolve-handlers
-          python scripts/validate_pdl_defaults.py
+          # GOVERNANCE SOURCE REMOVED
+          # Canonical governance will be resolved from directive_core/docs/
+          echo "PDL default validation disabled: governance source removed"
 
       - name: 🧪 Execute tests
         run: |

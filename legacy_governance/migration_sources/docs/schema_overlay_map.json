@@ -1,0 +1,34 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "anchor": {
+    "anchor_id": "schema_overlay_map",
+    "anchor_version": "1.0.0",
+    "scope": "docs",
+    "owner": "documentation.schemas",
+    "status": "draft"
+  },
+  "schema_refs": [
+    {
+      "schema_id": "https://schemas.sswg.local/pdl.json#",
+      "overlay_policy": "overlay_only",
+      "compatibility": "backward"
+    },
+    {
+      "schema_id": "https://schemas.sswg.local/run-telemetry.json#",
+      "overlay_policy": "overlay_only",
+      "compatibility": "backward"
+    },
+    {
+      "schema_id": "https://schemas.sswg.local/audit-bundle-spec.json#",
+      "overlay_policy": "overlay_only",
+      "compatibility": "backward"
+    }
+  ],
+  "notes": "Overlay descriptors must declare add/override/deprecate operations with compatibility statements."
+}

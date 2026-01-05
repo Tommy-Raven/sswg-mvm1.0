@@ -28,7 +28,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-path",
         type=Path,
-        default=Path("artifacts/governance/promotion_checklist.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Output checklist path.",
     )
     parser.add_argument(
@@ -43,6 +45,9 @@ def _parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = _parse_args()
+    if args.output_path is None:
+        print("Promotion checklist generation failed: output path must be supplied explicitly")
+        return 1
     evidence = []
     for path in args.evidence_paths:
         payload = json.loads(path.read_text(encoding="utf-8"))

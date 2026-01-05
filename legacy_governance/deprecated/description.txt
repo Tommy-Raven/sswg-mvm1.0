@@ -1,0 +1,33 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+---
+anchor:
+  anchor_id: repo_description
+  anchor_version: "1.0.0"
+  scope: documentation
+  owner: sswg
+  status: draft
+---
+
+sswg-mvm — recursive workflow generation and compliance scaffolding
+
+sswg-mvm is a schema-aligned workflow generator that enforces the canonical
+9-phase pipeline, deterministic measurement gates, and audit-ready outputs. It
+integrates semantic evaluation, graph-based dependency management, and
+recursive feedback loops to refine workflow structures.
+
+Core objectives:
+- Synthesize deterministic, schema-validated workflow specifications
+- Enforce phase separation, validation gates, and reproducibility guarantees
+- Track lineage, evidence, and audit bundles across runs
+- Visualize dependency and recursion maps via Mermaid and Graphviz
+
+Project tracking lives in repository governance and docs:
+- docs/RUNBOOK.md
+- governance.yaml
+- root_contract.yaml

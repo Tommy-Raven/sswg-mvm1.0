@@ -20,7 +20,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--budget-spec",
         type=Path,
-        default=Path("governance/budget_spec.json"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Budget specification path.",
     )
     parser.add_argument(
@@ -38,7 +40,9 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--schema-dir",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Schema directory.",
     )
     parser.add_argument(
@@ -50,6 +54,21 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     emitter = FailureEmitter(Path("artifacts/budgets/failures"))
+    if args.budget_spec is None or args.schema_dir is None:
+        emitter.emit(
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: required paths must be supplied explicitly",
+                phase_id="validate",
+                evidence={
+                    "budget_spec": str(args.budget_spec),
+                    "schema_dir": str(args.schema_dir),
+                },
+            ),
+            run_id=args.run_id,
+        )
+        print("Budget validation failed")
+        return 1
 
     if not args.budget_spec.exists():
         emitter.emit(

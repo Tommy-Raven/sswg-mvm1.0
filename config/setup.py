@@ -1,4 +1,6 @@
-"""Root configuration governed by canonical agent per AGENTS.md §19.1."""
+"""Root configuration."""
+# GOVERNANCE SOURCE REMOVED
+# Canonical governance will be resolved from directive_core/docs/
 #!/usr/bin/env python3
 
 """Package configuration for the AI Instructional Workflow Generator."""

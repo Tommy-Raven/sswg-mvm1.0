@@ -1,0 +1,37 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "$id": "https://schemas.sswg.local/pdl-phases/normalize.json#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sswg pdl phase: normalize",
+  "$defs": {
+    "phase": {
+      "allOf": [
+        { "$ref": "_common.json#/$defs/phase_base" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "const": "normalize" },
+            "type": { "const": "normalize" },
+            "constraints": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "deterministic_required": { "type": "boolean", "const": true },
+                "alignment_rules_required": { "type": "boolean", "const": true }
+              },
+              "required": ["deterministic_required", "alignment_rules_required"]
+            }
+          },
+          "required": ["constraints"]
+        }
+      ]
+    }
+  },
+  "$ref": "#/$defs/phase"
+}

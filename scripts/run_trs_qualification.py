@@ -94,6 +94,18 @@ def main() -> int:
     compatibility_candidate = Path(
         corpus.get("compatibility_candidate", cases[0]["pdl_path"])
     )
+    compatibility_outputs = corpus.get("compatibility_phase_outputs")
+    if not compatibility_outputs:
+        return _emit_failure(
+            emitter,
+            args.run_id,
+            FailureLabel(
+                Type="io_failure",
+                message="Governance source removed: compatibility phase outputs must be supplied explicitly",
+                phase_id="validate",
+                evidence={"compatibility_phase_outputs": compatibility_outputs},
+            ),
+        )
 
     baseline_artifact = load_artifact(compatibility_baseline)
     candidate_artifact = load_artifact(compatibility_candidate)
@@ -102,11 +114,7 @@ def main() -> int:
         candidate=candidate_artifact,
         overlays=overlays,
         schema_dir=args.schema_dir,
-        phase_outputs_path=Path(
-            corpus.get(
-                "compatibility_phase_outputs", "tests/fixtures/phase_outputs.json"
-            )
-        ),
+        phase_outputs_path=Path(compatibility_outputs),
         run_id=args.run_id,
     )
     if compatibility_errors:

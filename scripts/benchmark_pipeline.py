@@ -391,13 +391,17 @@ def _parse_args() -> BenchmarkConfig:
     parser.add_argument(
         "--pdl",
         type=Path,
-        default=Path("pdl/example_full_9_phase.yaml"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Path to the PDL dataset file.",
     )
     parser.add_argument(
         "--schemas",
         type=Path,
-        default=Path("schemas"),
+        # GOVERNANCE SOURCE REMOVED
+        # Canonical governance will be resolved from directive_core/docs/
+        default=None,
         help="Directory containing PDL schemas.",
     )
     parser.add_argument(
@@ -499,6 +503,9 @@ def _parse_args() -> BenchmarkConfig:
 
 def main() -> int:
     config = _parse_args()
+    if config.pdl_path is None or config.schema_dir is None:
+        print("Benchmark pipeline failed: governance sources must be supplied explicitly")
+        return 1
     try:
         reports = []
         for repeat_index in range(config.repeats):

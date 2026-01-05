@@ -1,0 +1,82 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Tommy-Raven/SSWG-mvm1.0/tree/main/schemas/guarantees_schema.json",
+  "title": "output guarantees",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["guarantees"],
+  "properties": {
+    "guarantees": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "definitions", "tool_checks"],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definitions": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["description", "required_evidence", "applies_to"],
+            "properties": {
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required_evidence": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "applies_to": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "tool_checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_fields", "evaluation_rules"],
+          "properties": {
+            "required_fields": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "evaluation_rules": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

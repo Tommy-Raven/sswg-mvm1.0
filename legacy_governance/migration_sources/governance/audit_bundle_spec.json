@@ -1,0 +1,69 @@
+> ⚠️ DEPRECATED — NON-AUTHORITATIVE
+>
+> This document is NOT canonical.
+> It SHALL NEVER be used as a source of governance.
+> Canonical governance will reside exclusively in `directive_core/docs/`.
+> This file exists only for historical or migration reference.
+
+{
+  "anchor": {
+    "anchor_id": "audit_bundle_spec",
+    "anchor_version": "1.0.0",
+    "scope": "governance",
+    "owner": "audit.compliance",
+    "status": "draft"
+  },
+  "spec_id": "audit_bundle_v1",
+  "spec_version": "1.0.0",
+  "components": [
+    {
+      "component_id": "pdl",
+      "path_template": "pdl/example_full_9_phase.yaml"
+    },
+    {
+      "component_id": "schemas",
+      "path_glob": "schemas/*.json"
+    },
+    {
+      "component_id": "overlay_chain_manifest",
+      "path_template": "artifacts/evidence_pack/{run_id}/overlay_chain_manifest.json"
+    },
+    {
+      "component_id": "provenance_manifest",
+      "path_template": "artifacts/evidence_pack/{run_id}/provenance_manifest.json"
+    },
+    {
+      "component_id": "evaluation_report",
+      "path_template": "artifacts/evidence_pack/{run_id}/eval_report.json"
+    },
+    {
+      "component_id": "determinism_report",
+      "path_template": "artifacts/evidence_pack/{run_id}/determinism_report.json"
+    },
+    {
+      "component_id": "invariant_coverage_report",
+      "path_template": "artifacts/evidence_pack/{run_id}/invariant_coverage_report.json"
+    },
+    {
+      "component_id": "phase_evidence_bundle",
+      "path_template": "artifacts/evidence_pack/{run_id}/phase_evidence_bundle.json"
+    },
+    {
+      "component_id": "log_phase_report",
+      "path_template": "artifacts/evidence_pack/{run_id}/log_phase_report.json"
+    },
+    {
+      "component_id": "run_telemetry",
+      "path_template": "artifacts/telemetry/run_telemetry.json"
+    },
+    {
+      "component_id": "budget_report",
+      "path_template": "artifacts/budgets/budget_report.json"
+    },
+    {
+      "component_id": "policy_manifest",
+      "path_template": "artifacts/policy/policy_manifest.json"
+    }
+  ],
+  "evolution_policy": "overlay_only"
+}

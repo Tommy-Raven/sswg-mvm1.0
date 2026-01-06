@@ -1,81 +1,63 @@
 name: Bug report
-description: Create a report to help us improve
-title: ""
-labels: []
+description: Report a defect or regression affecting sswg-mvm behavior
+title: "[BUG] "
+labels: ["bug"]
 assignees: []
 
 body:
   - type: markdown
     attributes:
       value: |
-        ## Create a report to help us improve
-        Please fill out the details below so we can reproduce and resolve the issue.
+        ## Bug report
+
+        Use this form to report **defects, regressions, or incorrect behavior**.
+        Please provide enough detail to allow deterministic reproduction where applicable.
 
   - type: textarea
-    id: describe
+    id: bug_description
     attributes:
-      label: Describe the bug
-      description: A clear and concise description of what the bug is.
+      label: Description of the bug
+      description: Clearly describe the observed behavior and what is incorrect.
+      placeholder: What happened?
     validations:
       required: true
 
   - type: textarea
-    id: reproduce
+    id: reproduction_steps
     attributes:
-      label: To Reproduce
-      description: Steps to reproduce the behavior.
-      value: |
-        1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
+      label: Steps to reproduce
+      description: Provide exact, ordered steps to reproduce the issue.
+      placeholder: |
+        1. Run command or workflow ...
+        2. Provide input ...
+        3. Observe output ...
     validations:
       required: true
 
   - type: textarea
-    id: expected
+    id: expected_behavior
     attributes:
       label: Expected behavior
-      description: A clear and concise description of what you expected to happen.
+      description: Describe what you expected to happen instead.
     validations:
       required: true
 
   - type: textarea
-    id: screenshots
+    id: environment
     attributes:
-      label: Screenshots
-      description: If applicable, add screenshots to help explain your problem.
-
-  - type: textarea
-    id: desktop
-    attributes:
-      label: Desktop (please complete the following information)
-      value: |
-        - OS: [e.g. iOS]
-        - Browser [e.g. chrome, safari]
-        - Version [e.g. 22]
-
-  - type: textarea
-    id: smartphone
-    attributes:
-      label: Smartphone (please complete the following information)
-      value: |
-        - Device: [e.g. iPhone6]
-        - OS: [e.g. iOS8.1]
-        - Browser [e.g. stock browser, safari]
-        - Version [e.g. 22]
-
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Add any other context about the problem here.
+      label: Environment
+      description: Provide relevant environment details (OS, Python version, runtime, etc.).
+      placeholder: |
+        - OS:
+        - Python version:
+        - Runtime / CI:
+        - Other relevant context:
 
   - type: dropdown
-    id: layer
+    id: affected_layer
     attributes:
-      label: Affected layer (optional)
-      description: Select the most relevant repository area.
+      label: Affected repository layer
+      description: Select the primary layer impacted.
       options:
         - schemas/
         - pdl/
@@ -87,10 +69,10 @@ body:
         - Other
 
   - type: checkboxes
-    id: phases
+    id: affected_phases
     attributes:
-      label: Affected phase(s) (optional)
-      description: Choose any pipeline phases impacted.
+      label: Affected pipeline phase(s)
+      description: Select all phases impacted by this bug.
       options:
         - label: ingest
         - label: normalize
@@ -102,22 +84,8 @@ body:
         - label: interpret
         - label: log
 
-  - type: markdown
+  - type: textarea
+    id: additional_context
     attributes:
-      value: |
-        **Optional additional items**
-
-  - type: input
-    id: issue_default_title
-    attributes:
-      label: Issue default title
-
-  - type: input
-    id: assignees
-    attributes:
-      label: Assignees
-
-  - type: input
-    id: labels
-    attributes:
-      label: Labels
+      label: Additional context
+      description: Include logs, screenshots, error messages, or other relevant details.

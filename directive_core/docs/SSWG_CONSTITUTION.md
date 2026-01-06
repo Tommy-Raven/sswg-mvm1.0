@@ -14,3 +14,16 @@ anchor:
   init_authors:
     - "Tommy Raven"
 ```
+
+## Canonical Governance Ingestion Order
+
+Governance documents MUST be ingested in this exact order:
+
+1. `TERMINOLOGY.md`
+2. `SSWG_CONSTITUTION.md`
+3. `AGENTS.md`
+4. `ARCHITECTURE.md`
+5. `FORMAL_GUARANTEES.md`
+6. `REFERENCES.md`
+
+Missing or malformed ledger documents SHALL cause governance validation failure.

@@ -40,7 +40,14 @@ GOVERNANCE_TOKEN_PATTERNS = [
     "fail_closed",
 ]
 
-EXCLUDED_DIRS = {".git", "directive_core", "legacy_governance"}
+EXCLUDED_DIRS = {".git", "directive_core"}
+
+DEPRECATION_BANNER_PATTERNS = [
+    re.compile(r"DEPRECATED\s+—\s+NON-AUTHORITATIVE", re.IGNORECASE),
+    re.compile(r"NOT canonical", re.IGNORECASE),
+    re.compile(r"NEVER be used as a source of governance", re.IGNORECASE),
+    re.compile(r"Canonical governance .*directive_core/docs", re.IGNORECASE),
+]
 
 
 def _matches_filename(name: str) -> bool:
@@ -65,6 +72,15 @@ def is_governance_like(path: Path) -> bool:
     return _matches_tokens(payload)
 
 
+def _has_deprecation_banner(path: Path, *, max_lines: int = 12) -> bool:
+    try:
+        lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+    except OSError:
+        return False
+    snippet = "\n".join(lines[:max_lines])
+    return all(pattern.search(snippet) for pattern in DEPRECATION_BANNER_PATTERNS)
+
+
 def _is_excluded(path: Path, repo_root: Path) -> bool:
     try:
         relative = path.relative_to(repo_root)
@@ -81,6 +97,8 @@ def find_governance_like_files(repo_root: Path) -> List[Path]:
         if not path.is_file():
             continue
         if _is_excluded(path, repo_root):
+            continue
+        if _has_deprecation_banner(path):
             continue
         if is_governance_like(path):
             matches.append(path.relative_to(repo_root))

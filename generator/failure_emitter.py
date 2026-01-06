@@ -30,7 +30,7 @@ class FailureLabel:  # pylint: disable=invalid-name
     Type: str
     message: str
     phase_id: str
-    path: str = "<unspecified>"
+    path: Optional[str] = None
     evidence: Optional[Dict[str, Any]] = None
 
     def as_dict(self) -> Dict[str, Any]:
@@ -41,6 +41,8 @@ class FailureLabel:  # pylint: disable=invalid-name
             "phase_id": self.phase_id,
             "path": self.path,
         }
+        if self.path is not None:
+            payload["path"] = self.path
         if self.evidence is not None:
             payload["evidence"] = self.evidence
         return payload
@@ -54,8 +56,8 @@ def validate_failure_label(label: FailureLabel) -> None:
         raise ValueError("Failure label message must be non-empty")
     if not label.phase_id:
         raise ValueError("Failure label phase_id must be non-empty")
-    if not label.path.strip():
-        raise ValueError("Failure label path must be non-empty")
+    if label.path is not None and not label.path:
+        raise ValueError("Failure label path must be non-empty when provided")
 
 
 class FailureEmitter:  # pylint: disable=too-few-public-methods

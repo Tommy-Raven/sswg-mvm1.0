@@ -71,3 +71,6 @@ data/outputs/*
 !data/outputs/audit_bundle.py
 build/
 dist/
+directive_core/artifacts/**
+!directive_core/artifacts/audit/
+!directive_core/artifacts/audit/.gitkeep

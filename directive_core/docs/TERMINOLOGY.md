@@ -17,6 +17,6 @@ anchor:
 
 ## Naming Status (Canonical)
 
-Only **SSWG/MVM** (formal) and **sswg-mvm** (lowercase) are usable. All other
+Only **SSWG/MVM** (mindset and ethos) and **sswg-mvm** (software) are usable. All other
 variants are deprecated. See
 [`deprecated_ nomenclature.md`](./deprecated_%20nomenclature.md).

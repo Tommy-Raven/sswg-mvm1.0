@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 from ai_cores.cli_arg_parser_core import build_parser, parse_args
-from ai_cores.governance_core import find_governance_like_files
+from ai_cores.governance_core import validate_governance_source_location
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
 
@@ -28,11 +28,11 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     args = _parse_args()
     repo_root = args.repo_root
-    violations = find_governance_like_files(repo_root)
+    violations = validate_governance_source_location(repo_root)
     if violations:
         failure = FailureLabel(
-            Type="governance_violation",
-            message="Governance-like document found outside directive_core/docs",
+            Type="governance_source_violation",
+            message="Governance-like document found outside directive_core/",
             phase_id="governance_source_validation",
             path=str(violations[0]),
         )

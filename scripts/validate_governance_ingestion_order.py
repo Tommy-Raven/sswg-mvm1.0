@@ -7,6 +7,7 @@ from ai_cores.cli_arg_parser_core import build_parser, parse_args
 from ai_cores.governance_core import (
     CANONICAL_GOVERNANCE_ORDER,
     validate_governance_ingestion_order,
+    validate_required_governance_documents,
 )
 from generator.failure_emitter import FailureEmitter, FailureLabel
 
@@ -30,7 +31,7 @@ def _parse_args() -> argparse.Namespace:
 
 def _emit_failure(run_id: str, message: str, path: Path | None = None) -> None:
     failure = FailureLabel(
-        Type="governance_violation",
+        Type="governance_ingestion_order_violation",
         message=message,
         phase_id="governance_ingestion_order",
         path=str(path) if path else None,
@@ -43,7 +44,10 @@ def main() -> int:
     repo_root = args.repo_root.resolve()
     docs_root = repo_root / "directive_core" / "docs"
 
-    errors = validate_governance_ingestion_order(repo_root)
+    documents, doc_errors = validate_required_governance_documents(repo_root)
+    errors = doc_errors or validate_governance_ingestion_order(
+        repo_root, observed_order=[doc.name for doc in documents]
+    )
     if errors:
         first_error = errors[0]
         filename = first_error.split(":")[0]

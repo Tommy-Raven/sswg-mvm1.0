@@ -126,7 +126,7 @@ No discretionary bypass is permitted.
 
 ---
 
-## 5. Naming Status (Canonical)
+## 6. Naming Status (Canonical)
 
 Only **SSWG/MVM** (governance mindset and ethos) and **sswg-mvm** (software implementation) are canonical identifiers.
 
@@ -136,7 +136,7 @@ Deprecated identifiers are documented in [`deprecated_nomenclature.md`](./deprec
 
 ---
 
-## 6. Evolution and Change Control
+## 7. Evolution and Change Control
 
 1. Governance evolution **MUST** occur through explicit versioned changes.
 2. Backward traceability to `anchor_version: 1.0.0` **MUST** be preserved.

@@ -3,7 +3,7 @@
 anchor:
   anchor_id: "sswg_terminology"
   anchor_model: "sswg+mvm"
-  anchor_version: "1.2.0"
+  anchor_version: "1.0.0"
   scope: "directive_core/docs"
   owner:
     - "2025© Raven Recordings"
@@ -19,4 +19,4 @@ anchor:
 
 Only **SSWG/MVM** (mindset and ethos) and **sswg-mvm** (software) are usable. All other
 variants are deprecated. See
-[`deprecated_nomenclature.md`](./deprecated_%20nomenclature.md).
+[`deprecated_nomenclature.md`](./deprecated_nomenclature.md).

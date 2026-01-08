@@ -118,11 +118,54 @@ Missing, malformed, or out-of-order ledger documents **SHALL** cause governance 
 
 ## 5. Enforcement and Fail-Closed Guarantees
 
-1. All constitutional rules **MUST** be enforced by validators.
-2. Governance enforcement **SHALL** operate in fail-closed mode.
-3. Any uncertainty, ambiguity, or validation error **MUST** result in rejection, not approximation.
+# Semantic Ambiguity Gate (Pre-Ingestion, Mandatory)
 
-No discretionary bypass is permitted.
+## Principle
+
+## SSWG **SHALL** treat ambiguity as a **security vulnerability**, not a stylistic defect.
+
+#### Any semantic ambiguity in a governance artifact **MUST** be treated as a critical failure condition.
+
+### Execution Order
+
+The Semantic Ambiguity Gate **MUST** execute **before**:
+
+1. governance ingestion order enforcement,
+2. anchor validation,
+3. constitution precedence checks,
+4. any additional governance or schema validation.
+
+If the Semantic Ambiguity Gate fails, **NO OTHER GOVERNANCE VALIDATION MAY RUN**.
+
+### Enforcement
+
+On detection of semantic ambiguity, validators **MUST**:
+
+1. hard-fail in fail-closed mode,
+2. emit the error label **`Semantic Ambiguity`**,
+3. record the affected path in an append-only quarantine registry,
+4. automatically **exile** the ambiguous artifact from the ingestion candidate set.
+
+Exiled artifacts **SHALL NOT** contribute to governance meaning, precedence, or downstream validation.
+
+### Remediation Doctrine
+
+The only permitted remediation path is:
+
+1. immediate rejection,
+2. explicit re-authoring to remove ambiguity,
+3. terminology refinement to prevent recurrence,
+4. retraining/behavioral refinement of semantic modeling tools where applicable,
+5. re-ingestion under full validation.
+
+Ambiguity **MUST** be eradicated immediately to prevent propagation.
+
+#### All constitutional rules **MUST** be enforced by validators.
+#### Governance enforcement **SHALL** operate in fail-closed mode.
+#### Any uncertainty, ambiguity, or validation error **MUST** result in rejection, not approximation.
+
+** No discretionary bypass is permitted.**
+No human intervention may circumvent this immutability except for controlled experimentals.
 
 ---
 

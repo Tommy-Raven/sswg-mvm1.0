@@ -99,8 +99,8 @@ This baseline marks the transition from documented intent to enforced authority.
 Governance documents **MUST** be ingested in the following exact order:
 
 1. `TERMINOLOGY.md`
-2. `SSWG_CONSTITUTION.md`
-3. `AGENTS.md`
+2. `AGENTS.md`
+3. `SSWG_CONSTITUTION.md`
 4. `ARCHITECTURE.md`
 5. `FORMAL_GUARANTEES.md`
 6. `REFERENCES.md`

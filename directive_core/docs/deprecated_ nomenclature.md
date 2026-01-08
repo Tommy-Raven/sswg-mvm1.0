@@ -1,1 +1,0 @@
-../../deprecated_ nomenclature.md

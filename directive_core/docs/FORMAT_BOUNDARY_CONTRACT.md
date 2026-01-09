@@ -35,7 +35,7 @@ Only the following flows are permitted:
 
 The following flows are forbidden and MUST be rejected:
 
-1. human → TOML_core (humans must author YAML_core, not TOML_core, unless explicitly waived)
+1. human → TOML_core (humans must author YAML_core, not TOML_core, there is no waiver, explicit or implicit that may bypass this standard)
 2. machine → YAML_core (no YAML as a machine output authority format)
 3. YAML_core → machine without normalization + enforcement
 4. Markdown → machine as authority-bearing input (Markdown is documentation only)

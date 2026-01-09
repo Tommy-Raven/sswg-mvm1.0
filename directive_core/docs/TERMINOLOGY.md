@@ -1,19 +1,21 @@
-# Canonic Ledger
+# === CANONIC LEDGER (TOML) ===
 
-```yaml
-anchor:
-  anchor_id: "terminology"
-  anchor_model: "sswg+mvm+version"
-  anchor_version: "1.0.0"
-  scope: "directive_core/docs"
-  owner:
-    - "2025© Raven Recordings"
-    - "Tommy Raven (Thomas Byers)"
-  status: "invariant"
-  output_mode: "non_operational_output"
-  init_purpose: "Define the canonical terminology for SSWG/MVM governance and enforcement."
-  init_authors:
-    - "Tommy Raven"
+```toml
+[anchor]
+anchor_id = "terminology"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define the canonical terminology for SSWG/MVM governance and enforcement."
+init_authors = ["Tommy Raven"]
 ```
 
 ---
@@ -26,7 +28,38 @@ Terminology is the **first ingestion layer** of governance. All subsequent docum
 
 Effective at `anchor_version: 1.0.0`, this terminology set is enforced as a **security boundary**. Ambiguity is treated as a vulnerability, not a documentation defect. The system is intentionally hostile to unclear language.
 
----
+--- 
+
+## Canonical Header Format (Verbatim Pattern)
+
+Every governance document MUST start like this:
+
+# === CANONIC LEDGER (TOML) ===
+
+```toml
+[anchor_example]
+anchor_id = "example_id"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Human-readable purpose statement."
+init_authors = ["Tommy Raven"]
+```
+
+Rules:
+The first code fence in the file MUST be TOML
+Fence language MUST be toml
+No YAML (yaml, yml) fences allowed for anchors
+No mixed headers
+No duplicated anchors
 
 ## 1. Authority and Scope
 
@@ -55,7 +88,7 @@ Effective at `anchor_version: 1.0.0`, this terminology set is enforced as a **se
 | Governance mindset | uppercase             | `SSWG`, `MVM`                           |
 | Concepts / terms   | snake_case            | `semantic_ambiguity`, `evaluation_gate` |
 | Constants          | UPPERCASE             | `FAIL_CLOSED`                           |
-| Anchors            | YAML block            | `anchor_id`, `anchor_version`           |
+| Anchors            | TOML block            | `anchor_id`, `anchor_version`           |
 
 Any deviation **SHALL** be treated as a terminology violation.
 
@@ -88,6 +121,28 @@ Semantic ambiguity **SHALL ALWAYS** be treated as a critical governance failure.
 ### 4.6 fail_closed
 
 A failure mode in which uncertainty results in rejection, not approximation.
+
+### 4.7 canonical_header
+
+A canonical header is:
+
+The first authority-bearing metadata block in a document
+
+Defines:
+anchor_id
+anchor_model
+anchor_version
+scope
+status
+output_mode
+authorship / ownership
+
+Is consumed by:
+governance ingestion
+validators
+audit tooling
+
+Anything that meets this definition MUST be TOML.
 
 ---
 

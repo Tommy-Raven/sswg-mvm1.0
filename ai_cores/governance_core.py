@@ -13,11 +13,12 @@ from pathlib import Path
 from dataclasses import dataclass
 from typing import Iterable, List, Optional, Tuple
 
-import yaml
+import tomllib
 
 from scripts.validate_governance_ingestion import (
     CANONICAL_GOVERNANCE_ORDER,
     GovernanceIngestionError,
+    validate_canonical_header_format as enforce_canonical_header_format,
     validate_governance_ingestion_order as enforce_governance_ingestion_order,
 )
 
@@ -33,6 +34,7 @@ __all__ = [
     "load_canonic_ledger",
     "run_governance_validations",
     "validate_canonic_ledger",
+    "validate_canonical_header_format",
     "validate_constitution_precedence",
     "validate_governance_anchor_integrity",
     "validate_governance_freeze",
@@ -42,14 +44,14 @@ __all__ = [
 ]
 
 GOVERNANCE_FILENAME_PATTERNS = [
-    "AGENTS.md",
-    "TERMINOLOGY.md",
-    "*CONSTITUTION*.md",
-    "*POLICY*.md",
-    "*GOVERNANCE*.md",
-    "*GUARANTEE*.md",
-    "*ARCHITECTURE*.md",
-    "*REFERENCES*.md",
+    "AGENTS.toml",
+    "TERMINOLOGY.toml",
+    "*CONSTITUTION*.toml",
+    "*POLICY*.toml",
+    "*GOVERNANCE*.toml",
+    "*GUARANTEE*.toml",
+    "*ARCHITECTURE*.toml",
+    "*REFERENCES*.toml",
 ]
 
 GOVERNANCE_TOKEN_PATTERNS = [
@@ -69,7 +71,17 @@ ALLOWED_GOVERNANCE_ROOTS = (
     Path("directive_core/schemas"),
 )
 
-ANCHOR_REQUIRED_FIELDS = ["anchor_id", "anchor_model", "anchor_version", "scope", "status"]
+ANCHOR_REQUIRED_FIELDS = [
+    "anchor_id",
+    "anchor_model",
+    "anchor_version",
+    "scope",
+    "status",
+    "output_mode",
+    "owner",
+    "init_purpose",
+    "init_authors",
+]
 
 
 @dataclass(frozen=True)
@@ -169,18 +181,12 @@ def _has_deprecation_banner(path: Path, *, max_lines: int = 12) -> bool:
 
 
 def load_canonic_ledger(path: Path) -> dict:
-    """Load the YAML anchor from a canonic ledger document."""
+    """Load the TOML anchor from a canonic ledger document."""
     text = path.read_text(encoding="utf-8")
-    lines = text.splitlines()
-    if not lines or lines[0].strip() != "# Canonic Ledger":
-        raise ValueError("Missing canonical header")
-    try:
-        start = lines.index("```yaml")
-        end = lines.index("```", start + 1)
-    except ValueError as exc:
-        raise ValueError("Missing YAML ledger block") from exc
-    payload = "\n".join(lines[start + 1 : end])
-    data = yaml.safe_load(payload)
+    anchor_count = len(re.findall(r"(?m)^\[anchor\]\s*$", text))
+    if anchor_count != 1:
+        raise ValueError("Invalid Canonical Header")
+    data = tomllib.loads(text)
     if not isinstance(data, dict) or "anchor" not in data:
         raise ValueError("Missing anchor payload")
     anchor = data["anchor"]
@@ -223,6 +229,16 @@ def validate_governance_ingestion_order(
     return []
 
 
+def validate_canonical_header_format(repo_root: Path) -> tuple[dict[str, dict], list[str]]:
+    """Return parsed anchors and validation errors for canonical header TOML enforcement."""
+    docs_root = repo_root / "directive_core" / "docs"
+    try:
+        anchors = enforce_canonical_header_format(docs_root, CANONICAL_GOVERNANCE_ORDER)
+    except GovernanceIngestionError as exc:
+        return {}, [str(exc)]
+    return anchors, []
+
+
 def extract_ingestion_order(text: str) -> Optional[List[str]]:
     """Extract an ingestion order list from governance text, if present."""
     lines = text.splitlines()
@@ -261,10 +277,10 @@ def validate_constitution_precedence(repo_root: Path) -> list[str]:
         return doc_errors
 
     constitution = next(
-        (doc for doc in documents if doc.name == "SSWG_CONSTITUTION.md"), None
+        (doc for doc in documents if doc.name == "SSWG_CONSTITUTION.toml"), None
     )
     if constitution is None:
-        return ["Missing governance document: SSWG_CONSTITUTION.md"]
+        return ["Missing governance document: SSWG_CONSTITUTION.toml"]
 
     constitution_order = extract_ingestion_order(constitution.content)
     if constitution_order and constitution_order != CANONICAL_GOVERNANCE_ORDER:
@@ -272,7 +288,7 @@ def validate_constitution_precedence(repo_root: Path) -> list[str]:
 
     authoritative_order = constitution_order or CANONICAL_GOVERNANCE_ORDER
     for doc in documents:
-        if doc.name == "SSWG_CONSTITUTION.md":
+        if doc.name == "SSWG_CONSTITUTION.toml":
             continue
         doc_order = extract_ingestion_order(doc.content)
         if doc_order and doc_order != authoritative_order:
@@ -282,61 +298,26 @@ def validate_constitution_precedence(repo_root: Path) -> list[str]:
     return errors
 
 
-def _line_is_comment(line: str) -> bool:
-    stripped = line.strip()
-    return stripped.startswith("<!--") or stripped.endswith("-->")
-
-
-def validate_governance_anchor_integrity(repo_root: Path) -> list[str]:
+def validate_governance_anchor_integrity(
+    repo_root: Path,
+    *,
+    anchors: dict[str, dict] | None = None,
+) -> list[str]:
     """Return validation errors for governance anchor block integrity."""
     documents, errors = validate_required_governance_documents(repo_root)
     if errors:
         return errors
 
+    if anchors is None:
+        anchors, header_errors = validate_canonical_header_format(repo_root)
+        if header_errors:
+            return header_errors
+
     anchor_errors: list[str] = []
     for doc in documents:
-        lines = doc.content.splitlines()
-        index = 0
-        while index < len(lines) and (not lines[index].strip() or _line_is_comment(lines[index])):
-            index += 1
-        if index >= len(lines) or lines[index].strip() != "# Canonic Ledger":
-            anchor_errors.append(f"{doc.name}: missing '# Canonic Ledger' header")
-            continue
-
-        anchor_header_index = index
-        yaml_starts = [i for i, line in enumerate(lines) if line.strip() == "```yaml"]
-        if len(yaml_starts) != 1:
-            anchor_errors.append(f"{doc.name}: anchor block must appear exactly once")
-            continue
-
-        yaml_start = yaml_starts[0]
-        if yaml_start <= anchor_header_index:
-            anchor_errors.append(f"{doc.name}: anchor YAML block must follow header")
-            continue
-
-        try:
-            yaml_end = lines.index("```", yaml_start + 1)
-        except ValueError:
-            anchor_errors.append(f"{doc.name}: anchor block missing closing fence")
-            continue
-
-        header_before_anchor = next(
-            (
-                i
-                for i, line in enumerate(lines)
-                if line.strip().startswith("#") and i < yaml_start and i != anchor_header_index
-            ),
-            None,
-        )
-        if header_before_anchor is not None:
-            anchor_errors.append(
-                f"{doc.name}: anchor block must appear before first section header"
-            )
-
-        try:
-            anchor = load_canonic_ledger(doc.path)
-        except ValueError as exc:
-            anchor_errors.append(f"{doc.name}: {exc}")
+        anchor = anchors.get(doc.name)
+        if anchor is None:
+            anchor_errors.append("Invalid Canonical Header")
             continue
 
         for field in ANCHOR_REQUIRED_FIELDS:
@@ -443,6 +424,14 @@ def run_governance_validations(
             phase_id="governance_document_presence",
         )
 
+    anchors, canonical_header_errors = validate_canonical_header_format(repo_root)
+    if canonical_header_errors:
+        return FailureLabel(
+            Type="governance_anchor_violation",
+            message=canonical_header_errors[0],
+            phase_id="governance_anchor_integrity",
+        )
+
     ingestion_errors = validate_governance_ingestion_order(
         repo_root, observed_order=[doc.name for doc in docs]
     )
@@ -461,7 +450,7 @@ def run_governance_validations(
             phase_id="constitution_precedence",
         )
 
-    anchor_errors = validate_governance_anchor_integrity(repo_root)
+    anchor_errors = validate_governance_anchor_integrity(repo_root, anchors=anchors)
     if anchor_errors:
         return FailureLabel(
             Type="governance_anchor_violation",

@@ -219,8 +219,8 @@ def main() -> int:
     docs_dir = repo_root / "directive_core" / "docs"
     quarantine_path = repo_root / "directive_core" / "artifacts" / "audit" / "semantic_ambiguity_quarantine.jsonl"
 
-    # Candidate governance artifacts: conservative default = all docs/*.md
-    candidates = sorted(docs_dir.glob("*.md"))
+    # Candidate governance artifacts: conservative default = all docs/*.toml
+    candidates = sorted(docs_dir.glob("*.toml"))
     try:
         semantic_ambiguity_gate(candidates, quarantine_path)
     except SemanticAmbiguityError as e:

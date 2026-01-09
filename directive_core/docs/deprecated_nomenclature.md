@@ -1,3 +1,22 @@
+# === CANONIC LEDGER (TOML) ===
+```toml
+[anchor]
+anchor_id = "deprecated_nomenclature"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define deprecated naming variants for directive_core governance."
+init_authors = ["Tommy Raven"]
+```
+
 # ⚠️ DEPRECATION NOTICE — Naming Variants Prohibited
 
 The terms listed below are **deprecated** and **must not** appear in new or

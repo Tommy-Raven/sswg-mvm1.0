@@ -1,20 +1,58 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
+import tomllib
 
 CANONICAL_GOVERNANCE_ORDER = [
-    "TERMINOLOGY.md",
-    "SSWG_CONSTITUTION.md",
-    "AGENTS.md",
-    "ARCHITECTURE.md",
-    "FORMAL_GUARANTEES.md",
-    "REFERENCES.md",
-    "deprecated_nomenclature.md",
+    "TERMINOLOGY.toml",
+    "SSWG_CONSTITUTION.toml",
+    "AGENTS.toml",
+    "ARCHITECTURE.toml",
+    "FORMAL_GUARANTEES.toml",
+    "REFERENCES.toml",
+    "deprecated_nomenclature.toml",
 ]
 
 
 class GovernanceIngestionError(RuntimeError):
     pass
+
+
+def _extract_canonical_header(content: str) -> dict:
+    anchor_count = len(re.findall(r"(?m)^\[anchor\]\s*$", content))
+    if anchor_count != 1:
+        raise GovernanceIngestionError("Invalid Canonical Header")
+
+    try:
+        data = tomllib.loads(content)
+    except tomllib.TOMLDecodeError as exc:
+        raise GovernanceIngestionError("Invalid Canonical Header") from exc
+    if not isinstance(data, dict) or "anchor" not in data or not isinstance(data["anchor"], dict):
+        raise GovernanceIngestionError("Invalid Canonical Header")
+
+    anchor = data["anchor"]
+
+    return anchor
+
+
+def validate_canonical_header_format(
+    docs_dir: Path,
+    expected_order: list[str],
+) -> dict[str, dict]:
+    anchors: dict[str, dict] = {}
+    for path in docs_dir.iterdir():
+        if not path.is_file() or path.suffix != ".toml":
+            continue
+        content = path.read_text(encoding="utf-8")
+        anchor = _extract_canonical_header(content)
+        if path.name in expected_order:
+            anchors[path.name] = anchor
+    for filename in expected_order:
+        path = docs_dir / filename
+        if not path.exists():
+            continue
+    return anchors
 
 
 def validate_governance_ingestion_order(
@@ -32,7 +70,7 @@ def validate_governance_ingestion_order(
         )
 
     present = sorted(
-        p.name for p in docs_dir.iterdir() if p.is_file() and p.suffix == ".md"
+        p.name for p in docs_dir.iterdir() if p.is_file() and p.suffix == ".toml"
     )
 
     expected_set = set(expected_order)

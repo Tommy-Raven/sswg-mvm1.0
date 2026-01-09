@@ -1,0 +1,10 @@
+[anchor]
+anchor_id = "terminology"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "Define the canonical terminology for SSWG/MVM governance and enforcement."
+init_authors = ["Tommy Raven"]

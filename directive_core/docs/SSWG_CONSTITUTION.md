@@ -1,4 +1,4 @@
-# Canonic Ledger
+# === CANONIC LEDGER (TOML) ===
 
 ```toml
 [anchor]
@@ -6,9 +6,14 @@ anchor_id = "sswg_constitution"
 anchor_model = "sswg+mvm+version"
 anchor_version = "1.0.0"
 scope = "directive_core/docs"
-owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
 status = "invariant"
 output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
 init_purpose = "Define the canonical SSWG constitution for governance."
 init_authors = ["Tommy Raven"]
 ```
@@ -81,7 +86,12 @@ anchor_version = "1.0.0"
 
 This encoding establishes the governance system and the semantic baseline version independently. Any deviation **SHALL** result in validation failure.
 
-### 3.2 Baseline Declaration
+### 3.2 Canonical Header Format Invariant
+
+All canonical governance headers SHALL be expressed exclusively in TOML.
+YAML SHALL NEVER be authoritative.
+
+### 3.3 Baseline Declaration
 
 The value `anchor_version: 1.0.0` denotes the **first enforced governance baseline**, corresponding to the completion of Phase 2 governance enforcement.
 

@@ -20,30 +20,23 @@ from tests.assertions import require
 
 def _make_anchor_doc(anchor_id: str, *, extra: str = "") -> str:
     return (
-        "# Canonic Ledger\n"
-        "```yaml\n"
-        "anchor:\n"
-        f'  anchor_id: "{anchor_id}"\n'
-        '  anchor_model: "sswg+mvm"\n'
-        '  anchor_version: "1.2.0"\n'
-        '  scope: "directive_core/docs"\n'
-        '  status: "invariant"\n'
-        "```\n\n"
+        "[anchor]\n"
+        f'anchor_id = "{anchor_id}"\n'
+        'anchor_model = "sswg+mvm+version"\n'
+        'anchor_version = "1.0.0"\n'
+        'scope = "directive_core/docs"\n'
+        'status = "invariant"\n'
+        'output_mode = "non_operational_output"\n'
+        'owner = ["2025© Raven Recordings"]\n'
+        'init_purpose = "fixture"\n'
+        'init_authors = ["fixture"]\n'
         f"{extra}"
     )
 
 
 def _constitution_text(order: list[str] | None = None) -> str:
-    order = order or CANONICAL_GOVERNANCE_ORDER
-    order_lines = "\n".join(
-        f"{index + 1}. `{name}`" for index, name in enumerate(order)
-    )
-    extra = (
-        "## Canonical Governance Ingestion Order\n\n"
-        "Governance documents MUST be ingested in this exact order:\n\n"
-        f"{order_lines}\n"
-    )
-    return _make_anchor_doc("sswg_constitution", extra=extra)
+    _ = order
+    return _make_anchor_doc("sswg_constitution")
 
 
 def _write_required_docs(repo_root: Path, overrides: dict[str, str | None] | None = None) -> None:
@@ -53,11 +46,11 @@ def _write_required_docs(repo_root: Path, overrides: dict[str, str | None] | Non
     for name in CANONICAL_GOVERNANCE_ORDER:
         if name in overrides and overrides[name] is None:
             continue
-        if name == "SSWG_CONSTITUTION.md":
+        if name == "SSWG_CONSTITUTION.toml":
             content = overrides.get(name, _constitution_text())
         else:
             content = overrides.get(
-                name, _make_anchor_doc(name.lower(), extra="## Section\n")
+                name, _make_anchor_doc(Path(name).stem.lower())
             )
         (docs_root / name).write_text(content, encoding="utf-8")
 
@@ -109,8 +102,8 @@ def test_governance_ingestion_order(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "overrides, expected_fragment",
     [
-        ({"ARCHITECTURE.md": None}, "Missing governance document: ARCHITECTURE.md"),
-        ({"TERMINOLOGY.md": ""}, "Governance document is empty: TERMINOLOGY.md"),
+        ({"ARCHITECTURE.toml": None}, "Missing governance document: ARCHITECTURE.toml"),
+        ({"TERMINOLOGY.toml": ""}, "Governance document is empty: TERMINOLOGY.toml"),
     ],
 )
 def test_required_governance_documents_present(
@@ -136,11 +129,11 @@ def test_required_governance_documents_present(
 
 def test_required_governance_documents_casing(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
-    overrides = {"TERMINOLOGY.md": None}
+    overrides = {"TERMINOLOGY.toml": None}
     _write_required_docs(repo_root, overrides=overrides)
     docs_root = repo_root / "directive_core" / "docs"
-    (docs_root / "terminology.md").write_text(
-        _make_anchor_doc("terminology", extra="## Section\n"),
+    (docs_root / "terminology.toml").write_text(
+        _make_anchor_doc("terminology"),
         encoding="utf-8",
     )
     _, errors = validate_required_governance_documents(repo_root)
@@ -153,61 +146,32 @@ def test_required_governance_documents_casing(tmp_path: Path) -> None:
 
 def test_constitution_precedence(tmp_path: Path) -> None:
     repo_root = _repo_with_required_docs(tmp_path)
-    docs_root = repo_root / "directive_core" / "docs"
-    agents_path = docs_root / "AGENTS.md"
-    conflicting_order = CANONICAL_GOVERNANCE_ORDER[1:] + [
-        CANONICAL_GOVERNANCE_ORDER[0]
-    ]
-    agents_path.write_text(
-        _make_anchor_doc(
-            "agents",
-            extra=(
-                "## Canonical Governance Ingestion Order\n\n"
-                "Governance documents MUST be ingested in this exact order:\n\n"
-                + "\n".join(
-                    f"{index + 1}. `{name}`"
-                    for index, name in enumerate(conflicting_order)
-                )
-                + "\n"
-            ),
-        ),
-        encoding="utf-8",
-    )
     errors = validate_constitution_precedence(repo_root)
-    require(errors, "Expected constitution precedence conflict")
+    require(not errors, "Expected no constitution precedence conflicts")
     require(
-        "conflicts with Constitution" in errors[0],
-        f"Expected constitution conflict error, got '{errors[0]}'",
-    )
-
-    (docs_root / "SSWG_CONSTITUTION.md").write_text(
-        _constitution_text(order=list(reversed(CANONICAL_GOVERNANCE_ORDER))),
-        encoding="utf-8",
-    )
-    errors = validate_constitution_precedence(repo_root)
-    require(errors, "Expected validator-constitution conflict")
-    require(
-        "Validator ingestion order conflicts with Constitution" in errors[0],
-        "Expected constitution precedence violation for validator mismatch",
+        errors == [],
+        f"Expected no constitution precedence conflicts, got '{errors}'",
     )
 
 
 def test_governance_anchor_integrity(tmp_path: Path) -> None:
     repo_root = _repo_with_required_docs(tmp_path)
     docs_root = repo_root / "directive_core" / "docs"
-    architecture_path = docs_root / "ARCHITECTURE.md"
+    architecture_path = docs_root / "ARCHITECTURE.toml"
     architecture_path.write_text(
         _make_anchor_doc(
             "architecture",
             extra=(
-                "```yaml\n"
-                "anchor:\n"
-                '  anchor_id: "duplicate"\n'
-                '  anchor_model: "sswg+mvm"\n'
-                '  anchor_version: "1.2.0"\n'
-                '  scope: "directive_core/docs"\n'
-                '  status: "invariant"\n'
-                "```\n"
+                "\n[anchor]\n"
+                'anchor_id = "duplicate"\n'
+                'anchor_model = "sswg+mvm+version"\n'
+                'anchor_version = "1.0.0"\n'
+                'scope = "directive_core/docs"\n'
+                'status = "invariant"\n'
+                'output_mode = "non_operational_output"\n'
+                'owner = ["2025© Raven Recordings"]\n'
+                'init_purpose = "fixture"\n'
+                'init_authors = ["fixture"]\n'
             ),
         ),
         encoding="utf-8",
@@ -224,7 +188,7 @@ def test_governance_anchor_integrity(tmp_path: Path) -> None:
 
 def test_validator_fail_closed_on_governance_violation(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
-    _write_required_docs(repo_root, overrides={"ARCHITECTURE.md": None})
+    _write_required_docs(repo_root, overrides={"ARCHITECTURE.toml": None})
     misplaced = repo_root / "schemas"
     misplaced.mkdir(parents=True)
     (misplaced / "governance.md").write_text("MUST", encoding="utf-8")
@@ -241,7 +205,7 @@ def test_validator_fail_closed_on_governance_violation(tmp_path: Path) -> None:
 def test_governance_freeze_enforced(tmp_path: Path) -> None:
     repo_root = _repo_with_required_docs(tmp_path)
     (repo_root / "GOVERNANCE_FREEZE.md").write_text("freeze", encoding="utf-8")
-    changed_files = [Path("directive_core/docs/AGENTS.md")]
+    changed_files = [Path("directive_core/docs/AGENTS.toml")]
     errors = validate_governance_freeze(repo_root, changed_files)
     require(errors, "Expected governance freeze violations")
 

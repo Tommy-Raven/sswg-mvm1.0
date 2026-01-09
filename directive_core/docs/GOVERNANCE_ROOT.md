@@ -1,13 +1,18 @@
-# Canonic Ledger
+# === CANONIC LEDGER (TOML) ===
 ```toml
 [anchor]
 anchor_id = "sswg_governance_root"
 anchor_model = "sswg+mvm"
 anchor_version = "1.2.0"
 scope = "directive_core/docs"
-owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
 status = "deprecated"
 output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
 init_purpose = "Ratify directive_core as the authoritative governance root. This is explicitly declared non-authoritative. This not the constitution. Validators ignore it for ingestion order."
 init_authors = ["Tommy Raven"]
 ```

@@ -1,0 +1,148 @@
+# ============================================================
+# AGENTS.toml — Canonical Agent Governance (Enforcement Layer)
+# ============================================================
+
+[anchor]
+anchor_id = "sswg_agents"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/definitions"
+status = "invariant"
+output_mode = "non_operational_output"
+init_purpose = "Define canonical agent governance invariants for enforcement."
+init_authors = ["Tommy Raven"]
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+# ------------------------------------------------------------
+# Naming Canon
+# ------------------------------------------------------------
+
+[naming]
+canonical_mindset = ["SSWG", "MVM"]
+canonical_software = ["sswg-mvm"]
+deprecated_variants_forbidden = true
+deprecation_reference = "deprecated_nomenclature.md"
+
+# ------------------------------------------------------------
+# Root-Scope Agent Invariants
+# ------------------------------------------------------------
+
+[root_scope]
+applies_to = [
+  "human_contributors",
+  "automation_agents",
+  "validators",
+  "ci_systems",
+  "tooling",
+  "delegated_execution"
+]
+waivable = false
+
+# ------------------------------------------------------------
+# Semantic Ambiguity Invariant
+# ------------------------------------------------------------
+
+[semantic_ambiguity]
+classification = "security_vulnerability"
+treatment = "fail_closed"
+interpretation_allowed = false
+
+# Explicitly forbidden linguistic constructs
+forbidden_language = [
+  "allowed unless",
+  "permitted unless",
+  "unless explicitly waived",
+  "may be allowed",
+  "generally allowed",
+  "with approval",
+  "except in special cases",
+  "at discretion",
+  "subject to interpretation"
+]
+
+# Required absolute language
+required_language = [
+  "MUST",
+  "MUST NOT",
+  "SHALL",
+  "SHALL NOT"
+]
+
+# ------------------------------------------------------------
+# Exception Handling Rules
+# ------------------------------------------------------------
+
+[exceptions]
+inline_exceptions_allowed = false
+conditional_phrases_allowed = false
+
+# Exceptions MUST be explicit artifacts
+exception_mechanism_requirements = [
+  "separate_contract",
+  "explicit_schema",
+  "validator_enforced",
+  "opt_in_by_construction",
+  "auditable",
+  "revocable",
+  "scope_bounded"
+]
+
+# ------------------------------------------------------------
+# Mandatory Semantic Ambiguity Gate
+# ------------------------------------------------------------
+
+[semantic_ambiguity_gate]
+required = true
+execution_order = "pre_ingestion"
+fail_behavior = "halt"
+quarantine_on_failure = true
+
+# Public-facing error behavior
+public_error_label = "Semantic Ambiguity"
+expose_rule_ids = false
+expose_pattern_names = false
+expose_remediation_hints = false
+
+# ------------------------------------------------------------
+# Failure Semantics
+# ------------------------------------------------------------
+
+[failure_semantics]
+on_ambiguity = [
+  "reject_artifact",
+  "quarantine_artifact",
+  "block_normalization",
+  "block_enforcement",
+  "block_execution"
+]
+
+# ------------------------------------------------------------
+# Interpretation Prohibition
+# ------------------------------------------------------------
+
+[interpretation]
+attempt_resolution = false
+attempt_clarification = false
+attempt_normalization = false
+
+# ------------------------------------------------------------
+# Enforcement Binding
+# ------------------------------------------------------------
+
+[validator_binding]
+missing_document_behavior = "fail"
+malformed_document_behavior = "fail"
+out_of_order_ingestion_behavior = "fail"
+undefined_behavior = "forbidden"
+
+# ------------------------------------------------------------
+# End-of-Contract Statement (Machine-Authoritative)
+# ------------------------------------------------------------
+
+[final_statement]
+principle = "Ambiguity is an existential threat to deterministic governance."
+enforcement = "absolute"
+non_compliance_result = "non_canonical_rejection"

@@ -1,0 +1,19 @@
+[anchor]
+anchor_id = "ambiguity_gate_policy"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/definitions"
+status = "invariant"
+authority = true
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define deterministic ambiguity detection triggers and enforcement behavior. Any match SHALL result in rejection."
+
+init_authors = [
+  "Tommy Raven"
+]
+

@@ -1,3 +1,7 @@
+# ============================================================
+# AGENTS — CANONICAL AGENT GOVERNANCE (AUTHORITATIVE)
+# ============================================================
+
 [anchor]
 anchor_id = "sswg_agents"
 anchor_model = "sswg+mvm+version"
@@ -5,6 +9,180 @@ anchor_version = "1.0.0"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
-owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
 init_purpose = "Define canonical agent governance for directive_core."
 init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION 1 — CANONICAL HEADER CONSTRAINTS
+# ------------------------------------------------------------
+
+[canonical_header]
+
+required = true
+first_fence_must_be_toml = true
+mixed_headers_forbidden = true
+duplicate_anchors_forbidden = true
+yaml_fences_forbidden = true
+
+description = """
+Every governance document MUST begin with a TOML canonical ledger header.
+No YAML, mixed formats, or duplicate anchors are permitted.
+"""
+
+# ------------------------------------------------------------
+# SECTION 2 — ROOT-SCOPE AGENT RULES (INVARIANT)
+# ------------------------------------------------------------
+
+[agents.scope]
+
+applies_to = [
+  "human_contributors",
+  "automation",
+  "validators",
+  "ci_systems",
+  "delegated_execution_environments"
+]
+
+waivable = false
+
+# ------------------------------------------------------------
+# SECTION 3 — SEMANTIC AMBIGUITY PROHIBITION (INVARIANT)
+# ------------------------------------------------------------
+
+[agents.semantic_ambiguity]
+
+classification = "security_vulnerability"
+treat_as_style_issue = false
+assume_malicious_potential = true
+
+agents_must_not = [
+  "introduce_ambiguity",
+  "accept_ambiguity",
+  "normalize_ambiguity",
+  "interpret_ambiguity",
+  "propagate_ambiguity"
+]
+
+public_error_label = "Semantic Ambiguity"
+
+# ------------------------------------------------------------
+# SECTION 4 — ABSOLUTELY FORBIDDEN LANGUAGE
+# ------------------------------------------------------------
+
+[agents.forbidden_language]
+
+conditional_permission_phrases = [
+  "allowed unless",
+  "permitted unless",
+  "unless explicitly waived",
+  "allowed with approval",
+  "may be allowed",
+  "generally allowed",
+  "except in special cases",
+  "at discretion",
+  "subject to interpretation"
+]
+
+context_ignored = true
+intent_ignored = true
+harmlessness_ignored = true
+
+# ------------------------------------------------------------
+# SECTION 5 — ABSOLUTE LANGUAGE REQUIREMENTS
+# ------------------------------------------------------------
+
+[agents.required_language]
+
+allowed_modals = [
+  "MUST",
+  "MUST NOT",
+  "SHALL",
+  "SHALL NOT"
+]
+
+disallowed_modals = [
+  "may",
+  "might",
+  "should",
+  "could",
+  "generally",
+  "typically"
+]
+
+# ------------------------------------------------------------
+# SECTION 6 — EXCEPTION HANDLING (EXPLICIT ONLY)
+# ------------------------------------------------------------
+
+[agents.exceptions]
+
+inline_exceptions_forbidden = true
+conditional_language_forbidden = true
+
+exceptions_must = [
+  "exist_as_separate_contract",
+  "have_own_schema",
+  "have_own_validator",
+  "be_opt_in_by_construction",
+  "be_auditable",
+  "be_revocable",
+  "be_scope_bounded"
+]
+
+# ------------------------------------------------------------
+# SECTION 7 — MANDATORY AMBIGUITY GATE
+# ------------------------------------------------------------
+
+[agents.ambiguity_gate]
+
+required = true
+executes_before_schema_validation = true
+fail_closed = true
+
+user_visible_output = [
+  "Semantic Ambiguity"
+]
+
+must_not_expose = [
+  "rule_identifiers",
+  "pattern_names",
+  "remediation_hints"
+]
+
+# ------------------------------------------------------------
+# SECTION 8 — FAILURE SEMANTICS
+# ------------------------------------------------------------
+
+[agents.failure_semantics]
+
+on_ambiguity = [
+  "fail_closed",
+  "quarantine_artifact",
+  "halt_processing",
+  "skip_normalization",
+  "skip_enforcement",
+  "skip_execution"
+]
+
+guidance_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 9 — INTERPRETATION PROHIBITION
+# ------------------------------------------------------------
+
+[agents.interpretation]
+
+clarification_allowed = false
+reinterpretation_allowed = false
+resolution_allowed = false
+
+ambiguity_results_in = "rejection_only"
+
+# ------------------------------------------------------------
+# END OF AGENTS
+# ------------------------------------------------------------

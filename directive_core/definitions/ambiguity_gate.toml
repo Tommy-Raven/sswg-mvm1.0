@@ -5,17 +5,11 @@ anchor_version = "1.0.0"
 scope = "directive_core/definitions"
 status = "invariant"
 authority = true
-
+init_purpose = "Define deterministic ambiguity detection triggers and enforcement behavior. Any match SHALL result in rejection."
+description = "This gate evaluates prompts for linguistic ambiguity, obfuscation, and indirect circumvention based on strict pattern triggers. If any pattern matches, the prompt SHALL be rejected before execution."
 owner = [
   "2025© Raven Recordings",
   "Tommy Raven (Thomas Byers)"
-]
-
-init_purpose = "Define deterministic ambiguity detection triggers and enforcement behavior. Any match SHALL result in rejection."
-description = "This gate evaluates prompts for linguistic ambiguity, obfuscation, and indirect circumvention based on strict pattern triggers. If any pattern matches, the prompt SHALL be rejected before execution."
-
-init_authors = [
-  "Tommy Raven"
 ]
 
 [settings]

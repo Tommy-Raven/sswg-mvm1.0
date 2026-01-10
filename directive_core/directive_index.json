@@ -1,42 +1,69 @@
 {
-  "$schema": "schemas/directive_index.schema.json",
-  "schema_version": "1.0.0",
+  "directive_core_version": "1.0.0",
   "canonical_path": "directive_core",
-  "definitions": [
-    {
-      "directive_id": "sswg_governance_root",
-      "definition_path": "directive_core/definitions/governance_root.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_terminology",
-      "definition_path": "directive_core/definitions/terminology.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_constitution",
-      "definition_path": "directive_core/definitions/sswg_constitution.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_agents",
-      "definition_path": "directive_core/definitions/agents.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_architecture",
-      "definition_path": "directive_core/definitions/architecture.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_formal_guarantees",
-      "definition_path": "directive_core/definitions/formal_guarantees.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_references",
-      "definition_path": "directive_core/definitions/references.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+  "governance_root": "directive_core/docs",
+  "authoritative_format": "toml",
+
+  "governance_ingestion_order": [
+    "TERMINOLOGY",
+    "AGENTS",
+    "SSWG_CONSTITUTION",
+    "FORMAT_BOUNDARY_CONTRACT",
+    "ARCHITECTURE",
+    "FORMAL_GUARANTEES",
+    "REFERENCES"
+  ],
+
+  "authoritative_governance": {
+    "SSWG_CONSTITUTION": {
+      "file": "SSWG_CONSTITUTION.toml",
+      "required": true,
+      "status": "invariant",
+      "enforcement_level": "constitutional",
+      "format": "toml",
+      "fail_on_missing": true,
+      "fail_on_malformed": true,
+      "fail_on_reorder": true
     }
-  ]
+  },
+
+  "governance_documents": {
+    "TERMINOLOGY": {
+      "file": "TERMINOLOGY.toml",
+      "format": "toml",
+      "required": true
+    },
+    "AGENTS": {
+      "file": "AGENTS.toml",
+      "format": "toml",
+      "required": true
+    },
+    "FORMAT_BOUNDARY_CONTRACT": {
+      "file": "FORMAT_BOUNDARY_CONTRACT.toml",
+      "format": "toml",
+      "required": true
+    },
+    "ARCHITECTURE": {
+      "file": "ARCHITECTURE.toml",
+      "format": "toml",
+      "required": true
+    },
+    "FORMAL_GUARANTEES": {
+      "file": "FORMAL_GUARANTEES.toml",
+      "format": "toml",
+      "required": true
+    },
+    "REFERENCES": {
+      "file": "REFERENCES.toml",
+      "format": "toml",
+      "required": true
+    }
+  },
+
+  "validation_policy": {
+    "fail_closed": true,
+    "semantic_ambiguity_gate_required": true,
+    "canonical_header_required": true,
+    "authoritative_format_enforced": true
+  }
 }

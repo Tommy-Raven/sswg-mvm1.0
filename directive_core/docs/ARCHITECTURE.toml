@@ -1,10 +1,219 @@
+# ============================================================
+# ARCHITECTURE — SYSTEM ARCHITECTURE GOVERNANCE (AUTHORITATIVE)
+# ============================================================
+
 [anchor]
-anchor_id = "sswg_architecture"
+anchor_id = "architecture"
 anchor_model = "sswg+mvm+version"
 anchor_version = "1.0.0"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
-owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
-init_purpose = "Define the canonical architecture of directive_core."
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define the canonical system architecture and its enforced properties."
 init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION 1 — ARCHITECTURAL INTENT
+# ------------------------------------------------------------
+
+[intent]
+
+deterministic_artifact_generation = true
+invariant_preservation = true
+bounded_recursion = true
+non_operational_outputs_only = true
+
+system_is_conversational = false
+system_emits_procedures = false
+
+# ------------------------------------------------------------
+# SECTION 2 — HIGH-LEVEL ARCHITECTURE LAYERS
+# ------------------------------------------------------------
+
+[layers]
+
+artifact_generation_core = "produces_schema_aligned_artifacts"
+validation_and_invariants = "enforces_non_negotiable_constraints"
+bounded_recursion_engine = "permits_controlled_refinement"
+evaluation_and_gating = "determines_admissibility"
+lineage_and_evidence = "records_traceability"
+
+all_layers_fail_closed = true
+all_layers_emit_evidence = true
+
+# ------------------------------------------------------------
+# SECTION 3 — COMPONENT MAP
+# ------------------------------------------------------------
+
+[components]
+
+generator = "artifact_generation_orchestration"
+ai_validation = "schema_and_invariant_enforcement"
+ai_graph = "dependency_graph_construction"
+ai_recursive = "bounded_recursion_engine"
+ai_evaluation = "deterministic_quality_metrics"
+ai_memory = "lineage_and_version_tracking"
+ai_visualization = "non_operational_exporters"
+ai_monitoring = "telemetry_and_logging"
+schemas = "canonical_json_contracts"
+
+# ------------------------------------------------------------
+# SECTION 4 — ARTIFACT GENERATION CORE
+# ------------------------------------------------------------
+
+[artifact_generation]
+
+phase_ordering_enforced = true
+template_resolution_deterministic = true
+outputs_immutable = true
+lineage_recorded = true
+
+# ------------------------------------------------------------
+# SECTION 5 — VALIDATION AND INVARIANT ENFORCEMENT
+# ------------------------------------------------------------
+
+[validation]
+
+json_schema_required = true
+root_contract_required = true
+invariants_mandatory = true
+
+violation_behavior = "fail_closed_rejection"
+decision_trace_recorded = true
+
+# ------------------------------------------------------------
+# SECTION 6 — BOUNDED RECURSION ENGINE
+# ------------------------------------------------------------
+
+[recursion]
+
+explicit_termination_conditions = true
+depth_limited = true
+cost_limited = true
+implicit_self_expansion_forbidden = true
+
+each_cycle_emits = [
+  "candidate_artifact",
+  "evaluation_result",
+  "accept_or_reject_decision",
+  "audit_record"
+]
+
+# ------------------------------------------------------------
+# SECTION 7 — EVALUATION AND GATING
+# ------------------------------------------------------------
+
+[evaluation]
+
+metrics_deterministic = true
+comparison_diff_based = true
+acceptance_criteria_explicit = true
+
+optimization_without_constraints_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 8 — REFERENCE LOOP (PRE-PROMOTION)
+# ------------------------------------------------------------
+
+[reference_loop]
+
+part_of_pdl_pipeline = false
+promotion_gating = true
+
+emits_evidence = [
+  "benchmark_evolution_summary",
+  "entropy_budget_verification",
+  "convergence_summary",
+  "final_output_snapshot"
+]
+
+# ------------------------------------------------------------
+# SECTION 9 — LINEAGE AND EVIDENCE MANAGEMENT
+# ------------------------------------------------------------
+
+[lineage]
+
+parent_child_relationships_recorded = true
+hashes_recorded = true
+timestamps_recorded = true
+decision_traces_recorded = true
+audit_bundles_supported = true
+
+# ------------------------------------------------------------
+# SECTION 10 — NON-OPERATIONAL VISUALIZATION
+# ------------------------------------------------------------
+
+[visualization]
+
+outputs_executable = false
+outputs_descriptive_only = true
+authority_conveyed = false
+
+# ------------------------------------------------------------
+# SECTION 11 — FAILURE HANDLING
+# ------------------------------------------------------------
+
+[failure_handling]
+
+fail_closed = true
+
+failure_causes = [
+  "schema_validation_failure",
+  "invariant_violation",
+  "recursion_limit_exceeded",
+  "evaluation_gate_rejection"
+]
+
+failure_emits_artifacts = true
+
+# ------------------------------------------------------------
+# SECTION 12 — EXTENSION BOUNDARIES
+# ------------------------------------------------------------
+
+[extensions]
+
+may_add = [
+  "artifact_templates",
+  "evaluation_metrics",
+  "visualization_formats"
+]
+
+must_not = [
+  "weaken_invariants",
+  "bypass_validation",
+  "emit_operational_outputs"
+]
+
+# ------------------------------------------------------------
+# SECTION 13 — ARCHITECTURAL GUARANTEES
+# ------------------------------------------------------------
+
+[guarantees]
+
+determinism = true
+bounded_recursion = true
+complete_lineage = true
+auditability = true
+
+formal_guarantees_reference = "FORMAL_GUARANTEES.toml"
+
+# ------------------------------------------------------------
+# SECTION 14 — NON-GOALS
+# ------------------------------------------------------------
+
+[non_goals]
+
+operational_instructions = false
+autonomous_action = false
+intent_inference = false
+trust_based_authority = false
+
+# ------------------------------------------------------------
+# END OF ARCHITECTURE
+# ------------------------------------------------------------

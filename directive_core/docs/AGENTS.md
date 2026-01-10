@@ -5,7 +5,7 @@ anchor_id = "sswg_agents"
 anchor_model = "sswg+mvm+version"
 anchor_version = "1.0.0"
 scope = "directive_core/docs"
-status = "invariant"
+status = "non-authoritative"
 output_mode = "non_operational_output"
 
 owner = [

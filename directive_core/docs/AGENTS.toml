@@ -51,6 +51,50 @@ applies_to = [
 
 waivable = false
 
+_These rules apply to all agents, including human contributors, automation, validators, CI systems, and any delegated execution environment._
+
+# --- BEGIN NEW INVARIANT: NON-DESTRUCTIVE ACTIONS ONLY --- #
+
+[agent_action_constraints]
+
+# Absolute prohibitions — non-waivable
+prohibit_file_deletion = true
+prohibit_file_renaming = true
+prohibit_destructive_editing = true
+prohibit_subtractive_editing = true
+
+# Definitions (normative)
+destructive_editing_definition = """
+Any edit that removes, truncates, overwrites, or alters existing authoritative
+content such that information, intent, or governance meaning is lost.
+"""
+
+subtractive_editing_definition = """
+Any edit whose net effect is removal or reduction of existing content,
+including deletion of sections, lines, clauses, files, or anchors.
+"""
+
+allow_additive_editing_only = true
+
+additive_editing_definition = """
+Edits that strictly add new content without removing, renaming, relocating,
+or weakening existing content. Additions MUST preserve all prior meaning,
+authority, and auditability.
+"""
+
+# Enforcement semantics
+violation_behavior = [
+  "fail_closed",
+  "reject_action",
+  "emit_security_violation",
+  "quarantine_attempt"
+]
+
+# No exceptions
+exceptions_permitted = false
+waivers_permitted = false
+discretionary_override_permitted = false
+
 # ------------------------------------------------------------
 # SECTION 3 — SEMANTIC AMBIGUITY PROHIBITION (INVARIANT)
 # ------------------------------------------------------------
@@ -186,3 +230,5 @@ ambiguity_results_in = "rejection_only"
 # ------------------------------------------------------------
 # END OF AGENTS
 # ------------------------------------------------------------
+
+_These rules are non-waivable._

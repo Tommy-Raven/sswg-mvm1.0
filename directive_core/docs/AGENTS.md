@@ -16,7 +16,7 @@ owner = [
 init_purpose = "Define canonical agent governance for directive_core."
 init_authors = ["Tommy Raven"]
 ```
-#This document is non-authoritative, non-operational!!
+# This document is non-authoritative, non-operational!!
 Any markdown document must NEVER be used authoritatively or operatively. for authoritative source, view the TOML document-pair equivalent, `AGENTS.toml` in `directive_core/docs/`
 ## Canonical Header Format (Verbatim Pattern)
 

@@ -6,8 +6,10 @@ import tomllib
 
 CANONICAL_GOVERNANCE_ORDER = [
     "TERMINOLOGY.toml",
-    "SSWG_CONSTITUTION.toml",
     "AGENTS.toml",
+    "SSWG_CONSTITUTION.toml",
+    "SECURITY_INVARIANTS.toml",
+    "FORMAT_BOUNDARY_CONTRACT.toml",
     "ARCHITECTURE.toml",
     "FORMAL_GUARANTEES.toml",
     "REFERENCES.toml",

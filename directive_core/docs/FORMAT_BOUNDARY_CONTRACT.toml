@@ -15,7 +15,7 @@ owner = [
   "Tommy Raven (Thomas Byers)"
 ]
 
-init_purpose = "Define canonical format boundary flows and enforcement requirements."
+init_purpose = "Define canonical format boundary flows, authority surfaces, and enforcement requirements."
 init_authors = ["Tommy Raven"]
 
 # ------------------------------------------------------------
@@ -27,6 +27,7 @@ init_authors = ["Tommy Raven"]
 authoritative = true
 single_source_of_truth = true
 waivable = false
+mutable = false
 
 ingestion_position = 4
 must_exist = true
@@ -34,7 +35,7 @@ absence_is_fatal = true
 malformed_is_fatal = true
 
 # ------------------------------------------------------------
-# SECTION 2 — CANONICAL FORMAT ROLES
+# SECTION 2 — CANONICAL FORMAT ROLES AND AUTHORITY
 # ------------------------------------------------------------
 
 [formats]
@@ -48,6 +49,15 @@ yaml_authoritative = false
 markdown_authoritative = false
 toml_authoritative = true
 json_authoritative = true
+
+# JSON authority tightening
+json_derives_from_toml = true
+json_never_source_of_authority = true
+
+# Markdown authority tightening
+markdown_render_direction = "toml_to_markdown_only"
+markdown_roundtrip_forbidden = true
+markdown_never_ingested = true
 
 # ------------------------------------------------------------
 # SECTION 3 — ALLOWED FLOWS (EXHAUSTIVE)
@@ -81,6 +91,8 @@ sequence = [
   "machine"
 ]
 
+allowed_flows_exhaustive = true
+
 # ------------------------------------------------------------
 # SECTION 4 — FORBIDDEN FLOWS (ABSOLUTE)
 # ------------------------------------------------------------
@@ -102,6 +114,8 @@ reason = "Markdown is never authority-bearing"
 sequence = ["Markdown", "machine"]
 
 implicit_or_undocumented_flows_forbidden = true
+reverse_flows_forbidden = true
+roundtrip_flows_forbidden = true
 
 # ------------------------------------------------------------
 # SECTION 5 — GATE REQUIREMENTS
@@ -111,6 +125,7 @@ implicit_or_undocumented_flows_forbidden = true
 
 required = true
 executes_before_normalization = true
+executes_before_any_validation = true
 fail_closed = true
 
 public_error_label = "Semantic Ambiguity"
@@ -118,6 +133,7 @@ public_error_label = "Semantic Ambiguity"
 must_not_expose = [
   "rule_ids",
   "pattern_names",
+  "regex_signatures",
   "remediation_hints"
 ]
 
@@ -126,11 +142,13 @@ must_not_expose = [
 deterministic = true
 anchors_expanded = true
 implicit_structure_eliminated = true
+ordering_preserved = true
 
 [gates.toml_enforcement]
 
 schema_validation_required = true
 additional_properties_forbidden = true
+unknown_tables_forbidden = true
 
 # ------------------------------------------------------------
 # SECTION 6 — FAILURE SEMANTICS
@@ -142,14 +160,17 @@ on_violation = [
   "fail_closed",
   "reject_immediately",
   "quarantine_artifact",
-  "exclude_from_ingestion"
+  "exclude_from_ingestion",
+  "record_audit_event"
 ]
 
 public_message_generic = true
 guidance_forbidden = true
+interpretation_forbidden = true
 
 audit_logging_allowed = true
 audit_log_scope = "directive_core/artifacts/audit"
+audit_logs_append_only = true
 
 # ------------------------------------------------------------
 # END OF FORMAT_BOUNDARY_CONTRACT

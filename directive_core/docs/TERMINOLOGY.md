@@ -18,6 +18,11 @@ init_purpose = "Define the canonical terminology for SSWG/MVM governance and enf
 init_authors = ["Tommy Raven"]
 ```
 
+# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
+It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/TERMINOLOGY.toml`.
+
+
+
 ---
 
 ## Executive Summary

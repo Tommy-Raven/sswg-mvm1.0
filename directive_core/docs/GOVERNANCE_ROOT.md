@@ -17,6 +17,11 @@ init_purpose = "Ratify directive_core as the authoritative governance root. This
 init_authors = ["Tommy Raven"]
 ```
 
+# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
+It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/GOVERNANCE_ROOT.toml`.
+
+
+
 ## Governance Root Declaration
 
 - `directive_core/` is the single authoritative governance root for this repository.

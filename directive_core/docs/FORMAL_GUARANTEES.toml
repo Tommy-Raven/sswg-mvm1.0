@@ -143,7 +143,6 @@ Any behavior outside enforced guardrails is explicitly non-canonical.
 
 pre_baseline_documents_authoritative = false
 baseline_anchor_version = "1.0.0"
-
 documents_prior_to_baseline = "historical_only"
 
 # ------------------------------------------------------------

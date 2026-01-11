@@ -15,186 +15,155 @@ owner = [
 
 init_purpose = "Non-authoritative Markdown mirror of the canonical system architecture."
 init_authors = ["Tommy Raven"]
+```
+--- 
 
-⚠️ NOTICE — NON-AUTHORITATIVE DOCUMENT
+# ⚠️ NOTICE — NON-AUTHORITATIVE DOCUMENT
 
-This document is NON-AUTHORITATIVE and NON-OPERATIONAL.
+## This document is **NON-AUTHORITATIVE** and **NON-OPERATIONAL**.
 
-It exists solely as a human-readable mirror of the canonical architecture definition.
+It exists solely as a *human-readable mirror* of the canonical architecture definition.
 
 ALL authoritative governance, enforcement, and validation logic is sourced exclusively from:
 
-directive_core/docs/ARCHITECTURE.toml
+`directive_core/docs/ARCHITECTURE.toml`
 
-Markdown documents SHALL NEVER be treated as authoritative, contractual, or operational.
-
-
----
-
-System Architecture (Descriptive Mirror)
-
-> Terminology used herein follows TERMINOLOGY.toml, which is authoritative.
-
-
+*Markdown documents **SHALL NEVER** be treated as authoritative, contractual, or operational.*
 
 
 ---
 
-Architectural Intent
+## System Architecture (Descriptive Mirror)
 
-The sswg-mvm system is designed to enforce:
+> Terminology used herein follows `TERMINOLOGY.toml`, which is authoritative.
 
-deterministic artifact generation
+---
 
-invariant preservation
+## Architectural Intent
 
-bounded recursion
+The `sswg-mvm` system is designed to enforce:
 
-non-operational outputs only
+• deterministic artifact generation
+• invariant preservation
+• bounded recursion
+• non-operational outputs only
 
 
-The system is not conversational, does not emit procedures, and does not infer intent.
+**The system is not conversational, does not emit procedures, and does not infer intent.**
 
 
 ---
 
-Constitutional Dependencies
+## Constitutional Dependencies
 
 The architecture consumes governance authority from the following canonical documents, in ingestion order:
 
-1. TERMINOLOGY.toml
-
-
-2. AGENTS.toml
-
-
-3. SSWG_CONSTITUTION.toml
-
-
-4. FORMAT_BOUNDARY_CONTRACT.toml
-
-
+1. `TERMINOLOGY.toml`
+2. `AGENTS.toml`
+3. `SSWG_CONSTITUTION.toml`
+4. `FORMAT_BOUNDARY_CONTRACT.toml`
 
 If any of these documents are missing, malformed, or out of order, governance validation fails.
 
 
 ---
 
-Format Boundary Alignment
+## Format Boundary Alignment
 
 Authoritative format: TOML only
 
-Markdown is never authoritative
-
-YAML is never authoritative
-
+• **Markdown is NEVER authoritative**
+• **YAML is NEVER authoritative**
 
 All machine authority flows through the Format Boundary Contract.
 
 
 ---
 
-Semantic Ambiguity Alignment
+## Semantic Ambiguity Alignment
 
-Semantic ambiguity is treated as a security vulnerability.
+*Semantic ambiguity is treated as a **security vulnerability**.*
 
 The Semantic Ambiguity Gate executes before:
 
-normalization
-
-schema validation
-
-architectural enforcement
+- normalization
+- schema validation
+- architectural enforcement
 
 
 On detection of ambiguity:
 
-processing fails closed
-
-the artifact is rejected
-
-the artifact is quarantined
+- processing fails closed
+- the artifact is rejected
+- the artifact is quarantined
 
 
 
 ---
 
-High-Level Architecture Layers
+## High-Level Architecture Layers
 
 The system consists of the following layers:
 
 1. Artifact generation core
-
-
 2. Validation and invariant enforcement
-
-
 3. Bounded recursion engine
-
-
 4. Evaluation and gating
-
-
 5. Lineage and evidence management
-
-
 
 All layers fail closed and emit evidence.
 
 
 ---
 
-Component Overview
+## Component Overview
 
 Major components include:
 
-generator — artifact orchestration
+`generator` — artifact orchestration
 
-ai_validation — schema and invariant enforcement
+`ai_validation` — schema and invariant enforcement
 
-ai_graph — dependency graph construction
+`ai_graph` — dependency graph construction
 
-ai_recursive — bounded recursion engine
+`ai_recursive` — bounded recursion engine
 
-ai_evaluation — deterministic metrics
+`ai_evaluation` — deterministic metrics
 
-ai_memory — lineage tracking
+`ai_memory` — lineage tracking
 
-ai_visualization — non-operational exporters
+`ai_visualization` — non-operational exporters
 
-ai_monitoring — telemetry and logging
+`ai_monitoring` — telemetry and logging
 
-schemas — canonical JSON contracts
-
-
+`schemas` — canonical JSON contracts
 
 ---
 
-Artifact Generation Core
+### Artifact Generation Core
 
 The artifact generation core:
 
-enforces phase ordering
-
-resolves templates deterministically
-
-emits immutable outputs
-
-records lineage
+- enforces phase ordering
+  
+- resolves templates deterministically
+  
+- emits immutable outputs
+  
+- records lineage
+  
 
 
 
 ---
 
-Validation & Invariant Enforcement
+### Validation & Invariant Enforcement
 
 All artifacts pass through deterministic validation gates:
 
-JSON Schema validation
-
-root contract checks
-
-invariant enforcement
+- JSON Schema validation
+- root contract checks
+- invariant enforcement
 
 
 Violations result in fail-closed rejection with a recorded decision trace.
@@ -202,62 +171,56 @@ Violations result in fail-closed rejection with a recorded decision trace.
 
 ---
 
-Bounded Recursion Engine
+### Bounded Recursion Engine
 
 Recursive refinement is strictly bounded:
 
-explicit termination conditions required
-
-depth limits enforced
-
-cost limits enforced
-
-implicit self-expansion forbidden
+- explicit termination conditions required
+- depth limits enforced
+- cost limits enforced
+- implicit self-expansion forbidden
 
 
 Each recursion cycle emits:
 
-a candidate artifact
-
-an evaluation result
-
-an accept/reject decision
-
-an audit record
+- a candidate artifact
+- an evaluation result
+- an accept/reject decision
+- an audit record
 
 
 
 ---
 
-Evaluation & Gating
+### Evaluation & Gating
 
 Evaluation gates:
 
-use deterministic metrics
+- use deterministic metrics
 
-compare artifacts via diffs
+- compare artifacts via diffs
 
-apply explicit acceptance criteria
+- apply explicit acceptance criteria
 
 
-Unconstrained optimization is forbidden.
+**Unconstrained optimization is forbidden.**
 
 
 ---
 
-Reference Loop (Pre-Promotion)
+### Reference Loop (Pre-Promotion)
 
 A non-phase reference loop runs before promotion.
 
 It emits:
 
-benchmark evolution summaries
+- benchmark evolution summaries
 
-entropy budget verification
+- entropy budget verification
 
-convergence summaries
+- convergence summaries
 
-final output snapshots
+- final output snapshots
 
 
 These artifacts gate promotion without altering the PDL pipeline.
@@ -265,121 +228,119 @@ These artifacts gate promotion without altering the PDL pipeline.
 
 ---
 
-Lineage & Evidence Management
+### Lineage & Evidence Management
 
 Every artifact is traceable:
 
-parent-child relationships recorded
+- parent-child relationships recorded
 
-hashes and timestamps preserved
+- hashes and timestamps preserved
 
-decision traces stored
+- decision traces stored
 
-audit bundles supported
+- audit bundles supported
 
 
 
 ---
 
-Non-Operational Visualization
+### Non-Operational Visualization
 
 Visualization outputs are:
 
-descriptive only
+- descriptive only
 
-non-executable
+- non-executable
 
-authority-free
+- authority-free
 
+--- 
 
+### Failure Handling
 
----
-
-Failure Handling
-
-All critical paths fail closed.
+All critical paths **MUST** fail closed.
 
 Failure causes include:
 
-semantic ambiguity
+- semantic ambiguity
 
-schema validation failure
+- schema validation failure
 
-invariant violation
+- invariant violation
 
-recursion limits exceeded
+- recursion limits exceeded
 
-evaluation gate rejection
+- evaluation gate rejection
 
 
-Failures emit evidence artifacts.
+**Failures *MUST* emit evidence artifacts.**
 
 
 ---
 
-Extension Boundaries
+### Extension Boundaries
 
 Extensions may add:
 
-artifact templates
+- artifact templates
 
-evaluation metrics
+- evaluation metrics
 
-visualization formats
+- visualization formats
 
 
-Extensions must not:
+Extensions **MUST NOT**:
 
-weaken invariants
+- weaken invariants
 
-bypass validation
+- bypass validation
 
-emit operational outputs
+- emit operational outputs
 
-introduce ambiguity
+- introduce ambiguity
 
 
 
 ---
 
-Architectural Guarantees
+## Architectural Guarantees
 
 The architecture guarantees:
 
-determinism
+- determinism
 
-bounded recursion
+- bounded recursion
 
-complete lineage
+- complete lineage
 
-auditability
+- auditability
 
 
-Formal guarantees are defined in FORMAL_GUARANTEES.toml.
+**Formal guarantees are defined in `FORMAL_GUARANTEES.toml`**.
 
 
 ---
 
-Non-Goals
+## Non-Goals
 
 The system explicitly does not:
 
-produce operational instructions
+- produce operational instructions
 
-act autonomously
+- act autonomously
 
-infer intent
+- infer intent
 
-trust user authority
+- trust user authority
 
 
 
 ---
 
-End-of-Document Summary (Descriptive)
+### End-of-Document Summary (Descriptive)
 
-This Markdown document mirrors the canonical architecture for human readability only.
+This Markdown document *mirrors* the canonical architecture for human readability only.
 
 All enforcement, validation, and authority derive exclusively from the TOML source.
 
-Any discrepancy between this document and ARCHITECTURE.toml MUST be resolved in favor of the TOML.
+Any discrepancy between this document and `ARCHITECTURE.toml` **MUST** be resolved in favor of the TOML.

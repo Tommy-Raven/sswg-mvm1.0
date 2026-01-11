@@ -19,7 +19,7 @@ init_purpose = "Define the canonical system architecture and its enforced proper
 init_authors = ["Tommy Raven"]
 
 # ------------------------------------------------------------
-# SECTION 1 — ARCHITECTURAL INTENT
+# SECTION 1 — ARCHITECTURAL INTENT (INVARIANT)
 # ------------------------------------------------------------
 
 [intent]
@@ -31,9 +31,62 @@ non_operational_outputs_only = true
 
 system_is_conversational = false
 system_emits_procedures = false
+system_interprets_intent = false
 
 # ------------------------------------------------------------
-# SECTION 2 — HIGH-LEVEL ARCHITECTURE LAYERS
+# SECTION 2 — CONSTITUTIONAL DEPENDENCIES (MANDATORY)
+# ------------------------------------------------------------
+
+[constitutional_dependencies]
+
+consumes_authority_from = [
+  "TERMINOLOGY.toml",
+  "AGENTS.toml",
+  "SSWG_CONSTITUTION.toml",
+  "FORMAT_BOUNDARY_CONTRACT.toml"
+]
+
+ingestion_order_position = 5
+out_of_order_invalidates = true
+
+# ------------------------------------------------------------
+# SECTION 3 — FORMAT BOUNDARY ENFORCEMENT
+# ------------------------------------------------------------
+
+[format_boundary]
+
+authoritative_format = "toml"
+markdown_authoritative = false
+yaml_authoritative = false
+
+machine_consumes_authority_from = [
+  "toml_only"
+]
+
+format_boundary_contract = "FORMAT_BOUNDARY_CONTRACT.toml"
+
+# ------------------------------------------------------------
+# SECTION 4 — SEMANTIC AMBIGUITY ALIGNMENT
+# ------------------------------------------------------------
+
+[semantic_ambiguity_alignment]
+
+ambiguity_treated_as = "security_vulnerability"
+ambiguity_gate_required = true
+ambiguity_gate_executes_before = [
+  "normalization",
+  "schema_validation",
+  "architecture_enforcement"
+]
+
+ambiguity_failure_behavior = [
+  "fail_closed",
+  "reject_artifact",
+  "quarantine_artifact"
+]
+
+# ------------------------------------------------------------
+# SECTION 5 — HIGH-LEVEL ARCHITECTURE LAYERS
 # ------------------------------------------------------------
 
 [layers]
@@ -48,7 +101,7 @@ all_layers_fail_closed = true
 all_layers_emit_evidence = true
 
 # ------------------------------------------------------------
-# SECTION 3 — COMPONENT MAP
+# SECTION 6 — COMPONENT MAP
 # ------------------------------------------------------------
 
 [components]
@@ -64,7 +117,7 @@ ai_monitoring = "telemetry_and_logging"
 schemas = "canonical_json_contracts"
 
 # ------------------------------------------------------------
-# SECTION 4 — ARTIFACT GENERATION CORE
+# SECTION 7 — ARTIFACT GENERATION CORE
 # ------------------------------------------------------------
 
 [artifact_generation]
@@ -75,7 +128,7 @@ outputs_immutable = true
 lineage_recorded = true
 
 # ------------------------------------------------------------
-# SECTION 5 — VALIDATION AND INVARIANT ENFORCEMENT
+# SECTION 8 — VALIDATION AND INVARIANT ENFORCEMENT
 # ------------------------------------------------------------
 
 [validation]
@@ -88,7 +141,7 @@ violation_behavior = "fail_closed_rejection"
 decision_trace_recorded = true
 
 # ------------------------------------------------------------
-# SECTION 6 — BOUNDED RECURSION ENGINE
+# SECTION 9 — BOUNDED RECURSION ENGINE
 # ------------------------------------------------------------
 
 [recursion]
@@ -106,7 +159,7 @@ each_cycle_emits = [
 ]
 
 # ------------------------------------------------------------
-# SECTION 7 — EVALUATION AND GATING
+# SECTION 10 — EVALUATION AND GATING
 # ------------------------------------------------------------
 
 [evaluation]
@@ -118,7 +171,7 @@ acceptance_criteria_explicit = true
 optimization_without_constraints_forbidden = true
 
 # ------------------------------------------------------------
-# SECTION 8 — REFERENCE LOOP (PRE-PROMOTION)
+# SECTION 11 — REFERENCE LOOP (PRE-PROMOTION)
 # ------------------------------------------------------------
 
 [reference_loop]
@@ -134,7 +187,7 @@ emits_evidence = [
 ]
 
 # ------------------------------------------------------------
-# SECTION 9 — LINEAGE AND EVIDENCE MANAGEMENT
+# SECTION 12 — LINEAGE AND EVIDENCE MANAGEMENT
 # ------------------------------------------------------------
 
 [lineage]
@@ -146,7 +199,7 @@ decision_traces_recorded = true
 audit_bundles_supported = true
 
 # ------------------------------------------------------------
-# SECTION 10 — NON-OPERATIONAL VISUALIZATION
+# SECTION 13 — NON-OPERATIONAL VISUALIZATION
 # ------------------------------------------------------------
 
 [visualization]
@@ -156,7 +209,7 @@ outputs_descriptive_only = true
 authority_conveyed = false
 
 # ------------------------------------------------------------
-# SECTION 11 — FAILURE HANDLING
+# SECTION 14 — FAILURE HANDLING
 # ------------------------------------------------------------
 
 [failure_handling]
@@ -164,6 +217,7 @@ authority_conveyed = false
 fail_closed = true
 
 failure_causes = [
+  "semantic_ambiguity_detected",
   "schema_validation_failure",
   "invariant_violation",
   "recursion_limit_exceeded",
@@ -173,7 +227,7 @@ failure_causes = [
 failure_emits_artifacts = true
 
 # ------------------------------------------------------------
-# SECTION 12 — EXTENSION BOUNDARIES
+# SECTION 15 — EXTENSION BOUNDARIES
 # ------------------------------------------------------------
 
 [extensions]
@@ -187,11 +241,12 @@ may_add = [
 must_not = [
   "weaken_invariants",
   "bypass_validation",
-  "emit_operational_outputs"
+  "emit_operational_outputs",
+  "introduce_ambiguity"
 ]
 
 # ------------------------------------------------------------
-# SECTION 13 — ARCHITECTURAL GUARANTEES
+# SECTION 16 — ARCHITECTURAL GUARANTEES
 # ------------------------------------------------------------
 
 [guarantees]
@@ -204,7 +259,7 @@ auditability = true
 formal_guarantees_reference = "FORMAL_GUARANTEES.toml"
 
 # ------------------------------------------------------------
-# SECTION 14 — NON-GOALS
+# SECTION 17 — NON-GOALS
 # ------------------------------------------------------------
 
 [non_goals]

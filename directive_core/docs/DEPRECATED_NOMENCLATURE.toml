@@ -1,0 +1,62 @@
+[anchor]
+anchor_id = "deprecated_nomenclature"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+status = "invariant"
+output_mode = "non_operational_output"
+init_purpose = "Define deprecated nomenclature for directive_core."
+init_authors = ["Tommy Raven"]
+
+[deprecation_notice]
+title = "⚠️ DEPRECATION NOTICE — Naming Variants Prohibited"
+description = """
+The terms listed below are deprecated and must not appear in new or updated materials.
+Use only the canonical names SSWG/MVM (Uppercase = mindset and ethos) and sswg-mvm (Lowercase = software).
+Any derivation, expansion, or alternate branding is explicitly forbidden in updated content.
+"""
+
+[deprecated_naming_variants]
+
+derivations_from_sswg_mvm = [
+    "SSWG-MVM",
+    "SSWG–MVM",
+    "SSWG MVM",
+    "sswg mvm",
+    "SSWG Workflow Generator",
+    "AI Instructional Workflow Generator",
+    "AI Instructions Workflow Generator",
+    "SSWG Workflow Generator — MVM",
+    "Recursive_Grimoire",
+    "Recursive Grimoire"
+]
+
+deprecated_descriptive_or_marketing_terms = [
+    "Recursion",
+    "Recursive",
+    "Recursive AI",
+    "Recursive workflow generator",
+    "AI Workflow",
+    "Ai Generator",
+    "Workflow generator",
+    "Workflow Generator",
+    "Workflow Synthesis Engine",
+    "Meta-instructional synthesis engine",
+    "Meta-educational AI system",
+    "GenAI Instructional Workflow Engine",
+    "Meta-workflow engine",
+    "Instructional Workflow Generator",
+    "AI-assisted procedural framework",
+    "Instructional Framework Generator",
+    "GenAI Instructional Framework",
+    "GenAI Workflow System",
+    "Hybrid Neuro-Symbolic System",
+    "Neuro-symbolic architecture",
+    "Constitutional AI framework",
+    "Rule-governed generative system",
+    "Deterministic workflow synthesis engine",
+    "Reproducible workflow generator",
+    "GenAI Instructional Framework Specification",
+    "sswg-workflow"
+]

@@ -70,11 +70,11 @@ def _validate_terminology(data: Dict[str, Any], issues: List[Dict[str, str]]) ->
             _issue("constraint", "terminology block is required", "terminology")
         )
         return
-    if terminology.get("terminology_compliance") != "TERMINOLOGY.md@1.0.0":
+    if terminology.get("terminology_compliance") != "TERMINOLOGY.toml@1.0.0":
         issues.append(
             _issue(
                 "constraint",
-                "terminology_compliance must reference TERMINOLOGY.md@1.0.0",
+                "terminology_compliance must reference TERMINOLOGY.toml@1.0.0",
                 "terminology.terminology_compliance",
             )
         )
@@ -177,7 +177,7 @@ def validate_spec(path: Path) -> Dict[str, Any]:
     return {
         "metadata": {
             "artifact_type": "decision_trace",
-            "terminology_compliance": "TERMINOLOGY.md@1.0.0",
+            "terminology_compliance": "TERMINOLOGY.toml@1.0.0",
             "output_mode": "non_operational_output",
         },
         "result": result,

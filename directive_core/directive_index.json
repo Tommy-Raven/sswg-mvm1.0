@@ -16,6 +16,7 @@ anchor:
 ```
 
 {
+<<<<<<< HEAD
   "$schema": "schemas/directive_index.schema.json",
   "schema_version": "1.0.0",
   "canonical_path": "~/directive_core/directive_index.toml",
@@ -54,6 +55,80 @@ anchor:
       "directive_id": "sswg_references",
       "definition_path": "directive_core/definitions/references.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
+=======
+  "directive_core_version": "1.0.0",
+  "canonical_path": "directive_core",
+  "governance_root": "directive_core/docs",
+  "authoritative_format": "toml",
+
+  "governance_ingestion_order": [
+    "TERMINOLOGY.toml",
+    "AGENTS.toml",
+    "SSWG_CONSTITUTION.toml",
+    "SECURITY_INVARIANTS.toml",
+    "FORMAT_BOUNDARY_CONTRACT.toml",
+    "ARCHITECTURE.toml",
+    "FORMAL_GUARANTEES.toml",
+    "REFERENCES.toml",
+    "DEPRECATED_NOMENCLATURE.toml"
+  ],
+
+  "authoritative_governance": {
+    "SSWG_CONSTITUTION": {
+      "file": "SSWG_CONSTITUTION.toml",
+      "required": true,
+      "status": "invariant",
+      "enforcement_level": "constitutional",
+      "format": "toml",
+      "fail_on_missing": true,
+      "fail_on_malformed": true,
+      "fail_on_reorder": true
+>>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1
     }
-  ]
+  },
+
+  "governance_documents": {
+    "TERMINOLOGY": {
+      "file": "TERMINOLOGY.toml",
+      "format": "toml",
+      "required": true
+    },
+    "AGENTS": {
+      "file": "AGENTS.toml",
+      "format": "toml",
+      "required": true
+    },
+    "FORMAT_BOUNDARY_CONTRACT": {
+      "file": "FORMAT_BOUNDARY_CONTRACT.toml",
+      "format": "toml",
+      "required": true
+    },
+    "SECURITY_INVARIANTS": {
+      "file": "SECURITY_INVARIANTS.toml",
+      "format": "toml",
+      "required": true
+    },
+    "ARCHITECTURE": {
+      "file": "ARCHITECTURE.toml",
+      "format": "toml",
+      "required": true
+    },
+    "FORMAL_GUARANTEES": {
+      "file": "FORMAL_GUARANTEES.toml",
+      "format": "toml",
+      "required": true
+    },
+    "REFERENCES": {
+      "file": "REFERENCES.toml",
+      "format": "toml",
+      "required": true
+    }
+  },
+
+  "validation_policy": {
+    "fail_closed": true,
+    "semantic_ambiguity_gate_required": true,
+    "canonical_header_required": true,
+    "authoritative_format_enforced": true
+  }
 }

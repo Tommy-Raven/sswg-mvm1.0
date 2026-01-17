@@ -1,0 +1,187 @@
+# ============================================================
+# REFERENCES — CANONICAL VERSIONING AUTHORITY
+# ============================================================
+
+[anchor]
+anchor_id = "sswg_references"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define canonical references and ledger versioning rules for directive_core."
+init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION 1 — PURPOSE
+# ------------------------------------------------------------
+
+[purpose]
+
+defines_versioning_rules = true
+eliminates_ambiguity = true
+prevents_silent_drift = true
+
+baseline_established = true
+baseline_version = "1.0.0"
+
+# ------------------------------------------------------------
+# SECTION 2 — CANONICAL LEDGER VERSION ENCODING
+# ------------------------------------------------------------
+
+[ledger_versioning]
+
+model_field_required = true
+version_field_required = true
+
+required_anchor_model = "sswg+mvm+version"
+required_anchor_version = "1.0.0"
+
+split_required = true
+split_waivable = false
+
+# ------------------------------------------------------------
+# SECTION 3 — PROHIBITED FORMS
+# ------------------------------------------------------------
+
+[prohibited_encodings]
+
+embedded_versions_forbidden = true
+prefixed_versions_forbidden = true
+combined_identifiers_forbidden = true
+
+examples_forbidden = [
+  "sswg+mvm+v1.0.0",
+  "sswg+mvm@1.0.0",
+  "sswg+mvm-1.0.0",
+  "v1.0.0"
+]
+
+violation_behavior = "fail_closed"
+
+# ------------------------------------------------------------
+# SECTION 4 — SEMANTICS (NON-OVERLAPPING)
+# ------------------------------------------------------------
+
+[semantics]
+
+anchor_model_meaning = "governance_system_and_versioning_scheme"
+anchor_version_meaning = "semantic_baseline_number_only"
+
+semantic_version_format = "X.Y.Z"
+
+combined_string_usage_allowed_only_for = [
+  "git_tags",
+  "release_names",
+  "human_readable_prose"
+]
+
+combined_string_forbidden_in_metadata = true
+
+# ------------------------------------------------------------
+# SECTION 5 — STABILITY GUARANTEE
+# ------------------------------------------------------------
+
+[stability]
+
+anchor_model_mutability = "forbidden"
+anchor_version_advancement = "monotonic_only"
+
+silent_redefinition_forbidden = true
+reinterpretation_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 6 — CANONICAL BASELINE DEFINITION
+# ------------------------------------------------------------
+
+[baseline]
+
+anchor_version = "1.0.0"
+
+meaning = [
+  "first_validator_enforced_governance_baseline",
+  "completion_of_phase_2",
+  "transition_from_intent_to_enforcement"
+]
+
+not_a_software_release = true
+not_a_feature_completeness_signal = true
+
+# ------------------------------------------------------------
+# SECTION 7 — PRE-BASELINE DRAFTS
+# ------------------------------------------------------------
+
+[pre_baseline]
+
+authority = "none"
+status = "historical_only"
+
+examples = [
+  "1.2.0",
+  "v1.2.x",
+  "draft_versions"
+]
+
+usage_rules = [
+  "may_be_referenced_in_prose_only",
+  "must_be_labeled_non_canonical",
+  "must_not_be_enforced"
+]
+
+# ------------------------------------------------------------
+# SECTION 8 — AUTHORITY BOUNDARY
+# ------------------------------------------------------------
+
+[authority_boundary]
+
+at_or_after_baseline = [
+  "fail_closed_validation",
+  "mandatory_ingestion_order",
+  "authoritative_enforcement"
+]
+
+before_baseline = [
+  "non_authoritative",
+  "no_enforcement_guarantees"
+]
+
+# ------------------------------------------------------------
+# SECTION 9 — FORWARD EVOLUTION RULE
+# ------------------------------------------------------------
+
+[evolution]
+
+traceability_required = true
+explicit_deltas_required = true
+
+silent_changes_forbidden = true
+implicit_reinterpretation_forbidden = true
+retroactive_alteration_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 10 — END-OF-DOCUMENT SUMMARY (NORMATIVE)
+# ------------------------------------------------------------
+
+[summary]
+
+statement = """
+This document defines the non-negotiable rules for canonical ledger versioning
+within the SSWG/MVM governance system. It establishes anchor_version 1.0.0 as the
+first enforced baseline, mandates strict separation of governance identity and
+semantic versioning, and defines the authority boundary between drafts and
+enforced governance.
+
+Any document violating these rules is non-canonical and SHALL be rejected.
+"""
+
+summary_mandatory_in_future_docs = true
+
+# ------------------------------------------------------------
+# END OF REFERENCES
+# ------------------------------------------------------------

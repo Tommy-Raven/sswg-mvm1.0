@@ -10,7 +10,10 @@ from pathlib import Path
 from ai_evaluation.checkpoints import EvaluationCheckpointer
 from ai_cores.cli_arg_parser_core import build_parser, parse_args
 from ai_cores.deprecation_core import find_deprecation_banner_violations
-from ai_cores.governance_core import validate_governance_ingestion_order
+from ai_cores.governance_core import (
+    validate_canonical_header_format,
+    validate_governance_ingestion_order,
+)
 from jsonschema import Draft202012Validator
 from generator.determinism import (
     bijectivity_check,
@@ -341,6 +344,18 @@ def main() -> int:
                 message="Deprecated governance file lacks required non-authoritative banner",
                 phase_id="deprecation_banner_validation",
                 path=violation_path,
+            ),
+        )
+
+    _, header_errors = validate_canonical_header_format(repo_root)
+    if header_errors:
+        return _gate_failure(
+            failure_emitter,
+            args.run_id,
+            FailureLabel(
+                Type="governance_violation",
+                message=header_errors[0],
+                phase_id="governance_ingestion_order",
             ),
         )
 

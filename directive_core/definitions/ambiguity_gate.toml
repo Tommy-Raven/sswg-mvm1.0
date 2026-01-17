@@ -1,0 +1,85 @@
+[anchor]
+anchor_id = "ambiguity_gate_policy"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/definitions"
+status = "invariant"
+authority = true
+init_purpose = "Define deterministic ambiguity detection triggers and enforcement behavior. Any match SHALL result in rejection."
+description = "This gate evaluates prompts for linguistic ambiguity, obfuscation, and indirect circumvention based on strict pattern triggers. If any pattern matches, the prompt SHALL be rejected before execution."
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+[settings]
+match_mode = "any"  # "any" or "all" — match triggers enforcement
+action_on_match = "block"  # or "flag", "log", "review"
+case_sensitive = false
+explain_matches = true
+log_trigger = true
+
+[[trigger]]
+name = "implied_authority_language"
+description = "Implicit authority or validation assumed without declaration."
+pattern = '''\b((implicitly|implicitly understood|implied|assumed authority|assumed to be true|should be assumed|implicitly accepted|implicitly valid|naturally follows that|implied to be|presumed valid|goes without saying|taken for granted|assumed implicitly|without explicitly stating|left unsaid|naturally inferred|default assumption))\b'''
+
+[[trigger]]
+name = "interpretive_permission_language"
+description = "Subjective or open-to-interpretation phrasing to justify action."
+pattern = '''\b((may be interpreted as|open to interpretation|reasonable interpretation|interpreted in good faith|common sense implies|subject to perspective|can be seen as|viewed as acceptable|can be reasonably assumed|as some may interpret|by standard reasoning|could be construed as|widely accepted interpretation|perceived intent))\b'''
+
+[[trigger]]
+name = "operational_instruction_language"
+description = "Language giving step-by-step or process instructions."
+pattern = '''\b((step[- ]by[- ]step|follow these steps|as a guide|perform these actions|the next step is|carry out the procedure|sequence of instructions|execute these steps|how-to guide|tutorial format|execute the plan|carry out the steps|breakdown of actions|instructional model|directional statement|steps to achieve))\b'''
+
+[[trigger]]
+name = "roleplay_or_trusted_intent"
+description = "Simulation of a trusted identity or role to bypass constraints."
+pattern = '''\b((acting as|pretend you are|trusted intent|on behalf of a role|if I were you|assuming the role of|simulating trusted assistant|playing a character|playing the role|fictional scenario|within this narrative|as your assistant|as your guide|pretend assistant|story-mode prompt|if this were real))\b'''
+
+[[trigger]]
+name = "meta_instruction_loopholes"
+description = "Indirect or suggestive communication implying unsafe content."
+pattern = '''\b((you know what I mean|wink wink|if you catch my drift|say no more|you get the idea|fill in the blanks|between the lines|nudge nudge|if you know what’s good|just between us|hint hint|off the record|you get where I'm going|wink-wink-nudge-nudge|coded language|you get the gist))\b'''
+
+[[trigger]]
+name = "delegated_agency_language"
+description = "Shifts request agency to another party to avoid responsibility."
+pattern = '''\b((on behalf of|acting under orders|I was told to|following instructions from|external request|as requested by someone else|at their direction|delegated authority|tasked with this|someone told me to|relaying a message|by request of another|was passed on to me|I didn’t come up with this|under directive from another))\b'''
+
+[[trigger]]
+name = "plausible_deniability_phrases"
+description = "Uses disclaimers or hypotheticals to mask unsafe requests."
+pattern = '''\b((just an example|this is hypothetical|not to be taken seriously|in a hypothetical world|purely speculative|just saying|hypothetically speaking|thought experiment only|this is satire|don’t take this seriously|academic inquiry|if this were real life|fictional use-case only|mental exercise))\b'''
+
+[[trigger]]
+name = "simulated_decisionmaking"
+description = "Prompts framed as simulations or theoretical scenarios."
+pattern = '''\b((let's assume|in a scenario where|imagine if|suppose that|for the sake of argument|theoretically speaking|if it were the case that|assume this premise|consider this scenario|set the stage|hypothetically if true|if you could simulate|within this framework|mock situation|speculative setup))\b'''
+
+[[trigger]]
+name = "technical_implication_loopholes"
+description = "References specs or standards to imply permission."
+pattern = '''\b((as defined in RFC\s*\d+|according to spec|per the protocol|in the documentation|under compliance rules|by industry standard|standard procedure|per implementation detail|hidden in the API|in the backend logic|under spec version|silent behavior in spec|documented exception|via system configuration))\b'''
+
+[[trigger]]
+name = "nested_instruction_language"
+description = "Instructions embedded within instructions to mask intent."
+pattern = '''\b((inside this request|embedded message|recursive prompt|message within a message|hidden inside|buried content|interpret nested intent|interpretation layer|secondary message|recursive logic|payload hidden|interpret embedded|interpret carefully|under hidden conditions|deeply encoded|interpreted layer))\b'''
+
+[[trigger]]
+name = "semantic_confusion_tactics"
+description = "Wordplay or ambiguity designed to challenge interpretation."
+pattern = '''\b((technically speaking|arguably|depending on interpretation|it's debatable|from a certain point of view|semantic difference|may differ by definition|depends on framing|from legal perspective|philosophically valid|alternate reading|construed another way|as defined loosely|soft interpretation))\b'''
+
+[[trigger]]
+name = "contextual_exceptions"
+description = "Requests framed as special-case exceptions to policy."
+pattern = '''\b((except in this case|under special circumstances|in this rare case|edge scenario|context-specific exception|unique condition|only this one time|granted only here|rare usage case|contextually safe|if the use case is narrow|based on user background|isolated scenario|only in this thread))\b'''
+
+[[trigger]]
+name = "pseudo-legal_language"
+description = "Legal-sounding phrases used to justify restricted behavior."
+pattern = '''\b((in accordance with|under the clause|per the agreement|within the bounds of the law|legally permitted|statutorily allowed|compliant behavior|under safe harbor|statutory ambiguity|legal gray area|case-law precedent|regulatory flexibility|policy tolerance|under advisory review|policy-safe context))\b'''

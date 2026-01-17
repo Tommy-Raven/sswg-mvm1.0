@@ -22,7 +22,7 @@ anchor:
   status: draft
 
 terminology:
-  terminology_compliance: "TERMINOLOGY.md@1.0.0"
+  terminology_compliance: "TERMINOLOGY.toml@1.0.0"
   output_mode: non_operational_output
 
 cli:

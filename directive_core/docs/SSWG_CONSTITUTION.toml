@@ -1,0 +1,219 @@
+# ============================================================
+# SSWG_CONSTITUTION — SUPREME GOVERNANCE AUTHORITY
+# ============================================================
+
+[anchor]
+anchor_id = "sswg_constitution"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define the canonical SSWG constitution for governance."
+init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION 0 — EXECUTIVE SUMMARY
+# ------------------------------------------------------------
+
+[executive_summary]
+
+statement = """
+This Constitution is the highest-order normative authority of the SSWG/MVM
+governance system. It defines the foundational principles, authority boundaries,
+and enforcement guarantees that govern all directive definitions, schemas,
+validators, and governance documentation within directive_core/.
+
+All other governance artifacts derive their authority from this Constitution and
+are subordinate to it. Where ambiguity, conflict, or omission exists elsewhere,
+this document SHALL control.
+
+Effective at anchor_version 1.0.0, governance is machine-enforced, fail-closed,
+and auditable by design. All prior materials are preserved solely for historical
+context and confer no authority.
+"""
+
+# ------------------------------------------------------------
+# SECTION 1 — PURPOSE AND AUTHORITY
+# ------------------------------------------------------------
+
+[authority]
+
+supreme = true
+overridable = false
+
+precedence_rules = [
+  "constitution_over_all_documents",
+  "constitution_over_code_and_tools",
+  "constitution_over_runtime_behavior",
+  "constitution_over_contributor_intent"
+]
+
+source_of_legitimacy = [
+  "explicit_constitutional_declaration",
+  "deterministic_ingestion_order",
+  "validator_enforced_compliance"
+]
+
+implicit_authority_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 2 — SCOPE OF GOVERNANCE
+# ------------------------------------------------------------
+
+[scope]
+
+governed_domains = [
+  "directive_definitions",
+  "directive_schemas",
+  "governance_documentation",
+  "validation_and_enforcement_logic",
+  "audit_artifacts_and_evidence_bundles"
+]
+
+excluded_domains = [
+  "application_logic",
+  "business_logic",
+  "runtime_execution_outside_directive_core",
+  "non_governance_experiments"
+]
+
+# ------------------------------------------------------------
+# SECTION 3 — CANONICAL GOVERNANCE MODEL
+# ------------------------------------------------------------
+
+[canonical_model]
+
+required_anchor_model = "sswg+mvm+version"
+required_anchor_version = "1.0.0"
+
+header_format = "toml_only"
+yaml_authority_forbidden = true
+mixed_headers_forbidden = true
+
+baseline_meaning = [
+  "first_enforced_governance_baseline",
+  "completion_of_phase_2",
+  "transition_from_intent_to_enforcement"
+]
+
+# ------------------------------------------------------------
+# SECTION 4 — GOVERNANCE INGESTION ORDER
+# ------------------------------------------------------------
+
+[ingestion_order]
+
+order = [
+  "TERMINOLOGY",
+  "AGENTS",
+  "SSWG_CONSTITUTION",
+  "SECURITY_INVARIANTS",
+  "FORMAT_BOUNDARY_CONTRACT",
+  "ARCHITECTURE",
+  "FORMAL_GUARANTEES",
+  "REFERENCES",
+  "DEPRECATED_NOMENCLATURE"
+]
+
+order_enforced = true
+missing_document_is_fatal = true
+out_of_order_is_fatal = true
+
+precedence_rules = [
+  "terminology_is_binding",
+  "constitution_overrides_all",
+  "later_documents_may_refine_not_contradict"
+]
+
+# ------------------------------------------------------------
+# SECTION 5 — SEMANTIC AMBIGUITY GATE (MANDATORY)
+# ------------------------------------------------------------
+
+[semantic_ambiguity_gate]
+
+enabled = true
+position = "pre_ingestion"
+fail_closed = true
+
+executes_before = [
+  "ingestion_order_validation",
+  "anchor_validation",
+  "constitution_precedence",
+  "schema_validation"
+]
+
+on_detection = [
+  "hard_fail",
+  "emit_error_label",
+  "quarantine_artifact",
+  "exile_from_ingestion"
+]
+
+public_error_label = "Semantic Ambiguity"
+
+user_visible_diagnostics = "generic_only"
+rule_identifiers_exposed = false
+pattern_names_exposed = false
+
+remediation_process = [
+  "reject_immediately",
+  "explicit_reauthoring",
+  "terminology_refinement",
+  "semantic_model_retraining",
+  "full_reingestion"
+]
+
+interpretation_forbidden = true
+discretionary_bypass_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 6 — NAMING STATUS (CANONICAL)
+# ------------------------------------------------------------
+
+[naming]
+
+canonical_identifiers = [
+  "SSWG/MVM",
+  "sswg-mvm"
+]
+
+non_canonical_identifiers_forbidden = true
+deprecated_identifiers_location = "DEPRECATED_NOMENCLATURE"
+
+# ------------------------------------------------------------
+# SECTION 7 — EVOLUTION AND CHANGE CONTROL
+# ------------------------------------------------------------
+
+[evolution]
+
+versioned_changes_only = true
+traceability_required = true
+silent_modification_forbidden = true
+retroactive_reinterpretation_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 8 — END-OF-DOCUMENT SUMMARY (NORMATIVE)
+# ------------------------------------------------------------
+
+[summary]
+
+statement = """
+This Constitution establishes the absolute authority, scope, and enforcement
+guarantees of the SSWG/MVM governance system. It defines a single canonical
+baseline, mandates deterministic ingestion and precedence, and requires
+machine-enforced, fail-closed compliance.
+
+Any artifact violating this Constitution is non-canonical and SHALL be rejected.
+"""
+
+summary_required_in_future_constitutional_docs = true
+
+# ============================================================
+# END OF SSWG_CONSTITUTION
+# ============================================================

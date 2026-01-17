@@ -1,0 +1,213 @@
+# ============================================================
+# APPENDIX_GOVERNANCE_VALIDATION — DESCRIPTIVE GOVERNANCE MIRROR
+# ============================================================
+
+[anchor]
+anchor_id = "appendix_governance_validation"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "non_authoritative"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Provide a descriptive, non-authoritative appendix explaining governance validation behavior and semantic ambiguity extermination enforced elsewhere."
+init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION A.1 — PURPOSE (DESCRIPTIVE ONLY)
+# ------------------------------------------------------------
+
+[purpose]
+
+classification = "descriptive_appendix"
+authority_granted = false
+
+statement = """
+This appendix documents how governance validation operates under the
+SSWG/MVM system. It does not define authority, create policy, or grant
+enforcement power.
+
+All enforcement behavior described here is authoritatively defined
+in other TOML governance artifacts and enforced by validators.
+"""
+
+# ------------------------------------------------------------
+# SECTION A.2 — CANONICAL GOVERNANCE VALIDATION SURFACE
+# ------------------------------------------------------------
+
+[validation_surface]
+
+authoritative_locations = [
+  "directive_core/docs/",
+  "directive_core/definitions/"
+]
+
+authoritative_format = "toml"
+markdown_authoritative = false
+yaml_authoritative = false
+json_authoritative = false
+
+outside_surface_behavior = "ignored"
+
+# ------------------------------------------------------------
+# SECTION A.3 — CANONICAL LEDGER HEADER INVARIANT (DESCRIBED)
+# ------------------------------------------------------------
+
+[canonical_header_invariant]
+
+required = true
+authoritative_definition_location = "TERMINOLOGY.toml"
+
+constraints = [
+  "exactly_one_anchor",
+  "toml_only",
+  "no_yaml",
+  "no_json",
+  "no_markdown_authority"
+]
+
+violation_effect = "invalid_canonical_header"
+
+# ------------------------------------------------------------
+# SECTION A.4 — GOVERNANCE INGESTION ORDER (DESCRIBED)
+# ------------------------------------------------------------
+
+[ingestion_order]
+
+authoritative_source = "SSWG_CONSTITUTION.toml"
+strict = true
+fail_closed = true
+partial_ingestion_allowed = false
+
+failure_conditions = [
+  "missing_document",
+  "malformed_document",
+  "duplicate_document",
+  "out_of_order"
+]
+
+# ------------------------------------------------------------
+# SECTION A.5 — LEDGER FORMAT INVARIANT (DESCRIBED)
+# ------------------------------------------------------------
+
+[ledger_format]
+
+authoritative_format = "toml"
+markdown_mode = "non_operational_output"
+yaml_allowed_as_input_only = true
+
+machine_authority_sources = [
+  "toml_only"
+]
+
+# ------------------------------------------------------------
+# SECTION A.6 — SEMANTIC AMBIGUITY EXTERMINATION DOCTRINE
+# ------------------------------------------------------------
+
+[semantic_ambiguity]
+
+classification = "security_vulnerability"
+stylistic_issue = false
+waivable = false
+
+definition = """
+Any language that allows multiple interpretations, implied authority,
+contextual exceptions, inferred intent, or delegated responsibility.
+"""
+
+# ------------------------------------------------------------
+# SECTION A.7 — SEMANTIC AMBIGUITY GATE (DESCRIBED)
+# ------------------------------------------------------------
+
+[semantic_ambiguity_gate]
+
+required = true
+deterministic = true
+fail_closed = true
+
+executes_before = [
+  "normalization",
+  "schema_validation",
+  "governance_ingestion"
+]
+
+public_error_label = "Semantic Ambiguity"
+
+must_not_expose = [
+  "rule_identifiers",
+  "trigger_names",
+  "regex_patterns",
+  "remediation_hints"
+]
+
+# ------------------------------------------------------------
+# SECTION A.8 — AMBIGUITY EXTERMINATION SEMANTICS
+# ------------------------------------------------------------
+
+[ambiguity_response]
+
+on_detection = [
+  "reject_artifact",
+  "quarantine_artifact",
+  "halt_processing"
+]
+
+repair_allowed = false
+interpretation_allowed = false
+contextualization_allowed = false
+
+# ------------------------------------------------------------
+# SECTION A.9 — AMBIGUITY GATE GOVERNANCE STRUCTURE
+# ------------------------------------------------------------
+
+[ambiguity_gate_governance]
+
+required_artifacts = [
+  "ambiguity_gate_spec",
+  "ambiguity_gate_invariant",
+  "ambiguity_gate_policy"
+]
+
+specification_authoritative = false
+invariant_authoritative = true
+policy_authoritative = true
+
+absence_behavior = "governance_failure"
+
+# ------------------------------------------------------------
+# SECTION A.10 — FORBIDDEN LANGUAGE CLASSES (DESCRIBED)
+# ------------------------------------------------------------
+
+[forbidden_language_examples]
+
+examples = [
+  "allow unless explicitly waived",
+  "may be interpreted as",
+  "under special circumstances",
+  "depending on context",
+  "reasonable interpretation",
+  "except in this case"
+]
+
+detection_effect = "semantic_ambiguity_failure"
+
+# ------------------------------------------------------------
+# SECTION A.11 — VALIDATOR BINDING (DESCRIBED)
+# ------------------------------------------------------------
+
+[validator_behavior]
+
+enforcement_source = "authoritative_toml_only"
+fail_closed = true
+deterministic = true
+interpretive_repair = false
+internal_details_exposed = false
+
+# ------------------------------------------------------------
+# END OF APPENDIX_GOVERNANCE_VALIDATION
+# ------------------------------------------------------------

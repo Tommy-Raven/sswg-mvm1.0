@@ -1,20 +1,27 @@
-# Canonic Ledger
+# === CANONIC LEDGER (TOML) ===
 
-```yaml
-anchor:
-  anchor_id: "sswg_constitution"
-  anchor_model: "sswg+mvm+version"
-  anchor_version: "1.0.0"
-  scope: "directive_core/docs"
-  owner:
-    - "2025© Raven Recordings"
-    - "Tommy Raven (Thomas Byers)"
-  status: "invariant"
-  output_mode: "non_operational_output"
-  init_purpose: "Define the canonical SSWG constitution for governance."
-  init_authors:
-    - "Tommy Raven"
+```toml
+[anchor]
+anchor_id = "sswg_constitution"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define the canonical SSWG constitution for governance."
+init_authors = ["Tommy Raven"]
 ```
+
+# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
+It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/SSWG_CONSTITUTION.toml`.
+
+
 
 --- 
 
@@ -77,14 +84,19 @@ This Constitution **SHALL NEVER** govern:
 
 All canonical governance documents **MUST** declare their identity using the following anchor encoding:
 
-```yaml
-anchor_model: "sswg+mvm+version"
-anchor_version: "1.0.0"
+```toml
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
 ```
 
 This encoding establishes the governance system and the semantic baseline version independently. Any deviation **SHALL** result in validation failure.
 
-### 3.2 Baseline Declaration
+### 3.2 Canonical Header Format Invariant
+
+All canonical governance headers SHALL be expressed exclusively in TOML.
+YAML SHALL NEVER be authoritative.
+
+### 3.3 Baseline Declaration
 
 The value `anchor_version: 1.0.0` denotes the **first enforced governance baseline**, corresponding to the completion of Phase 2 governance enforcement.
 
@@ -101,10 +113,11 @@ Governance documents **MUST** be ingested in the following exact order:
 1. `TERMINOLOGY.md`
 2. `AGENTS.md`
 3. `SSWG_CONSTITUTION.md`
-4. `ARCHITECTURE.md`
-5. `FORMAL_GUARANTEES.md`
-6. `REFERENCES.md`
-7. `deprecated_nomenclature.md`
+4. `FORMAT_BOUNDARY_CONTRACT.md`
+5. `ARCHITECTURE.md`
+6. `FORMAL_GUARANTEES.md`
+7. `REFERENCES.md`
+8. `deprecated_nomenclature.md`
 
 Missing, malformed, or out-of-order ledger documents **SHALL** cause governance validation failure.
 

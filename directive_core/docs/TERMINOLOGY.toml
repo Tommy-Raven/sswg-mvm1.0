@@ -1,0 +1,119 @@
+# ============================================================
+# TERMINOLOGY — CANONICAL GOVERNANCE LEXICON (AUTHORITATIVE)
+# ============================================================
+
+[anchor]
+anchor_id = "terminology"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define the canonical terminology for SSWG/MVM governance and enforcement."
+init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION 1 — AUTHORITY AND INGESTION PRECEDENCE
+# ------------------------------------------------------------
+
+[terminology.authority]
+
+highest_semantic_authority = true
+first_ingestion_layer = true
+supersedes_all_other_definitions = true
+
+undefined_terms_forbidden = true
+terminology_violation_is_fatal = true
+
+# ------------------------------------------------------------
+# SECTION 2 — CORE GOVERNANCE PRINCIPLES
+# ------------------------------------------------------------
+
+[terminology.principles]
+
+system_enforces_constraints = true
+system_does_not_infer_intent = true
+authority_must_be_explicit = true
+outputs_are_non_operational = true
+determinism_is_phase_scoped = true
+ambiguity_is_security_vulnerability = true
+
+# ------------------------------------------------------------
+# SECTION 3 — NAMING DISCIPLINE
+# ------------------------------------------------------------
+
+[naming]
+
+software_name = "sswg-mvm"
+mindset_name = "SSWG/MVM"
+
+allowed_variants = [
+  "SSWG/MVM",
+  "sswg-mvm"
+]
+
+deprecated_variants_forbidden = true
+
+concept_format = "snake_case"
+constant_format = "UPPERCASE"
+anchor_format = "toml_block_only"
+
+# ------------------------------------------------------------
+# SECTION 4 — CORE TERM DEFINITIONS (NORMATIVE)
+# ------------------------------------------------------------
+
+[definitions]
+
+invariant = "A property that MUST ALWAYS remain true and is immutable."
+constraint = "A rule that may evolve but MUST NOT violate invariants."
+artifact = "A non-operational, inspectable output produced for audit or validation."
+non_operational_output = "Content that CANNOT be executed or followed to perform actions."
+fail_closed = "A failure mode where uncertainty results in rejection, not approximation."
+
+semantic_ambiguity = "Any condition permitting multiple plausible interpretations of authority, scope, or behavior."
+
+canonical_header = "The first authority-bearing TOML block defining anchor metadata."
+
+# ------------------------------------------------------------
+# SECTION 5 — FORBIDDEN LANGUAGE CATEGORIES
+# ------------------------------------------------------------
+
+[terminology.forbidden_language]
+
+implied_authority = true
+inferred_intent = true
+procedural_instruction = true
+trust_based_claims = true
+
+# ------------------------------------------------------------
+# SECTION 6 — ENFORCEMENT REQUIREMENTS
+# ------------------------------------------------------------
+
+[terminology.enforcement]
+
+validators_must_enforce = true
+ambiguity_triggers_failure = true
+reinterpretation_forbidden = true
+clarification_forbidden = true
+
+# ------------------------------------------------------------
+# SECTION 7 — FAILURE BEHAVIOR
+# ------------------------------------------------------------
+
+[terminology.failure_behavior]
+
+on_violation = [
+  "fail_closed",
+  "emit_semantic_ambiguity",
+  "halt_ingestion"
+]
+
+# ------------------------------------------------------------
+# END OF TERMINOLOGY
+# ------------------------------------------------------------

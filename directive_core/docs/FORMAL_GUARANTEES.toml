@@ -1,0 +1,150 @@
+# ============================================================
+# FORMAL_GUARANTEES — AUTHORITATIVE GOVERNANCE CONTRACT
+# ============================================================
+
+[anchor]
+anchor_id = "formal_guarantees"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define the formal guarantees and explicit non-guarantees of the SSWG/MVM system."
+init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# SECTION 1 — SCOPE
+# ------------------------------------------------------------
+
+[scope]
+
+applies_to = [
+  "recursion_termination",
+  "recursion_convergence",
+  "evaluation_gating",
+  "bounded_refinement"
+]
+
+governed_runtime = "sswg_mvm"
+authority_source = "directive_core"
+
+# ------------------------------------------------------------
+# SECTION 2 — TERMINATION AND CONVERGENCE STATUS
+# ------------------------------------------------------------
+
+[recursion.convergence]
+
+formally_proven = false
+guarantee_type = "heuristic_only"
+
+statement = """
+Convergence is not formally proven. The system does not provide a mathematical
+proof of convergence for recursive refinement across all workflows, templates,
+or evaluation regimes.
+"""
+
+# ------------------------------------------------------------
+# SECTION 3 — TERMINATION GUARANTEE MECHANISM
+# ------------------------------------------------------------
+
+[recursion.termination]
+
+guaranteed_by = "enforced_guardrails"
+implicit_termination_forbidden = true
+
+mechanism_description = """
+Termination is guaranteed exclusively through explicit guardrails and enforced
+policy limits. These guardrails are treated as formal assumptions and are
+mandatory for all recursion entry points.
+"""
+
+# ------------------------------------------------------------
+# SECTION 4 — REQUIRED GUARDRAILS (MANDATORY)
+# ------------------------------------------------------------
+
+[recursion.guardrails]
+
+termination_condition_required = true
+missing_termination_condition_is_fatal = true
+
+hard_limits_required = true
+max_depth_enforced = true
+max_children_enforced = true
+
+cost_budget_required = true
+cost_budget_enforced = true
+
+checkpoint_gating_enabled = true
+checkpoint_ratio_enforced = true
+
+audit_trail_required = true
+audit_trail_immutable = true
+
+implementation_reference = "ai_recursive/recursion_manager.py"
+
+# ------------------------------------------------------------
+# SECTION 5 — FORMAL ASSUMPTIONS
+# ------------------------------------------------------------
+
+[[formal_assumption]]
+id = "guardrails_enabled"
+statement = "Guardrails MUST be enabled for any recursion call site."
+
+[[formal_assumption]]
+id = "policy_limits_finite"
+statement = "All recursion policy limits MUST be finite and enforced without override."
+
+[[formal_assumption]]
+id = "termination_declared"
+statement = "Termination conditions MUST be explicitly declared and recorded."
+
+assumptions_mandatory = true
+assumptions_waivable = false
+
+# ------------------------------------------------------------
+# SECTION 6 — VALIDATION REQUIREMENTS
+# ------------------------------------------------------------
+
+[validation]
+
+recursion_policy_reviews_required = true
+guardrail_presence_validated = true
+assumptions_validated = true
+
+violation_behavior = "fail_closed"
+
+# ------------------------------------------------------------
+# SECTION 7 — NON-GUARANTEES (EXPLICIT)
+# ------------------------------------------------------------
+
+[non_guarantees]
+
+global_convergence = false
+optimality = false
+completeness = false
+termination_without_guardrails = false
+
+statement = """
+No guarantees are made regarding global convergence, optimality, or completeness.
+Any behavior outside enforced guardrails is explicitly non-canonical.
+"""
+
+# ------------------------------------------------------------
+# SECTION 8 — AUTHORITY BOUNDARY
+# ------------------------------------------------------------
+
+[authority]
+
+pre_baseline_documents_authoritative = false
+baseline_anchor_version = "1.0.0"
+documents_prior_to_baseline = "historical_only"
+
+# ------------------------------------------------------------
+# END OF FORMAL_GUARANTEES
+# ------------------------------------------------------------

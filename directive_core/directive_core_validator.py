@@ -1,148 +1,187 @@
 #!/usr/bin/env python3
 """
-directive_core/directive_core_validator.py — Directive core validation gate.
+directive_core_validator.py
 
-Validates:
-- directive_index.json against directive_index.schema.json
-- canonical_path normalization against the computed directive_core root
-- directive definition JSON files against their schemas
+Canonical governance ingestion and enforcement validator for SSWG/MVM.
+
+This validator enforces:
+- Governance ingestion order
+- Canonical TOML-only ledger headers
+- Mandatory invariants
+- Semantic Ambiguity Gate presence and wiring
+- Fail-closed behavior on ambiguity or authority violations
+
+This module MUST remain deterministic and side-effect free.
 """
 
-from __future__ import annotations
-
-import json
 from pathlib import Path
-from typing import Any, Iterable
-
-from ai_cores.schema_core import validate_artifact
-
-CORE_ROOT = Path(__file__).resolve().parent
-REPO_ROOT = CORE_ROOT.parent
-INDEX_PATH = CORE_ROOT / "directive_index.json"
-SCHEMAS_DIR = CORE_ROOT / "schemas"
-DEFINITIONS_DIR = CORE_ROOT / "definitions"
+import tomllib
+import re
+import sys
+from typing import List, Dict
 
 
-def _load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+# ============================================================
+# Constants
+# ============================================================
+
+DIRECTIVE_ROOT = Path(__file__).resolve().parent
+DOCS_DIR = DIRECTIVE_ROOT / "docs"
+DEFINITIONS_DIR = DIRECTIVE_ROOT / "definitions"
+
+REQUIRED_GOVERNANCE_ORDER = [
+    "TERMINOLOGY.toml",
+    "AGENTS.toml",
+    "SSWG_CONSTITUTION.toml",
+    "SECURITY_INVARIANTS.toml",
+    "FORMAT_BOUNDARY_CONTRACT.toml",
+    "ARCHITECTURE.toml",
+    "FORMAL_GUARANTEES.toml",
+    "REFERENCES.toml",
+]
+
+REQUIRED_AMBIGUITY_FILES = {
+    "spec": DEFINITIONS_DIR / "ambiguity_gate_spec.toml",
+    "invariant": DEFINITIONS_DIR / "ambiguity_gate_invariant.toml",
+    "policy": DEFINITIONS_DIR / "ambiguity_gate.toml",
+}
+
+PUBLIC_ERROR_AMBIGUITY = "Semantic Ambiguity"
+PUBLIC_ERROR_HEADER = "Invalid Canonical Header"
+PUBLIC_ERROR_GOVERNANCE = "Governance Validation Failure"
 
 
-def _normalize_path(value: str) -> str:
-    return Path(value).as_posix().rstrip("/")
+# ============================================================
+# Utilities
+# ============================================================
+
+def fail(message: str) -> None:
+    print(message, file=sys.stderr)
+    sys.exit(1)
 
 
-def _relative_to_repo(path: Path) -> str:
+def load_toml(path: Path) -> Dict:
     try:
-        return path.relative_to(REPO_ROOT).as_posix()
-    except ValueError:
-        return path.as_posix()
+        with path.open("rb") as f:
+            return tomllib.load(f)
+    except Exception:
+        fail(f"{PUBLIC_ERROR_HEADER}: {path.name}")
 
 
-def _format_schema_errors(errors: Iterable[dict]) -> list[str]:
-    formatted: list[str] = []
-    for error in errors:
-        message = error.get("message", "Schema validation error")
-        path = "/".join(str(part) for part in error.get("path", []))
-        formatted.append(f"{message} (path: {path or 'root'})")
-    return formatted
+# ============================================================
+# Canonical Header Validation
+# ============================================================
+
+def validate_anchor(anchor: Dict, *, require_authority: bool | None = None) -> None:
+    required_fields = {
+        "anchor_id",
+        "anchor_model",
+        "anchor_version",
+        "scope",
+        "status",
+        "authority",
+        "owner",
+        "init_purpose",
+        "init_authors",
+    }
+
+    missing = required_fields - anchor.keys()
+    if missing:
+        fail(PUBLIC_ERROR_HEADER)
+
+    if require_authority is not None:
+        if anchor.get("authority") is not require_authority:
+            fail(PUBLIC_ERROR_HEADER)
 
 
-def validate_directive_core() -> list[str]:
-    errors: list[str] = []
+def validate_single_anchor(toml_data: Dict) -> Dict:
+    if "anchor" not in toml_data:
+        fail(PUBLIC_ERROR_HEADER)
 
-    if not INDEX_PATH.exists():
-        return [f"Missing directive index: {INDEX_PATH}"]
-
-    index = _load_json(INDEX_PATH)
-    index_errors = validate_artifact(index, SCHEMAS_DIR, "directive_index.schema.json")
-    if index_errors:
-        errors.extend(
-            f"directive_index.json: {message}"
-            for message in _format_schema_errors(index_errors)
-        )
-
-    canonical_path = _normalize_path(index.get("canonical_path", ""))
-    computed_core_root = _normalize_path(_relative_to_repo(CORE_ROOT))
-    if canonical_path != computed_core_root:
-        errors.append(
-            "directive_index.json: canonical_path mismatch "
-            f"(expected '{computed_core_root}', got '{canonical_path}')"
-        )
-
-    definitions = index.get("definitions", [])
-    seen_directive_ids: set[str] = set()
-    listed_definition_paths: set[str] = set()
-
-    for entry in definitions:
-        directive_id = entry.get("directive_id")
-        definition_path = entry.get("definition_path")
-        schema_path = entry.get("schema_path")
-        if directive_id in seen_directive_ids:
-            errors.append(f"Duplicate directive_id in index: {directive_id}")
-        seen_directive_ids.add(directive_id)
-
-        if not definition_path or not schema_path:
-            continue
-
-        normalized_definition_path = _normalize_path(definition_path)
-        listed_definition_paths.add(normalized_definition_path)
-        definition_full_path = REPO_ROOT / normalized_definition_path
-        schema_full_path = REPO_ROOT / _normalize_path(schema_path)
-
-        if not definition_full_path.exists():
-            errors.append(f"Missing directive definition: {definition_full_path}")
-            continue
-        if not schema_full_path.exists():
-            errors.append(f"Missing directive schema: {schema_full_path}")
-            continue
-
-        definition = _load_json(definition_full_path)
-        definition_errors = validate_artifact(
-            definition,
-            schema_full_path.parent,
-            schema_full_path.name,
-        )
-        if definition_errors:
-            errors.extend(
-                f"{definition_full_path}: {message}"
-                for message in _format_schema_errors(definition_errors)
-            )
-
-        if directive_id and definition.get("directive_id") != directive_id:
-            errors.append(
-                f"{definition_full_path}: directive_id mismatch "
-                f"(index '{directive_id}', definition '{definition.get('directive_id')}')"
-            )
-        if directive_id and definition.get("anchor_id") != directive_id:
-            errors.append(
-                f"{definition_full_path}: anchor_id mismatch "
-                f"(expected '{directive_id}', got '{definition.get('anchor_id')}')"
-            )
-
-        source_path = definition.get("source_path")
-        if source_path:
-            source_full_path = REPO_ROOT / _normalize_path(source_path)
-            if not source_full_path.exists():
-                errors.append(f"{definition_full_path}: missing source_path {source_full_path}")
-
-    if DEFINITIONS_DIR.exists():
-        for path in DEFINITIONS_DIR.rglob("*.json"):
-            relative_path = _normalize_path(_relative_to_repo(path))
-            if relative_path not in listed_definition_paths:
-                errors.append(f"Unregistered directive definition: {relative_path}")
-
-    return errors
+    validate_anchor(toml_data["anchor"])
+    return toml_data["anchor"]
 
 
-def main() -> int:
-    errors = validate_directive_core()
-    if errors:
-        for error in errors:
-            print(error)
-        return 1
-    print("directive_core validation passed")
-    return 0
+# ============================================================
+# Governance Ingestion Order
+# ============================================================
+
+def validate_governance_ingestion_order() -> None:
+    present = sorted(
+        p.name for p in DOCS_DIR.glob("*.toml")
+        if p.name in REQUIRED_GOVERNANCE_ORDER
+    )
+
+    if present != REQUIRED_GOVERNANCE_ORDER[:len(present)]:
+        fail(PUBLIC_ERROR_GOVERNANCE)
+
+
+# ============================================================
+# Ambiguity Gate Enforcement
+# ============================================================
+
+def load_ambiguity_gate() -> None:
+    # Ensure all required files exist
+    for path in REQUIRED_AMBIGUITY_FILES.values():
+        if not path.exists():
+            fail(PUBLIC_ERROR_GOVERNANCE)
+
+    # Load and validate anchors
+    spec = load_toml(REQUIRED_AMBIGUITY_FILES["spec"])
+    inv = load_toml(REQUIRED_AMBIGUITY_FILES["invariant"])
+    policy = load_toml(REQUIRED_AMBIGUITY_FILES["policy"])
+
+    validate_single_anchor(spec)
+    validate_anchor(inv.get("anchor", {}), require_authority=True)
+    validate_anchor(policy.get("anchor", {}), require_authority=True)
+
+    # Spec MUST be non-authoritative
+    if spec["anchor"].get("authority") is not False:
+        fail(PUBLIC_ERROR_GOVERNANCE)
+
+    # Invariant + policy MUST be authoritative
+    if not inv["anchor"].get("authority"):
+        fail(PUBLIC_ERROR_GOVERNANCE)
+
+    if not policy["anchor"].get("authority"):
+        fail(PUBLIC_ERROR_GOVERNANCE)
+
+    # Policy MUST define triggers
+    triggers = policy.get("trigger")
+    if not triggers or not isinstance(triggers, list):
+        fail(PUBLIC_ERROR_GOVERNANCE)
+
+    # Compile regexes to ensure determinism and validity
+    for trig in triggers:
+        pattern = trig.get("pattern")
+        if not pattern:
+            fail(PUBLIC_ERROR_GOVERNANCE)
+        try:
+            re.compile(pattern, re.IGNORECASE)
+        except re.error:
+            fail(PUBLIC_ERROR_GOVERNANCE)
+
+
+# ============================================================
+# YAML / Markdown Leakage Guard
+# ============================================================
+
+def validate_no_yaml_ledgers() -> None:
+    illegal = list(DOCS_DIR.glob("*.md")) + list(DOCS_DIR.glob("*.yaml")) + list(DOCS_DIR.glob("*.yml"))
+    if illegal:
+        fail(PUBLIC_ERROR_GOVERNANCE)
+
+
+# ============================================================
+# Entry Point
+# ============================================================
+
+def run() -> None:
+    validate_governance_ingestion_order()
+    validate_no_yaml_ledgers()
+    load_ambiguity_gate()
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    run()
+    

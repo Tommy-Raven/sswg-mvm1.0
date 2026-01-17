@@ -1,0 +1,70 @@
+# === CANONIC LEDGER (TOML) ===
+[anchor]
+anchor_id = "security_invariants"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define non-negotiable security invariants governing authority, ambiguity, and agent behavior."
+init_authors = ["Tommy Raven"]
+
+# --------------------------------------------------
+# SECURITY AXIOMS (DERIVED, NON-NEGOTIABLE)
+# --------------------------------------------------
+
+[invariant.ambiguity_is_vulnerability]
+statement = "Semantic ambiguity SHALL be treated as a security vulnerability, not a documentation defect."
+enforcement = "fail_closed"
+rationale = "Ambiguity enables authority laundering, scope escalation, and validator bypass."
+
+[invariant.no_interpretation]
+statement = "No agent, validator, or system component SHALL interpret, resolve, or clarify ambiguous authority-bearing language."
+enforcement = "reject"
+rationale = "Interpretation introduces discretionary authority and undermines determinism."
+
+[invariant.pre_ingestion_gate]
+statement = "All artifacts SHALL pass Semantic Ambiguity detection prior to any ingestion, normalization, or validation step."
+enforcement = "mandatory_order"
+rationale = "Downstream validation is unsafe if ambiguity exists upstream."
+
+[invariant.no_conditional_authority]
+statement = "Conditional permission constructs (e.g. 'allowed unless', 'except when approved') SHALL NEVER be used in governance."
+enforcement = "absolute_prohibition"
+rationale = "Conditional language embeds hidden exception paths."
+
+[invariant.fail_closed_authority]
+statement = "Any uncertainty regarding authority, scope, or intent SHALL result in rejection, not approximation."
+enforcement = "fail_closed"
+rationale = "Security requires explicit permission, never inferred allowance."
+
+[invariant.no_destructive_editing]
+statement = "Agents SHALL NEVER delete, rename, or subtractively modify canonical artifacts."
+enforcement = "constructive_only"
+rationale = "Subtractive edits erase auditability and enable silent weakening."
+
+[invariant.additive_only_changes]
+statement = "All canonical modifications SHALL be additive, explicitly delimited, and reviewable."
+enforcement = "diff_enforced"
+rationale = "Governance evolution must preserve lineage and intent."
+
+[invariant.no_authority_from_examples]
+statement = "Examples, illustrations, or demonstrations SHALL NEVER confer authority or override invariants."
+enforcement = "non_authoritative"
+rationale = "Authority derives only from canonical governance, not narrative context."
+
+# --------------------------------------------------
+# ENFORCEMENT REQUIREMENTS
+# --------------------------------------------------
+
+[enforcement]
+validators_must_enforce = true
+order_sensitive = true
+waivers_permitted = false
+error_label = "Security Invariant Violation"

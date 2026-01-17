@@ -1,19 +1,26 @@
-# Canonic Ledger
-```yaml
-  anchor: 
-    anchor_id: "sswg_references" 
-    anchor_model: "sswg+mvm+version" 
-    anchor_version: "1.0.0" 
-    scope: "directive_core/docs" 
-    owner: 
-      - "2025© Raven Recordings" 
-      - "Tommy Raven (Thomas Byers)" 
-    status: "invariant" 
-    output_mode: "non_operational_output" 
-    init_purpose: "Define canonical references for directive_core." 
-    init_authors: 
-      - "Tommy Raven" 
+# === CANONIC LEDGER (TOML) ===
+```toml
+[anchor]
+anchor_id = "sswg_references"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define canonical references for directive_core."
+init_authors = ["Tommy Raven"]
 ```
+
+# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
+It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/REFERENCES.toml`.
+
+
 ## Executive Summary
 
 This document establishes the **canonical ledger versioning rules** for the SSWG/MVM governance system. It defines, in normative and enforceable terms, how governance documents identify themselves, how version authority is encoded, and where the boundary between *draft history* and *enforced governance* is drawn.
@@ -30,9 +37,9 @@ This document is authoritative for all governance materials under `directive_cor
 
 All canonical governance documents **MUST** encode versioning using a **two-field split** that cleanly separates *governance model identity* from *semantic version numbering*. This requirement is absolute and applies uniformly across all canonical documents without exception.
 
-```yaml
-anchor_model: "sswg+mvm+version"
-anchor_version: "1.0.0"
+```toml
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
 ```
 
 This split is **mandatory**, **non-optional**, and **structurally enforced**. Any deviation from this encoding is considered a governance violation and is subject to fail-closed validation behavior.
@@ -89,9 +96,9 @@ Silent redefinition, recombination, or reinterpretation of these fields is forbi
 
 All canonical governance documents under `directive_core/docs/` **MUST** encode versioning using the following anchor fields, without alteration:
 
-```yaml
-anchor_model: "sswg+mvm+version"
-anchor_version: "1.0.0"
+```toml
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
 ```
 
 This encoding defines the **first enforced governance baseline** and establishes the reference point against which all future governance evolution is measured.
@@ -180,4 +187,3 @@ This document defines the **non-negotiable rules** for canonical ledger versioni
 All future governance documents, updates, and amendments **MUST** comply with the rules defined herein. Any document that violates these requirements is non-canonical by definition and **SHALL** be rejected by governance validators.
 
 This end-of-document summary pattern **SHALL be replicated** (with document-specific content) in all future canonical governance documentation to provide a clear, auditable closure and prevent interpretive ambiguity.
-

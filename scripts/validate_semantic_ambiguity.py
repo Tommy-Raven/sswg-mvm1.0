@@ -119,6 +119,14 @@ AMBIGUITY_PATTERNS: List[Tuple[str, re.Pattern]] = [
             re.IGNORECASE,
         ),
     ),
+    (
+        "conditional_permission_language",
+        re.compile(
+            r"\b(allowed unless|permitted except|allowed with approval|unless explicitly waived|"
+            r"may be allowed|generally allowed|allowed in special cases)\b",
+            re.IGNORECASE,
+        ),
+    ),
 ]
 
 
@@ -138,11 +146,9 @@ def emit_failure(path: Path, findings: List[AmbiguityFinding]) -> Dict[str, Any]
         "Type": "semantic_ambiguity",
         "severity": "critical",
         "failure_behavior": "fail_closed",
-        "message": "Semantic Ambiguity detected: ambiguity is a security vulnerability and SHALL be rejected.",
+        "message": ERROR_LABEL,
         "error_label": ERROR_LABEL,
         "affected_path": str(path),
-        "findings": [f.__dict__ for f in findings],
-        "remediation_required": True,
     }
 
 def quarantine_append(quarantine_path: Path, payload: Dict[str, Any]) -> None:
@@ -219,8 +225,8 @@ def main() -> int:
     docs_dir = repo_root / "directive_core" / "docs"
     quarantine_path = repo_root / "directive_core" / "artifacts" / "audit" / "semantic_ambiguity_quarantine.jsonl"
 
-    # Candidate governance artifacts: conservative default = all docs/*.md
-    candidates = sorted(docs_dir.glob("*.md"))
+    # Candidate governance artifacts: conservative default = all docs/*.toml
+    candidates = sorted(docs_dir.glob("*.toml"))
     try:
         semantic_ambiguity_gate(candidates, quarantine_path)
     except SemanticAmbiguityError as e:

@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+=======
+# === CANONIC LEDGER (TOML) ===
+```toml
+[anchor]
+anchor_id = "deprecated_nomenclature"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Define deprecated naming variants for directive_core governance."
+init_authors = ["Tommy Raven"]
+```
+
+# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
+It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/deprecated_nomenclature.toml`.
+
+
+>>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1
 
 # ⚠️ DEPRECATION NOTICE — Naming Variants Prohibited
 

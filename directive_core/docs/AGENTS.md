@@ -1,22 +1,248 @@
-# Canonic Ledger
-```yaml
-anchor:
-  anchor_id: "sswg_agents"
-  anchor_model: "sswg+mvm"
-  anchor_version: "1.2.0"
-  scope: "directive_core/docs"
-  owner:
-    - "2025© Raven Recordings"
-    - "Tommy Raven (Thomas Byers)"
-  status: "invariant"
-  output_mode: "non_operational_output"
-  init_purpose: "Define canonical agent governance for directive_core."
-  init_authors:
-    - "Tommy Raven"
+# === CANONIC LEDGER (TOML) ===
+```toml
+[anchor]
+anchor_id = "sswg_agents"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "non_authoritative"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Non-authoritative human-readable companion to AGENTS.toml."
+init_authors = ["Tommy Raven"]
+
+```
+---
+
+# ⚠️ NON-AUTHORITATIVE NOTICE (MANDATORY)
+
+This document is NON-AUTHORITATIVE and NON-OPERATIONAL.
+
+Markdown documents SHALL NEVER be used as authoritative, contractual, or enforcement sources.
+
+TOML is the ONLY acceptable authoritative format for governance.
+
+All enforcement, validation, and authority is defined exclusively in:
+
+
+`directive_core/docs/AGENTS.toml`
+
+This file exists solely for human readability and explanation.
+
+
+---
+
+## Canonical Header Format (Reference Only)
+
+All authoritative governance documents MUST begin with a TOML canonical ledger header.
+
+This section is illustrative only and confers no authority.
+
+# === CANONIC LEDGER (TOML) ===
+```toml
+[anchor]
+anchor_id = "example_id"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
 ```
 
-## Naming Status (Canonical)
+## Rules enforced elsewhere:
 
-Only **SSWG/MVM** (mindset and ethos) and **sswg-mvm** (software) are usable. All other
-variants are deprecated. See
-[`deprecated_nomenclature.md`](./deprecated_nomenclature.md).
+First code fence MUST be TOML
+
+Fence language MUST be toml
+
+No YAML anchors allowed
+
+No mixed or duplicated anchors
+
+
+
+---
+
+# Naming Status (Canonical)
+
+Only the following identifiers are canonical:
+
+SSWG/MVM — governance mindset and ethos
+
+sswg-mvm — software implementation
+
+
+All other variants are deprecated and forbidden in canonical governance.
+
+See: deprecated_nomenclature.toml
+
+
+---
+
+# Root-Scope Agent Rules (Informational Reflection)
+
+These rules apply to all agents defined authoritatively in AGENTS.toml, including:
+
+human contributors
+
+automated systems
+
+CI and validators
+
+delegated execution environments
+
+
+This markdown section reflects the authoritative rules; it does not define them.
+
+
+---
+
+# Semantic Ambiguity Prohibition (Informational)
+
+Semantic ambiguity is treated as a security vulnerability, not a stylistic issue.
+
+Agents are required to assume ambiguous language represents:
+
+authority bypass attempts
+
+scope escalation
+
+intent laundering
+
+
+## Conditional permission language is forbidden, including (non-exhaustive):
+
+“allowed unless”
+
+“unless explicitly waived”
+
+“may be allowed”
+
+“subject to interpretation”
+
+“at discretion”
+
+
+Any appearance of such language is a violation.
+
+
+---
+
+# Absolute Language Requirement
+
+Governance authority MUST be expressed using only:
+
+MUST
+
+MUST NOT
+
+SHALL
+
+SHALL NOT
+
+
+Language implying discretion, interpretation, or implied exceptions is forbidden.
+
+
+---
+
+# Exception Handling (Explicit Only)
+
+Exceptions, if they exist, MUST be:
+
+1. Defined in a separate contract
+
+
+2. Governed by its own schema and validator
+
+
+3. Explicitly opt-in
+
+
+4. Fully auditable and revocable
+
+
+
+Inline exceptions using “unless”, “except”, or “with approval” are forbidden.
+
+
+---
+
+# Mandatory Ambiguity Gate (Informational)
+
+The Semantic Ambiguity Gate:
+
+Executes before ingestion, normalization, or enforcement
+
+Operates fail-closed
+
+Emits only the public error label: Semantic Ambiguity
+
+Never exposes rule IDs, pattern names, or hints
+
+
+
+---
+
+# Failure Semantics (Informational)
+
+Any artifact containing ambiguity:
+
+FAILS CLOSED
+
+Is quarantined
+
+Does not proceed to enforcement
+
+Provides no corrective guidance
+
+
+
+---
+
+# Destructive-Edit Prohibition (Informational Reflection)
+
+Authoritative rules in AGENTS.toml prohibit all destructive modification.
+
+Agents SHALL NEVER:
+
+delete files
+
+rename files
+
+perform subtractive edits
+
+overwrite authoritative content
+
+
+Only constructive, additive edits are permitted, and only where explicitly authorized.
+
+
+---
+
+# Interpretation Prohibition
+
+Agents MUST NOT attempt to reinterpret or clarify ambiguous governance language.
+
+Ambiguity results in rejection, not interpretation.
+
+
+---
+
+## End-of-Document Summary
+
+This document exists solely to explain, not enforce, agent governance.
+
+All authority lives in `AGENTS.toml`.
+
+Any discrepancy between this file and the TOML source MUST resolve in favor of the TOML.
+
+
+---
+
+END FILE

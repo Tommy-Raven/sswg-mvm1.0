@@ -1,0 +1,37 @@
+[anchor]
+anchor_id = "ambiguity_gate_invariant"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/definitions"
+status = "invariant"
+authority = true
+scope = "governance_ingestion"
+fail_mode = "fail_closed"
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+init_purpose = "Formally require Semantic Ambiguity Gate enforcement during governance ingestion. Violations SHALL hard-fail without waiver."
+init_authors = [
+  "Tommy Raven"
+]
+
+[rule]
+description = "All governance and human-authored inputs MUST pass the Semantic Ambiguity Gate prior to normalization or authority assignment."
+
+[requirements]
+semantic_gate_required = true
+allow_bypass = false
+allow_waiver = false
+allow_interpretation = false
+
+[enforcement]
+on_violation = "reject"
+public_error = "Semantic Ambiguity"
+expose_rule_ids = false
+exile_artifact = true
+halt_ingestion = true
+
+[audit]
+record_violation = true
+store_location = "directive_core/artifacts/audit"

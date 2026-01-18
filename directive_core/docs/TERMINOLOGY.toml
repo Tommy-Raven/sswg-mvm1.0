@@ -1,11 +1,11 @@
 # ============================================================
-# TERMINOLOGY — CANONICAL GOVERNANCE LEXICON (AUTHORITATIVE)
+# TERMINOLOGY — CANONIC GOVERNANCE LEXICON (PHASE 001)
 # ============================================================
 
 [anchor]
 anchor_id = "terminology"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -15,15 +15,14 @@ owner = [
   "Tommy Raven (Thomas Byers)"
 ]
 
-init_purpose = "Define the canonical terminology for SSWG/MVM governance and enforcement."
+init_purpose = "Define the binding, unambiguous terminology for SSWG governance and enforcement. Undefined terms are forbidden."
 init_authors = ["Tommy Raven"]
 
 # ------------------------------------------------------------
-# SECTION 1 — AUTHORITY AND INGESTION PRECEDENCE
+# SECTION 1 — AUTHORITY AND INGESTION PRECEDENCE (NORMATIVE)
 # ------------------------------------------------------------
 
 [terminology.authority]
-
 highest_semantic_authority = true
 first_ingestion_layer = true
 supersedes_all_other_definitions = true
@@ -31,12 +30,19 @@ supersedes_all_other_definitions = true
 undefined_terms_forbidden = true
 terminology_violation_is_fatal = true
 
+redefinition_policy = "forbidden"
+rename_policy = "forbidden"
+typo_policy = "forbidden"
+drift_policy = "forbidden"
+
+governance_format = "toml_only"
+non_toml_never_governance = true
+
 # ------------------------------------------------------------
-# SECTION 2 — CORE GOVERNANCE PRINCIPLES
+# SECTION 2 — CORE GOVERNANCE PRINCIPLES (NORMATIVE)
 # ------------------------------------------------------------
 
 [terminology.principles]
-
 system_enforces_constraints = true
 system_does_not_infer_intent = true
 authority_must_be_explicit = true
@@ -45,11 +51,10 @@ determinism_is_phase_scoped = true
 ambiguity_is_security_vulnerability = true
 
 # ------------------------------------------------------------
-# SECTION 3 — NAMING DISCIPLINE
+# SECTION 3 — NAMING DISCIPLINE (NORMATIVE)
 # ------------------------------------------------------------
 
 [naming]
-
 software_name = "sswg-mvm"
 mindset_name = "SSWG/MVM"
 
@@ -65,54 +70,184 @@ constant_format = "UPPERCASE"
 anchor_format = "toml_block_only"
 
 # ------------------------------------------------------------
-# SECTION 4 — CORE TERM DEFINITIONS (NORMATIVE)
+# SECTION 4 — AXIOM: AMBIGUITY (NORMATIVE)
+# ------------------------------------------------------------
+
+[terminology.axioms.ambiguity]
+vulnerability_class = "CLASS_1_SEVERE"
+required_response = ["fail_abort", "quarantine_artifact"]
+proactive_eradication_required = true
+ambiguity_is_never_tolerated = true
+
+# ------------------------------------------------------------
+# SECTION 5 — FAILURE NOTIFICATION SEMANTICS (NORMATIVE, BOUNDARY-SAFE)
+# ------------------------------------------------------------
+
+[terminology.failure_notification]
+schema_id = "opaque_gate_notification"
+category_tag = "GATE_FAILURE"
+fields = ["error_gate_name", "category_tag"]
+
+allow_text = false
+allow_descriptions = false
+allow_snippets = false
+allow_paths = false
+allow_line_col = false
+allow_section_path = false
+allow_rule_hints = false
+allow_mitigation_guidance = false
+
+[terminology.gate_vocabulary]
+gate_id_format = "GATE_0000"
+gate_semantics_exposed = false
+gates = [
+  "GATE_0001",
+  "GATE_0002",
+  "GATE_0003",
+  "GATE_0004",
+  "GATE_0005",
+  "GATE_0006",
+  "GATE_0007"
+]
+
+# ------------------------------------------------------------
+# SECTION 6 — QUARANTINE (NORMATIVE)
+# ------------------------------------------------------------
+
+[terminology.quarantine]
+quarantine_required = true
+quarantine_dir = "/quarantine/"
+create_directory_if_missing = true
+quarantine_action = ["abort", "isolate_artifact"]
+
+# ------------------------------------------------------------
+# SECTION 7 — CORE TERM DEFINITIONS (NORMATIVE)
 # ------------------------------------------------------------
 
 [definitions]
-
 invariant = "A property that MUST ALWAYS remain true and is immutable."
-constraint = "A rule that may evolve but MUST NOT violate invariants."
+constraint = "A rule that is adjustable over time and MUST NOT violate invariants."
 artifact = "A non-operational, inspectable output produced for audit or validation."
-non_operational_output = "Content that CANNOT be executed or followed to perform actions."
+non_operational_output = "Content that is not executable and not a procedural instruction."
 fail_closed = "A failure mode where uncertainty results in rejection, not approximation."
+fail_start = "Abort runtime initialization on any registered governance invalidity."
+fail_abort = "Terminate the active run immediately."
+quarantine_artifact = "Isolate the violating artifact in the quarantine directory."
 
-semantic_ambiguity = "Any condition permitting multiple plausible interpretations of authority, scope, or behavior."
-
+semantic_ambiguity = "Any condition permitting multiple interpretations of authority, scope, or behavior."
 canonical_header = "The first authority-bearing TOML block defining anchor metadata."
 
+governance_document = "A TOML artifact registered as authoritative governance by SSWG_CONSTITUTION."
+reference_artifact = "A non-authoritative artifact. Reference artifacts do not override governance."
+registry = "The explicit authoritative artifact list defined by SSWG_CONSTITUTION."
+ingestion_sequence = "The ordered governance loading protocol defined by SSWG_CONSTITUTION."
+
+error_gate_name = "An opaque gate identifier drawn from terminology.gate_vocabulary.gates."
+GATE_FAILURE = "The canonical failure category tag for boundary notifications."
+
+poison_marker = "A marker indicating unresolved merge conflict state."
+duplicate_key = "A repeated TOML key within the same TOML table scope."
+
 # ------------------------------------------------------------
-# SECTION 5 — FORBIDDEN LANGUAGE CATEGORIES
+# SECTION 8 — FORBIDDEN LANGUAGE CATEGORIES (NORMATIVE)
 # ------------------------------------------------------------
 
 [terminology.forbidden_language]
-
 implied_authority = true
 inferred_intent = true
 procedural_instruction = true
 trust_based_claims = true
 
 # ------------------------------------------------------------
-# SECTION 6 — ENFORCEMENT REQUIREMENTS
+# SECTION 9 — FORBIDDEN LANGUAGE TOKENS (NORMATIVE)
+# ------------------------------------------------------------
+
+[terminology.forbidden_language.tokens]
+enforced = true
+case_insensitive = true
+match_mode = "exact_token_match"
+tokenization = "ascii_word_boundary"
+trigger_class = "CLASS_1_SEVERE"
+response = ["fail_abort", "quarantine_artifact"]
+scan_exclusions = ["terminology.forbidden_language.tokens.list"]
+
+list_id = "FL-0001"
+
+list = [
+  "may",
+  "might",
+  "could",
+  "should",
+  "can",
+  "possible",
+  "possibly",
+  "perhaps",
+  "usually",
+  "typically",
+  "generally",
+  "often",
+  "sometimes",
+  "some",
+  "many",
+  "few",
+  "various",
+  "etc",
+  "and/or",
+  "as_needed",
+  "where_appropriate",
+  "if_possible",
+  "best_effort",
+  "reasonable"
+]
+
+# ------------------------------------------------------------
+# SECTION 10 — POISON MARKERS (NORMATIVE)
+# ------------------------------------------------------------
+
+[terminology.poison_markers]
+enforced = true
+markers = ["<<<<<<<", "=======", ">>>>>>>"]
+response = ["fail_abort", "quarantine_artifact"]
+
+# ------------------------------------------------------------
+# SECTION 11 — ENFORCEMENT REQUIREMENTS (NORMATIVE)
 # ------------------------------------------------------------
 
 [terminology.enforcement]
-
 validators_must_enforce = true
 ambiguity_triggers_failure = true
 reinterpretation_forbidden = true
 clarification_forbidden = true
 
+cross_file_reference_validation_required = true
+undefined_reference_policy = ["fail_abort", "quarantine_artifact"]
+
 # ------------------------------------------------------------
-# SECTION 7 — FAILURE BEHAVIOR
+# SECTION 12 — FAILURE BEHAVIOR (NORMATIVE)
 # ------------------------------------------------------------
 
 [terminology.failure_behavior]
-
 on_violation = [
   "fail_closed",
-  "emit_semantic_ambiguity",
+  "fail_abort",
+  "quarantine_artifact",
+  "emit_gate_failure",
   "halt_ingestion"
 ]
+
+emit_gate_failure_schema = "opaque_gate_notification"
+halt_ingestion = true
+
+# ------------------------------------------------------------
+# SECTION 13 — STABILITY RULES (NORMATIVE)
+# ------------------------------------------------------------
+
+[stability]
+term_id_stability = "permanent"
+token_stability = "permanent"
+deprecation_mechanism = "deprecated_nomenclature_toml_only"
+term_removal_policy = "forbidden"
+term_change_policy = "new_term_id_required"
 
 # ------------------------------------------------------------
 # END OF TERMINOLOGY

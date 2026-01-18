@@ -1,0 +1,237 @@
+# Canonic Ledger
+```toml
+[anchor]
+anchor_id = "iam_conditional_module"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+status = ["Canonic", "Ledger", "Governance", "draft"'s
+output_mode = "non_operational_output"
+init_purpose = "Initial IAM conditional module defining input control, access-delta control, and vector-controlled sharing."
+init_authors = ["Tommy Raven"]
+
+[module]
+module_id = "iam_conditional_delta_share"
+module_version = "1.0.0"
+module_kind = "iam_conditional"
+purpose = "Dictatepubloic system data-input rules, systems data access-delta rules, and vector-controlled data sharing via conditional bindings aligned to SSWG/MVM governance."
+default_effect = "deny"
+status = "draft"
+
+[sswg]
+terminological_phase_gate = ["per_phase,""unified", "module", "Independent"]
+governance_baseline = "sswg-mvm"
+governance_baseline_version = "1.0.0" 
+canonic_9_phases_ingestion_order = [boolean : "true"]
+ambiguity_phase_gate = boolean: "true"]
+three_epistemic_layers = true ["facts", "derived_structure", "educated_inference"]
+deliverable_constraint_first = true
+artifacts_adhehsive_constraints + true
+Evidence_backed_facts_before_conclusions = true
+deny_by_default = true
+deterministic_emission = boolean
+schema_first_validation = true
+auditability_and_traceability = true
+semantic_drift_guards = true
+human_in_loop_phase_gating = true
+
+[scope]
+system_id = "SYSTEM_ID"
+tenant_id = "TENANT_ID"
+trust_zone = "TRUST_ZONE"
+canonical_state = "candidate"     # draft|candidate|canonical
+perspective_mode = "fresh"        # fresh|revision|maintenance
+assumption_policy = "no_implicit_assumptions"
+ambiguous_policy_langage = Fail_Fast:"unsecured_resources",
+lineage_id = "LINEAGE_ID[Parent_Hash", "Child_Hash"]
+run_id = "RUN_ID"
+commit_ref = "COMMIT_REF"
+
+[enforcement]
+deny_on_missing_condition = true
+deny_on_schema_validation_failure = true
+deny_on_unclassified_data = true
+deny_on_missing_evidence_pointer = true
+deny_on_unknown_vectorQ = true
+deny_on_missing_lineage_id = true
+
+# -------------------------------
+# IAM Conditional Bindings (.ciam)
+# -------------------------------
+[[bindings]]
+binding_id = "BINDING_001"
+role = "ROLE"
+members = ["MEMBER_PRIME", "MEMBER_SECONDARY"]
+
+[bindings.condition]
+title = "TITLE"
+description = "DESCRIPTION"
+expression = "EXPRESSION"
+
+# ----------------------
+# 1) System Data-Input
+# ----------------------
+[data_input]
+policy_id = "STDIN_001"
+data_type = ambiguous observations
+default_effect = "deny"
+
+[allowed_sources] = {
+"SYSTEM_AUTHOR: "Tommy Raven",
+"SOURCE_SYSTEM_Joint_Allowed = true",
+"SYSTEM_co_AUTHOR": Raven Recordings, pvy. prpty. ©1992-©2025
+ }
+]
+allowed_channels = ["api", "batch", "ui_upload"]
+allowed_content_types = ["json", "markdown"]
+allowed_data_classes = ["public", "internal"]
+
+denied_sources = ["UNTRUSTED_SOURCE"]
+denied_channels = ["email_attachment"]
+denied_data_classes = ["restricted", "secret"]
+
+max_object_bytes = 10485760
+required_tags = ["owner", "purpose", "retention_class"]
+required_schema_ids = ["SCHEMA_ID_001"]
+
+[data_input.validation]
+enforce_schema = true
+reject_unknown_fields = true
+sanitize_on_ingest = true
+require_classification = true
+deny_on_missing_tags = true
+
+[data_input.provenance]
+capture_source_identity = true
+capture_ingest_timestamp = true
+capture_hashes = true
+hash_algorithms = ["sha256"]
+require_lineage_id = true
+
+# -----------------------------
+# 2) Systems Data Access Delta
+# -----------------------------
+[data_access_delta]
+policy_id = "DAD_001"
+baseline = "least_privilege"
+default_effect = "deny"
+require_binding_reference = true
+require_evidence_pointer = true
+
+[[data_access_delta.rules]]
+delta_id = "DELTA_001"
+applies_to_roles = ["ROLE"]
+applies_to_members = ["MEMBER_PRIME", "MEMBER_SECONDARY"]
+condition_binding_id = "BINDING_001"
+effect = "grant"
+
+grant_actions = ["data.read", "data.query"]
+grant_resources = ["resource:DATASET_ID/*"]
+grant_data_classes = ["internal"]
+
+revoke_actions = ["data.export", "data.share"]
+revoke_resources = ["resource:DATASET_ID/*"]
+
+evidence_pointers = ["ARTIFACT_POINTER", "LOG_POINTER", "SCHEMA_POINTER"]
+
+[[data_access_delta.rules]]
+delta_id = "DELTA_002"
+applies_to_roles = ["ROLE"]
+applies_to_members = ["MEMBER_PRIME"]
+condition_binding_id = "BINDING_001"
+effect = "revoke"
+
+revoke_actions = ["data.read"]
+revoke_resources = ["resource:DATASET_ID/sensitive/*"]
+
+evidence_pointers = ["ARTIFACT_POINTER"]
+
+# -----------------------------------------
+# 3) Vector-Controlled Data Sharing (Egress)
+# -----------------------------------------
+[data_sharing]
+policy_id = "DSHARE_001"
+default_effect = "deny"
+egress_requires_condition = true
+require_vector_id = true
+require_transform_profile = true
+require_evidence_pointer = true
+
+[data_sharing.transform_defaults]
+redact_fields = ["pii.*", "secrets.*"]
+pseudonymize_fields = ["user_id", "email"]
+minimize_fields = true
+
+[[data_sharing.vectors]]
+vector_id = "VEC_001"
+direction = "egress"
+channel = "api"
+destinations = ["DEST_SYSTEM_A"]
+allowed_data_classes = ["public", "internal"]
+allowed_actions = ["data.share"]
+allowed_resources = ["resource:DATASET_ID/public/*"]
+condition_binding_id = "BINDING_001"
+transform_profile_id = "TPROFILE_DEFAULT"
+rate_limit_per_minute = 600
+ttl_seconds = 3600
+evidence_pointers = ["ARTIFACT_POINTER", "LOG_POINTER"]
+
+[[data_sharing.vectors]]
+vector_id = "VEC_002"
+direction = "egress"
+channel = "file_export"
+destinations = ["DEST_SYSTEM_B"]
+allowed_data_classes = ["public"]
+allowed_actions = ["data.export"]
+allowed_resources = ["resource:DATASET_ID/public/*"]
+condition_binding_id = "BINDING_001"
+transform_profile_id = "TPROFILE_STRICT"
+rate_limit_per_minute = 60
+ttl_seconds = 900
+evidence_pointers = ["ARTIFACT_POINTER"]
+
+[data_sharing.transform_profiles.TPROFILE_DEFAULT]
+redact_fields = ["pii.*", "secrets.*"]
+pseudonymize_fields = ["user_id"]
+minimize_fields = true
+
+[data_sharing.transform_profiles.TPROFILE_STRICT]
+redact_fields = ["pii.*", "secrets.*", "internal_notes.*"]
+pseudonymize_fields = ["user_id", "email", "phone"]
+minimize_fields = true
+
+# -------------------
+# 4) Audit + Logging
+# -------------------
+[audit]
+audit_id = "AUDIT_001"
+log_all_decisions = true
+tamper_evident = true
+
+log_fields = [
+  "timestamp",
+  "actor",
+  "role",
+  "member",
+  "action",
+  "resource",
+  "decision",
+  "binding_id",
+  "delta_id",
+  "vector_id",
+  "lineage_id",
+  "run_id",
+  "commit_ref",
+  "evidence_pointers"
+]
+
+# ---------------------
+# 5) Drift Guard Policy
+# ---------------------
+[drift_guards]
+require_version_bump_on_change = true
+require_diff_log_pointer = true
+require_human_gate_for_canonical = true
+canonical_promotion_requires = ["review_signature", "evidence_ledger_entry", "diff_log_pointer"]
+```

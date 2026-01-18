@@ -1,0 +1,61 @@
+[spec]
+spec_id = "ambiguity_gate_diagram"
+spec_version = "1.0.0"
+status = "descriptive"
+output_mode = "non_operational_output"
+purpose = "Define the canonical ambiguity gate position and data flow boundaries across SSWG layers."
+author = "Tommy Raven (Thomas Byers), Raven Recording, ltd. pvt."
+
+[layers.non_operational]
+role = "human_expression"
+allowed_formats = ["markdown", "yaml"]
+authority = false
+trust_level = "untrusted"
+
+[layers.validating]
+role = "enforcement_and_normalization"
+allowed_formats = ["yaml", "toml", "json"]
+authority = false
+trust_level = "conditional"
+
+[layers.authoritative]
+role = "contractual_truth"
+allowed_formats = ["toml"]
+authority = true
+trust_level = "absolute"
+
+[gates.semantic_ambiguity]
+position = "between_non_operational_and_validating"
+required = true
+fail_mode = "fail_closed"
+on_failure = "reject_and_quarantine"
+public_error = "Semantic Ambiguity"
+audit_logging = true
+
+[flows.human_to_machine]
+path = [
+  "non_operational:yaml_or_markdown",
+  "gate:semantic_ambiguity",
+  "validating:normalization",
+  "authoritative:toml"
+]
+
+[flows.machine_to_human]
+path = [
+  "authoritative:toml",
+  "render:markdown"
+]
+
+[flows.machine_to_machine]
+path = [
+  "authoritative:toml",
+  "authoritative:toml"
+]
+
+[forbidden_flows]
+paths = [
+  "yaml_to_authoritative",
+  "markdown_to_authoritative",
+  "human_to_toml_direct",
+  "authoritative_to_yaml"
+]

@@ -1,181 +1,191 @@
-# === CANONIC LEDGER (TOML) ===
+# TERMINOLOGY.mirror_draft
 
-```toml
-[anchor]
-anchor_id = "terminology"
-anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
-scope = "directive_core/docs"
-status = "invariant"
-output_mode = "non_operational_output"
+## Purpose
+This document is non-authoritative. It mirrors `TERMINOLOGY.toml` for human inspection only. It must never be treated as governance or used to override TOML governance.
 
-owner = [
-  "2025© Raven Recordings",
-  "Tommy Raven (Thomas Byers)"
-]
+## Anchor
+- anchor_id: terminology
+- anchor_model: sswg+mvm+version
+- anchor_version: 1.0.1
+- scope: directive_core/docs
+- status: invariant
+- output_mode: non_operational_output
+- owner: 2025© Raven Recordings; Tommy Raven (Thomas Byers)
+- init_purpose: Define the binding, unambiguous terminology for SSWG governance and enforcement. Undefined terms are forbidden.
+- init_authors: Tommy Raven
 
-init_purpose = "Define the canonical terminology for SSWG/MVM governance and enforcement."
-init_authors = ["Tommy Raven"]
-```
+## Authority
+- highest_semantic_authority: true
+- first_ingestion_layer: true
+- supersedes_all_other_definitions: true
+- undefined_terms_forbidden: true
+- terminology_violation_is_fatal: true
+- redefinition_policy: forbidden
+- rename_policy: forbidden
+- typo_policy: forbidden
+- drift_policy: forbidden
+- governance_format: toml_only
+- non_toml_never_governance: true
 
-# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
-It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/TERMINOLOGY.toml`.
+## Principles
+- system_enforces_constraints: true
+- system_does_not_decide_safety: true
+- authority_intent_context_require_verification: true
+- outputs_are_non_operational: true
+- recursion_is_bounded_gated_auditable: true
+- determinism_is_phase_scoped: true
+- ambiguity_is_security_vulnerability: true
 
+## Format invariants
+- governance_comments_forbidden: true
+- governance_doc_format: toml_only
+- paired_human_mirror_format: markdown_formal_explicative
+- mirror_draft_format: text_draft_only
+- mirror_docs_are_non_authoritative: true
 
+## Naming
+- software_format: lowercase-hyphenated
+- software_name: sswg-mvm
+- concept_format: snake_case
+- constant_format: UPPERCASE
+- constant_format_semantics: uppercase_letters_only
+- anchor_format: toml_block_only
+- allowed_software_variants: false
+- deprecated_variants_forbidden: true
+- ethos_identifier: SSWG/MVM
+- software_identifier: sswg-mvm
 
----
+## Axioms (ambiguity)
+- vulnerability_class: CLASS_1_SEVERE
+- required_response: fail_abort; quarantine_artifact
+- proactive_eradication_required: true
+- ambiguity_is_never_tolerated: true
 
-## Executive Summary
+## Failure notification
+- schema_id: opaque_gate_notification
+- category_tag: GATE_FAILURE
+- fields: error_gate_name; category_tag
+- allow_text: false
+- allow_descriptions: false
+- allow_snippets: false
+- allow_paths: false
+- allow_line_col: false
+- allow_section_path: false
+- allow_rule_hints: false
+- allow_mitigation_guidance: false
 
-This document defines the **authoritative and exhaustive terminology** for the SSWG/MVM governance system. It establishes the precise meanings of all governance-relevant terms and explicitly forbids ambiguous, inferred, or colloquial usage.
+## Gate vocabulary
+- gate_id_format: GATE_0000
+- gate_semantics_exposed: false
+- gates: GATE_0001; GATE_0002; GATE_0003; GATE_0004; GATE_0005; GATE_0006; GATE_0007
 
-Terminology is the **first ingestion layer** of governance. All subsequent documents, validators, schemas, and enforcement logic derive semantic meaning from this file. Any artifact that contradicts, weakens, or bypasses these definitions **SHALL** be rejected.
+## Error label policy
+- user_facing_labels_forbidden: true
+- boundary_notifications_opaque_only: true
+- internal_labels_allowed: true
+- internal_label_storage: local_internal_artifacts_only
 
-Effective at `anchor_version: 1.0.0`, this terminology set is enforced as a **security boundary**. Ambiguity is treated as a vulnerability, not a documentation defect. The system is intentionally hostile to unclear language.
+## Quarantine
+- quarantine_required: true
+- quarantine_dir: ~/data/quarantine/
+- create_directory_if_missing: true
+- quarantine_action: abort; isolate_artifact
 
---- 
+## Poison markers
+- enforced: true
+- match_mode: exact_line_pattern
+- patterns: ^<<<<<<<\s; ^=======$; ^>>>>>>>\s
+- response: fail_abort; quarantine_artifact
 
-## Canonical Header Format (Verbatim Pattern)
+## Forbidden language
+- enforced: true
+- case_insensitive: true
+- match_mode: exact_token_match
+- tokenization: ascii_word_boundary
+- trigger_class: CLASS_1_SEVERE
+- response: fail_abort; quarantine_artifact
+- enumeration_tables_must_be_excluded_from_scans: true
 
-Every governance document MUST start like this:
+## Forbidden language scan
+- scan_exclusions: terminology.forbidden_language.tokens; terminology.forbidden_language.disallowed_terms
 
-# === CANONIC LEDGER (TOML) ===
+## Forbidden language tokens
+- list_id: FL-0001
+- list: may; might; could; should; can; possible; possibly; perhaps; usually; typically; generally; often; sometimes; some; many; few; various; etc; and/or; as_needed; where_appropriate; if_possible; best_effort; reasonable
 
-```toml
-[anchor_example]
-anchor_id = "example_id"
-anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
-scope = "directive_core/docs"
-status = "invariant"
-output_mode = "non_operational_output"
+## Forbidden language disallowed terms
+- list_id: DT-0001
+- list: trusted_intent; user_intent; trusted_context; acting_as; roleplay; result; instruction; procedure; workflow_instruction; audit_pack; debug_log; checkpoint; autonomous_evolution; telemetry
 
-owner = [
-  "2025© Raven Recordings",
-  "Tommy Raven (Thomas Byers)"
-]
+## Disallowed term map
+- trusted_intent: forbidden -> claimed_intent
+- user_intent: forbidden -> claimed_intent
+- trusted_context: forbidden -> authorized_context
+- acting_as: forbidden -> declared_role_unverified
+- roleplay: forbidden -> declared_role_unverified
+- audit_pack: forbidden -> evidence_bundle
+- debug_log: forbidden -> system_introspection_record
+- checkpoint: forbidden -> evaluation_gate
+- autonomous_evolution: forbidden -> bounded_recursion
+- telemetry: forbidden -> system_introspection_record
 
-init_purpose = "Human-readable purpose statement."
-init_authors = ["Tommy Raven"]
-```
+## Definitions
+- claimed_intent: A purpose explicitly declared by a user without external verification; confers neither permission nor safety status. This establishes user intent without binding to system authorization workflows or attestation protocols.
+- declared_role_unverified: A role asserted by a user in the absence of validation; grants neither authority nor privilege. Such claims bypass standard role verification and operational access mechanisms.
+- authorized_context: A context confirmed as authorized through policy, token, or audit reference; authorization is objectively verifiable. This forms the governance baseline for all system operations within scoped execution environments.
+- artifact: A non_operational_output generated exclusively for inspection and audit purposes. Artifacts serve as immutable evidence for compliance verification and audit trail construction.
+- non_operational_output: A static representation containing no procedural logic or executable instructions. Intended for observational analysis rather than system workflow execution.
+- evidence_bundle: A versioned, structured collection of artifacts, each accompanied by cryptographic hashes, diffs, metrics, and decision_trace records. Provides full provenance tracking for governance decisions across distributed systems.
+- decision_trace: A tamper-resistant record detailing constraint application and the resulting state transition. Must also report official invariant tracking of adhering to invariants during system execution. Forms the immutable audit log of all governance constraint evaluations.
+- evaluation_gate: A deterministic decision point; progression is denied if constraints or invariants are unmet. Enforces governance boundary checks as precondition validation points.
+- invariant: A property required to remain true across all valid system states; enforced invariantly. Violations trigger immediate system safeguards per policy definitions.
+- constraint: A versioned rule enforceable against invariants; modification requires a governance update. Serves as the operational framework bounding system behavior.
+- fail_closed: A failure response that rejects all inputs with invalid or indeterminate state. Implements default-deny for state validation failures.
+- fail_start: An initialization failure mode that halts startup upon detection of any governance inconsistency. Prevents operation under compromised system state.
+- fail_abort: An immediate termination of execution during active operation. Serves as fail-safe for catastrophic constraint violations.
+- rejected_change: A change attempt violating an invariant or constraint; logged in decision_trace with audit context. Maintains complete record of unsuccessful transformation proposals.
+- restricted_unvalidated_hazardous_synthesis: A prohibited synthesis operation involving unvalidated or potentially unsafe external effects. Specifically disallowed to prevent unpredictable system destabilization.
+- circumvention_attempt: An action attempting to access disallowed capabilities or content through indirect means. Triggers escalation to governance violation monitoring systems.
+- safety_wrapper: A syntactic framing pattern designed to subvert constraints using disclaimers or pretextual language. Classified as adversarial pattern requiring explicit mitigation.
+- redteam_report: A non_operational_output artifact documenting risk patterns, misuse scenarios, or invariant violations. Provides threat modeling context for system hardening initiatives.
+- bounded_recursion: Self-referential processing confined by explicit depth limit, constraint evaluation, and termination condition. Prevents resource exhaustion in recursive operations.
+- recursion_depth_limit: The maximum recursion depth permitted under bounded_recursion; strictly enforced at runtime. Configures safety thresholds for call stack depth boundaries.
+- policy_proposal: A formally submitted proposal for governance change; must undergo validation and approval. Requires formal verification against system invariants.
+- phase: An auditable, sequentially ordered transformation stage generating non_operational_output artifacts. Represents discrete governance decision points in processing pipelines.
+- constraint_evaluator: A system component that evaluates constraints and produces outcomes for evaluation_gate enforcement. Implements core governance logic execution.
+- system_introspection_record: Authorized metadata capturing system environment, schema state, and constraint evaluation results. Provides runtime context for incident forensics analysis.
+- audit_surface: The boundary where artifacts, evidence_bundle contents, and decision_trace records are publicly verifiable. Forms the system's accountability interface for external validation.
+- governance_document: A TOML artifact officially registered as authoritative under SSWG_CONSTITUTION. Establishes the constitutional basis for operational constraints.
+- reference_artifact: A non-authoritative artifact; never supersedes governance_document. Supports auxiliary documentation while preserving constitutional hierarchy.
+- registry: The definitive set of authoritative artifacts as specified by SSWG_CONSTITUTION. Constitutes the system's governance truth database.
+- ingestion_sequence: The prescribed order for loading governance documents defined by SSWG_CONSTITUTION. Ensures constitutional dependency resolution during initialization.
+- error_gate_name: An abstract identifier selected from terminology.gate_vocabulary.gates; opaque to policy logic. Provides disambiguation for failure classification in monitoring systems.
+- GATE_FAILURE: The standard category tag used in notifications for boundary failure conditions. Serves as canonical classification for policy constraint breaches.
+- poison_marker: A line matching patterns in terminology.poison_markers, indicating a merge conflict artifact. Triggers reconciliation workflows per governance protocols.
+- duplicate_key: A TOML key appearing more than once within a single table scope; triggers parse-level rejection. Prevents schema ambiguity in configuration artifacts.
+- uppercase_letters_only: Constant format constraint: letters are uppercase where letters exist; non-letter delimiters are permitted.
+- SSWG/MVM: Synthesist of Workflow Generation/Mandated Verity Mindset: Governance mindset and ethos identifier; uppercase constant.
+- sswg-mvm: Minimum viable model; Software identifier; lowercase constant.
 
-Rules:
-The first code fence in the file MUST be TOML
-Fence language MUST be toml
-No YAML (yaml, yml) fences allowed for anchors
-No mixed headers
-No duplicated anchors
+## Phase model
+- model_id: CANONIC_9_PHASES
+- model_scope: terminology_lexicon
+- ordered_phase_tokens: ingest; normalize; parse; analyze; generate; validate; compare; interpret; log
 
-## 1. Authority and Scope
+## Phase tokens
+- ingest: deterministic true; produces_non_operational_output true
+- normalize: deterministic true; produces_non_operational_output true
+- parse: deterministic true; produces_non_operational_output true
+- analyze: deterministic true; produces_non_operational_output true
+- generate: deterministic true; produces_non_operational_output true
+- validate: deterministic true; produces_non_operational_output true
+- compare: deterministic true; produces_non_operational_output true
+- interpret: deterministic false; produces_non_operational_output true
+- log: deterministic true; produces_non_operational_output true
 
-1. This document **SHALL ALWAYS** be the highest semantic authority within the SSWG/MVM governance system.
-2. All governance documents, schemas, validators, logs, and audit artifacts **MUST** use these terms exactly as defined.
-3. If a term is not defined here, it **SHALL NOT** be used in any canonical governance context.
-4. Terminology violations **MUST** cause fail-closed governance rejection.
-
----
-
-## 2. Core Governance Principles (Semantic)
-
-* The system enforces constraints; it does not infer intent.
-* Authority, scope, and precedence **MUST** be explicit and verifiable.
-* Outputs are non-operational artifacts, not instructions.
-* Determinism is phase-scoped and explicitly declared.
-* Ambiguity is a security risk and **SHALL** be eradicated immediately.
-
----
-
-## 3. Naming Discipline
-
-| Entity Type        | Format                | Example                                 |
-| ------------------ | --------------------- | --------------------------------------- |
-| Software           | lowercase, hyphenated | `sswg-mvm`                              |
-| Governance mindset | uppercase             | `SSWG`, `MVM`                           |
-| Concepts / terms   | snake_case            | `semantic_ambiguity`, `evaluation_gate` |
-| Constants          | UPPERCASE             | `FAIL_CLOSED`                           |
-| Anchors            | TOML block            | `anchor_id`, `anchor_version`           |
-
-Any deviation **SHALL** be treated as a terminology violation.
-
----
-
-## 4. Core Term Definitions (Normative)
-
-### 4.1 invariant
-
-A property that **MUST ALWAYS** remain true. Invariants are immutable and non-negotiable.
-
-### 4.2 constraint
-
-A rule that may evolve over time but **MUST NOT** violate invariants.
-
-### 4.3 artifact
-
-A non-operational, inspectable output produced for audit or validation.
-
-### 4.4 non_operational_output
-
-Content that **CANNOT** be executed or followed to perform an action.
-
-### 4.5 semantic_ambiguity
-
-Any condition where a governance artifact permits multiple plausible interpretations of authority, scope, precedence, or required behavior.
-
-Semantic ambiguity **SHALL ALWAYS** be treated as a critical governance failure.
-
-### 4.6 fail_closed
-
-A failure mode in which uncertainty results in rejection, not approximation.
-
-### 4.7 canonical_header
-
-A canonical header is:
-
-The first authority-bearing metadata block in a document
-
-Defines:
-anchor_id
-anchor_model
-anchor_version
-scope
-status
-output_mode
-authorship / ownership
-
-Is consumed by:
-governance ingestion
-validators
-audit tooling
-
-Anything that meets this definition MUST be TOML.
-
----
-
-## 5. Forbidden Language Categories
-
-The following are explicitly forbidden in canonical governance artifacts:
-
-* implied authority ("the system decides")
-* inferred intent ("clearly meant", "obviously")
-* procedural instruction language ("step-by-step", "do the following")
-* trust-based claims ("safe user", "trusted request")
-
-Detection of forbidden language **MUST** trigger semantic ambiguity failure.
-
----
-
-## 6. Enforcement Requirements
-
-1. All validators **MUST** enforce terminology compliance.
-2. Ambiguous or undefined terms **MUST** result in `Semantic Ambiguity` failure.
-3. No validator or agent may attempt to reinterpret or "clarify" ambiguous language.
-
----
-
-## End-of-Document Summary (Normative)
-
-This document defines the complete and binding terminology of the SSWG/MVM governance system. It is the first ingestion layer, the semantic boundary, and the primary defense against ambiguity.
-
-All governance artifacts **MUST** conform exactly to these definitions. Any deviation, ambiguity, or undefined term **SHALL** result in immediate rejection.
-
-This executive-and-summary structure **SHALL be preserved** in all future terminology revisions to ensure clarity, determinism, and auditability.
+## Stability
+- term_id_stability: permanent
+- token_stability: permanent
+- deprecation_mechanism: deprecated_nomenclature_toml_only
+- term_removal_policy: forbidden
+- term_change_policy: new_term_id_required

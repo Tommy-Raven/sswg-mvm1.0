@@ -1,0 +1,48 @@
+[anchor]
+anchor_id = "normalization_threshold_invariant"
+anchor_version = "1.0.0"
+module_tier = "directive_core"
+module_kind = "truth_normalization_gate"
+authoritative = true
+deterministic = true
+mutable = false
+
+[purpose]
+description = "Normalize raw input intensity via a fixed transformation and enforce an immutable threshold invariant to emit a stabilized truth state."
+scope = "constraint_enforcement"
+non_operational = false
+
+[invariants]
+threshold_constant = 5.816
+threshold_mutability = "forbidden"
+override_policy = "reject"
+
+[inputs]
+a = { type = "float", description = "Raw unbounded input surge" }
+
+[transforms]
+x_factorial = { 
+  type = "gamma_factorial",
+  domain = "real_positive",
+  purpose = "Normalize surge magnitude into comparable scale"
+}
+
+[logic]
+equation = "x! = a / threshold_constant"
+evaluation = "binary_gate"
+
+[outputs]
+y = { 
+  type = "truth_state",
+  description = "Stabilized truth output emitted only when invariant holds"
+}
+
+[failure_modes]
+on_threshold_violation = "hard_reject"
+on_invalid_input = "schema_fail"
+
+[audit]
+log_inputs = true
+log_outputs = true
+log_decisions = true
+trace_id_required = true

@@ -1,0 +1,222 @@
+# ============================================================
+# INTEGRATION_REQUIREMENTS — ENGINE_CORES / VALIDATOR / SPEC BINDINGS
+# ============================================================
+
+[anchor]
+anchor_id = "integration_requirements"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.0"
+scope = "directive_core/docs"
+status = "candidate"
+output_mode = "non_operational_output"
+
+owner = [
+  "2025© Raven Recordings",
+  "Tommy Raven (Thomas Byers)"
+]
+
+init_purpose = "Bind validator + engine_cores integration semantics to SSWG/MVM governance (ethos/mindset) and sswg-mvm software (minimum viable model) with proactive ambiguity eradication."
+init_authors = ["Tommy Raven"]
+
+# ------------------------------------------------------------
+# TERMINOLOGY — CONSTANT IDENTIFIERS (NORMATIVE)
+# ------------------------------------------------------------
+
+[terminology.identifiers]
+"SSWG/MVM" = "Synthesist of Workflow Generation/Mandated Verity Mindset: Governance mindset and ethos identifier; uppercase constant."
+"sswg-mvm" = "Minimum viable model; Software identifier; lowercase constant."
+
+[terminology.enforcement]
+case_sensitivity = "strict"
+aliasing_forbidden = true
+separator_variants_forbidden = true
+governance_identifier = "SSWG/MVM"
+software_identifier = "sswg-mvm"
+
+# ------------------------------------------------------------
+# AXIOM — AMBIGUITY CLASSIFICATION (NORMATIVE INTENT)
+# ------------------------------------------------------------
+
+[axiom.ambiguity]
+vulnerability_class = "CLASS_1_SEVERE"
+required_response = ["fail_abort", "quarantine_artifact"]
+proactive_eradication_required = true
+
+# ------------------------------------------------------------
+# GOVERNANCE FORM + AUTHORITY BOUNDARIES
+# ------------------------------------------------------------
+
+[governance.form]
+authoritative_format = "toml"
+toml_is_binding_contract = true
+non_toml_is_never_governance = true
+non_toml_reference_only = true
+
+[governance.drafts]
+drafts_must_not_be_toml = true
+draft_extension = ".txt"
+draft_storage_policy = "place_in_designated_drafts_area_outside_registry_scope"
+
+# ------------------------------------------------------------
+# DISCOVERY + ROOT RESOLUTION
+# ------------------------------------------------------------
+
+[discovery]
+validation_scope = "registry_only"
+implicit_authority_forbidden = true
+
+[root_resolution]
+repo_root_relative_only = true
+root_override_allowed = false
+
+# ------------------------------------------------------------
+# TOML PARSING + POISON MARKER RULES
+# ------------------------------------------------------------
+
+[parsing.runtime]
+parser = "tomllib"
+strict_toml = true
+fail_on_duplicate_keys = true
+
+[parsing.authoring]
+authoring_tool = "tomlkit"
+authoring_outputs_as_drafts = true
+authoring_draft_extension = ".txt"
+
+[parsing.poison_scan]
+forbid_merge_conflict_markers = true
+forbid_known_poison_tokens = true
+poison_tokens = ["<<<<<<<", "=======", ">>>>>>>"]
+poison_scan_scope = "registered_governance_only"
+poison_action = ["fail_abort", "quarantine_artifact"]
+
+# ------------------------------------------------------------
+# VALIDATOR MODE (FAIL-CLOSED)
+# ------------------------------------------------------------
+
+[validator.mode]
+fail_closed = true
+fail_start_on_any_registered_invalidity = true
+abort_on_first_failure = true
+warnings_allowed = false
+
+# ------------------------------------------------------------
+# VALIDATOR ERROR NOTIFICATION (BOUNDARY-SAFE, OPAQUE)
+# ------------------------------------------------------------
+
+[validator.notification]
+schema_id = "opaque_gate_notification"
+allowed_formats = ["toml", "json"]
+
+category_tag = "GATE_FAILURE"
+fields = ["error_gate_name", "category_tag"]
+
+allow_text = false
+allow_descriptions = false
+allow_snippets = false
+allow_paths = false
+allow_line_col = false
+allow_section_path = false
+allow_rule_hints = false
+allow_mitigation_guidance = false
+
+# Canonical gate vocabulary: opaque identifiers only; no descriptive semantics.
+# Gate IDs MUST be stable across versions once introduced.
+[validator.gate_vocabulary]
+gate_id_format = "GATE_0000"
+gates = [
+  "GATE_0001",
+  "GATE_0002",
+  "GATE_0003",
+  "GATE_0004",
+  "GATE_0005",
+  "GATE_0006",
+  "GATE_0007"
+]
+
+# ------------------------------------------------------------
+# VALIDATOR FAILURE HANDLING (LOCAL FORENSICS, NOT A NOTIFICATION)
+# ------------------------------------------------------------
+
+[validator.forensics]
+enabled = true
+emission_scope = "local_artifact_only"
+emit_on = ["any_registered_invalidity", "any_quarantine_event"]
+location_root = "new_directory/quarantine"
+report_format = "toml"
+notification_must_remain_opaque = true
+
+# ------------------------------------------------------------
+# SCHEMA + CROSS-FILE LINK VALIDATION
+# ------------------------------------------------------------
+
+[schema]
+require_document_start_ledger_header = true
+require_explicit_required_sections = true
+require_required_fields_and_enums = true
+schema_must_be_doc_specific = true
+
+[cross_file_linking]
+strict_reference_validation = true
+terms_must_exist = true
+rename_policy = "forbidden"
+typos_and_drift_policy = "fail_abort"
+
+# ------------------------------------------------------------
+# INGESTION SEQUENCE (001–009) EXECUTION SEMANTICS
+# ------------------------------------------------------------
+
+[ingestion]
+sequence_enforcement = "strict_in_order"
+abort_at_first_failure = true
+minimum_viable_governance = "all_registered_governance_artifacts"
+partial_boot_allowed = false
+
+# ------------------------------------------------------------
+# GOVERNANCE STATE CENTRALIZATION
+# ------------------------------------------------------------
+
+[governance_state]
+state_model = "single_canonical_state_object"
+load_granularity = "per_phase"
+centralization_chain = ["module", "phase_cores", "governance_core"]
+drift_prevention_required = true
+
+[load_timing]
+timing = "fail_start"
+hot_reload_allowed = false
+
+[engine_cores]
+compliance_claim_requires_enforcement = true
+unimplemented_invariants_policy = "fail_start"
+
+# ------------------------------------------------------------
+# SPEC + POLICY GOVERNANCE EVOLUTION
+# ------------------------------------------------------------
+
+[spec_policy]
+spec_and_policy_must_be_separate = true
+POLICY_role = "constraints_permissions"
+SPEC_role = "technical_requirements"
+
+[registry_evolution]
+spec_policy_become_governance_via_constitution_bump = true
+constraints_monotonicity = "tighten_only_never_more_ambiguous"
+
+# ------------------------------------------------------------
+# QUARANTINE
+# ------------------------------------------------------------
+
+[quarantine]
+quarantine_required = true
+quarantine_dir = "new_directory/quarantine"
+quarantine_trigger_conditions = ["ambiguity_class1", "poison_marker", "registered_parse_failure"]
+quarantine_action = ["abort", "isolate_artifact"]
+
+# ------------------------------------------------------------
+# FORK / DIFF LIMITATION (GIT NOT INITIALIZED)
+# ------------------------------------------------------------
+
+[fork_analysis]
+true_divergence_requires_git_history = true
+until_git_available = "snapshot_surrogate_only"

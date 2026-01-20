@@ -7,7 +7,7 @@ status = "invariant"
 output_mode = "non_operational_output"
 
 owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
-init_purpose = "Define the binding, unambiguous terminology for SSWG governance and enforcement. Undefined terms are forbidden."
+init_purpose = "The normalization_threshold_invariant module functions as a Directive Core truth gate that prevents corruption by disallowing perceptual manipulation of burden, enforcing a fixed invariant through deterministic normalization, and emitting truth only when reality—not narrative—remains within bounds."
 init_authors = ["Tommy Raven"]
 
 [module]
@@ -16,11 +16,6 @@ module_type = "invariant"
 authoritative = true
 deterministic = true
 mutable = false
-
-[purpose]
-description = "Normalize raw input intensity via a fixed transformation and enforce an immutable threshold invariant to emit a stabilized truth state."
-scope = "constraint_enforcement"
-non_operational = false
 
 [invariants]
 threshold_constant = 5.816

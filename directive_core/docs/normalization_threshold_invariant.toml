@@ -1,8 +1,18 @@
 [anchor]
 anchor_id = "normalization_threshold_invariant"
-anchor_version = "1.0.0"
-module_tier = "directive_core"
-module_kind = "truth_normalization_gate"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.1"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "Define the binding, unambiguous terminology for SSWG governance and enforcement. Undefined terms are forbidden."
+init_authors = ["Tommy Raven"]
+
+[module]
+module_id = "truth_normalization_gate"
+module_type = "invariant"
 authoritative = true
 deterministic = true
 mutable = false

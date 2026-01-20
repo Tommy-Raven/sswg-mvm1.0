@@ -157,7 +157,7 @@ forbid_merge_conflict_markers = true
 
 [canonical_model]
 required_anchor_model = "sswg+mvm+version"
-required_anchor_version_min = "1.0.0"
+required_anchor_version_min = "1.0.1"
 required_output_mode = "non_operational_output"
 
 [reference_policy]

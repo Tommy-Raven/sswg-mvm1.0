@@ -108,15 +108,64 @@ This baseline marks the transition from documented intent to enforced authority.
 
 Governance documents **MUST** be ingested in the following exact order:
 
-1. `TERMINOLOGY.md`
-2. `AGENTS.md`
-3. `SSWG_CONSTITUTION.md`
-4. `FORMAT_BOUNDARY_CONTRACT.md`
-5. `ARCHITECTURE.md`
-6. `FORMAL_GUARANTEES.md`
-7. `REFERENCES.md`
-8. `deprecated_nomenclature.md`
+[ingestion_sequence]
 
+sequence_id = "SSWG_CANONIC_9_PHASES"
+sequence_version = "1.0.1"
+
+[[ingestion_sequence.phase]]
+phase_id = "001"
+doc_id = "TERMINOLOGY"
+file = "TERMINOLOGY.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "002"
+doc_id = "AGENTS"
+file = "AGENTS.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "003"
+doc_id = "SSWG_CONSTITUTION"
+file = "SSWG_CONSTITUTION.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "004"
+doc_id = "SECURITY_INVARIANTS"
+file = "SECURITY_INVARIANTS.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "005"
+doc_id = "FORMAT_BOUNDARY_CONTRACT"
+file = "FORMAT_BOUNDARY_CONTRACT.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "006"
+doc_id = "ARCHITECTURE"
+file = "ARCHITECTURE.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "007"
+doc_id = "FORMAL_GUARANTEES"
+file = "FORMAL_GUARANTEES.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "008"
+doc_id = "REFERENCES"
+file = "REFERENCES.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "009"
+doc_id = "DEPRECATED_NOMENCLATURE"
+file = "deprecated_nomenclature.toml"
+required = true
 Missing, malformed, or out-of-order ledger documents **SHALL** cause governance validation failure.
 
 ### 4.2 Precedence Rules
@@ -296,7 +345,7 @@ implicit_authority_forbidden = true
 [ingestion_sequence]
 
 sequence_id = "SSWG_CANONIC_9_PHASES"
-sequence_version = "1.0.0"
+sequence_version = "1.0.1"
 
 [[ingestion_sequence.phase]]
 phase_id = "001"
@@ -431,7 +480,7 @@ forbid_merge_conflict_markers = true
 
 [canonical_model]
 required_anchor_model = "sswg+mvm+version"
-required_anchor_version_min = "1.0.0"
+required_anchor_version_min = "1.0.1"
 required_output_mode = "non_operational_output"
 
 # ------------------------------------------------------------

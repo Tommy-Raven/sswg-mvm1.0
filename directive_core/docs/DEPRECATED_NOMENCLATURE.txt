@@ -1,40 +1,13 @@
-<<<<<<< HEAD
-=======
-# === CANONIC LEDGER (TOML) ===
-```toml
-[anchor]
-anchor_id = "deprecated_nomenclature"
-anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
-scope = "directive_core/docs"
-status = "invariant"
-output_mode = "non_operational_output"
+DEPRECATED NOMENCLATURE (NON-AUTHORITATIVE NOTICE)
 
-owner = [
-  "2025© Raven Recordings",
-  "Tommy Raven (Thomas Byers)"
-]
+This document is non-authoritative and non-operational.
+Authoritative naming constraints are defined in:
 
-init_purpose = "Define deprecated naming variants for directive_core governance."
-init_authors = ["Tommy Raven"]
-```
+  directive_core/docs/DEPRECATED_NOMENCLATURE.toml
 
-# ⚠️ Notice: This document is non-authoritative, and non-operational⚠️
-It is forbidden to use markdown formatting for any authoritative or operational and contractual documentation. ALL markdown documents SHALL NEVER be used authoritatively or operatively. TOML formatting is the only acceptable format for authoritative source. You may view the TOML document-pair equivalent, `directive_core/docs/deprecated_nomenclature.toml`.
+Deprecated naming variants (observed or requested):
 
-
->>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1
-
-# ⚠️ DEPRECATION NOTICE — Naming Variants Prohibited
-
-The terms listed below are **deprecated** and **must not** appear in new or
-updated materials. Use only the canonical names **SSWG/MVM** (Uppercase = mindset and
-ethos) and **sswg-mvm** (Lowercase = software). Any derivation, expansion, or alternate
-branding is explicitly forbidden in updated content.
-
-## Deprecated naming variants (observed or requested)
-
-### Derivations from SSWG/MVM or sswg-mvm
+Derivations from SSWG/MVM or sswg-mvm:
 - SSWG-MVM
 - SSWG–MVM
 - SSWG MVM
@@ -46,7 +19,7 @@ branding is explicitly forbidden in updated content.
 - Recursive_Grimoire
 - Recursive Grimoire
 
-### Deprecated descriptive or marketing terms
+Deprecated descriptive or marketing terms:
 - Recursion
 - Recursive
 - Recursive AI

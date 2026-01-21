@@ -164,7 +164,7 @@ required = true
 [[ingestion_sequence.phase]]
 phase_id = "009"
 doc_id = "DEPRECATED_NOMENCLATURE"
-file = "deprecated_nomenclature.toml"
+file = "DEPRECATED_NOMENCLATURE.toml"
 required = true
 Missing, malformed, or out-of-order ledger documents **SHALL** cause governance validation failure.
 
@@ -235,7 +235,7 @@ Only **SSWG/MVM** (governance mindset and ethos) and **sswg-mvm** (software impl
 
 All other naming variants are deprecated and **SHALL NOT** be used in canonical governance documents.
 
-Deprecated identifiers are documented in [`deprecated_nomenclature.md`](./deprecated_nomenclature.md) and are retained for historical traceability only.
+Deprecated identifiers are documented in [`DEPRECATED_NOMENCLATURE.txt`](./DEPRECATED_NOMENCLATURE.txt) and are retained for historical traceability only.
 
 ---
 
@@ -398,7 +398,7 @@ required = true
 [[ingestion_sequence.phase]]
 phase_id = "009"
 doc_id = "DEPRECATED_NOMENCLATURE"
-file = "deprecated_nomenclature.toml"
+file = "DEPRECATED_NOMENCLATURE.toml"
 required = true
 
 # ------------------------------------------------------------
@@ -452,7 +452,7 @@ validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
 artifact_id = "DEPRECATED_NOMENCLATURE"
-path = "deprecated_nomenclature.toml"
+path = "DEPRECATED_NOMENCLATURE.toml"
 authority = "derived"
 validation = "toml_parse_required"
 

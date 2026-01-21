@@ -13,7 +13,7 @@ CANONICAL_GOVERNANCE_ORDER = [
     "ARCHITECTURE.toml",
     "FORMAL_GUARANTEES.toml",
     "REFERENCES.toml",
-    "deprecated_nomenclature.toml",
+    "DEPRECATED_NOMENCLATURE.toml",
 ]
 
 

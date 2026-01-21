@@ -1,141 +1,18 @@
-<<<<<<< HEAD
-<<<<<<<< HEAD:directive_core/docs/GOVERNANCE_ROOT.toml
-# Canonic Ledger
-```toml
-anchor:
-  anchor_id: "sswg_governance_root"
-  anchor_model: "sswg+mvm"
-  anchor_version: "1.0.0"
-  scope: "directive_core/docs"
-  owner:
-    - "2025© Raven Recordings"
-    - "Tommy Raven (Thomas Byers)"
-  status: "deprecated"
-  output_mode: "non_operational_output"
-  init_purpose: "Ratify `toml` as authoritative and directive_core as the centralized authoritative governance root. This is explicitly declared authoritative. This not `SSWG_CONSTITUTION.toml`. Validators MUST ignore the markdown mirror for ingestion order."
-  init_authors:
-    - "Tommy Raven"
-```
-========
-# GOVERNANCE ROOT — INFORMATIONAL NOTICE (NON-AUTHORITATIVE)
+GOVERNANCE ROOT (NON-AUTHORITATIVE NOTICE)
 
-⚠️ **This document is informational only. It is not authoritative.**
+This document is informational only and non-authoritative.
+All authoritative governance is defined in TOML artifacts under:
 
-All authoritative governance for this repository is defined exclusively
-in canonical **TOML** documents located under:
+  directive_core/docs/
 
-directive_core/docs/
+Authoritative governance sources include:
+- SSWG_CONSTITUTION.toml
+- TERMINOLOGY.toml
+- AGENTS.toml
+- FORMAT_BOUNDARY_CONTRACT.toml
+- ARCHITECTURE.toml
+- FORMAL_GUARANTEES.toml
+- SECURITY_INVARIANTS.toml
 
-This Markdown file exists solely to provide **human-readable context**
-and **navigation assistance**. It defines **no rules**, **no precedence**,
-and **no enforcement behavior**.
-
----
-
-## What Is the Governance Root?
-
-The governance root is the directory from which all canonical governance
-documents are loaded, validated, and enforced.
-
-For this repository:
-
-- The governance root is **`directive_core/docs/`**
-- All authoritative governance artifacts are TOML
-- All validation is fail-closed and schema-driven
-
----
-
-## Where Authority Actually Lives
-
-Refer to the following authoritative documents:
-
-- `SSWG_CONSTITUTION.toml` — supreme governance authority
-- `GOVERNANCE_ROOT.toml` — authoritative root declaration
-- `TERMINOLOGY.toml` — semantic authority
-- `AGENTS.toml` — agent constraints
-- `FORMAT_BOUNDARY_CONTRACT.toml` — format enforcement
-- `ARCHITECTURE.toml` — system structure
-
----
-
-## Important Boundary Notice
-
-This document:
-
-- Does **not** participate in governance ingestion
-- Does **not** define validator behavior
-- Does **not** override or amend the Constitution
-- Does **not** grant authority of any kind
-
-If this Markdown file conflicts with any TOML governance document,
-the TOML document **always wins**.
-
----
-
-For enforcement, validation, and audit behavior, see the TOML
-counterpart:
-
-directive_core/docs/GOVERNANCE_ROOT.toml
->>>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1:directive_core/docs/GOVERNANCE_ROOT.md
-
-
-<<<<<<<< HEAD:directive_core/docs/GOVERNANCE_ROOT.toml
-- >`directive_core/*.toml`< is the single authoritative governance root for this repository.
-- Governance resolution MUST source exclusively from `directive_core/docs`.
-- Governance-like artifacts outside `directive_core/docs` are non-authoritative and SHALL trigger validation failure.
-- `directive_core/docs` inputs take precedence over any other references.
-- This is EXPLICITLY declared NON-AUTHORITATIVE.
-- This NOT the constitution.
-- Validators IGNORE it for ingestion order
-========
->>>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1:directive_core/docs/GOVERNANCE_ROOT.md
-=======
-# ================================================================
-# GOVERNANCE_ROOT — AUTHORITATIVE ROOT DECLARATION
-# ================================================================
-
-[anchor]
-anchor_id = "sswg_governance_root"
-anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
-scope = "directive_core/docs"
-status = "invariant"
-output_mode = "non_operational_output"
-
-owner = [
-  "2025© Raven Recordings",
-  "Tommy Raven (Thomas Byers)"
-]
-
-init_purpose = "Declare directive_core/docs as the exclusive authoritative governance root for the repository."
-init_authors = ["Tommy Raven"]
-
-# ------------------------------------------------
-# Governance Root Declaration (Authoritative)
-# ------------------------------------------------
-
-[governance_root]
-
-# Absolute authority location
-authoritative_root = "directive_core/docs"
-
-# Resolution rules
-governance_resolution_source = "directive_core/docs"
-outside_docs_authoritative = false
-
-# Precedence semantics
-docs_precedence = true
-
-# Explicit constraints
-markdown_authoritative = false
-yaml_authoritative = false
-toml_authoritative = true
-
-# Ingestion behavior
-included_in_ingestion_order = false
-constitution_overrides = true
-
-# Safety flags
-implicit_authority_forbidden = true
-fallback_resolution_forbidden = true
->>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1
+If this text conflicts with any TOML governance document, the TOML
+artifact is authoritative.

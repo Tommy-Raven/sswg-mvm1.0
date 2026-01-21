@@ -41,9 +41,9 @@ REQUIRED_GOVERNANCE_ORDER = [
 ]
 
 REQUIRED_AMBIGUITY_FILES = {
-    "spec": DEFINITIONS_DIR / "ambiguity_gate_spec.toml",
-    "invariant": DEFINITIONS_DIR / "ambiguity_gate_invariant.toml",
-    "policy": DEFINITIONS_DIR / "ambiguity_gate.toml",
+    "spec": DEFINITIONS_DIR / "AMBIGUITY_GATE_SPEC.toml",
+    "invariant": DEFINITIONS_DIR / "AMBIGUITY_GATE_INVARIANT.toml",
+    "policy": DEFINITIONS_DIR / "AMBIGUITY_GATE.toml",
 }
 
 PUBLIC_ERROR_AMBIGUITY = "Semantic Ambiguity"

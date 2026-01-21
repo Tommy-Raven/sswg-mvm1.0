@@ -1,11 +1,7 @@
-# ============================================================
-# REFERENCES — CANONICAL VERSIONING AUTHORITY
-# ============================================================
-
 [anchor]
 anchor_id = "sswg_references"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -18,9 +14,6 @@ owner = [
 init_purpose = "Define canonical references and ledger versioning rules for directive_core."
 init_authors = ["Tommy Raven"]
 
-# ------------------------------------------------------------
-# SECTION 1 — PURPOSE
-# ------------------------------------------------------------
 
 [purpose]
 
@@ -31,9 +24,6 @@ prevents_silent_drift = true
 baseline_established = true
 baseline_version = "1.0.0"
 
-# ------------------------------------------------------------
-# SECTION 2 — CANONICAL LEDGER VERSION ENCODING
-# ------------------------------------------------------------
 
 [ledger_versioning]
 
@@ -46,9 +36,6 @@ required_anchor_version = "1.0.0"
 split_required = true
 split_waivable = false
 
-# ------------------------------------------------------------
-# SECTION 3 — PROHIBITED FORMS
-# ------------------------------------------------------------
 
 [prohibited_encodings]
 
@@ -65,9 +52,6 @@ examples_forbidden = [
 
 violation_behavior = "fail_closed"
 
-# ------------------------------------------------------------
-# SECTION 4 — SEMANTICS (NON-OVERLAPPING)
-# ------------------------------------------------------------
 
 [semantics]
 
@@ -84,9 +68,6 @@ combined_string_usage_allowed_only_for = [
 
 combined_string_forbidden_in_metadata = true
 
-# ------------------------------------------------------------
-# SECTION 5 — STABILITY GUARANTEE
-# ------------------------------------------------------------
 
 [stability]
 
@@ -96,13 +77,10 @@ anchor_version_advancement = "monotonic_only"
 silent_redefinition_forbidden = true
 reinterpretation_forbidden = true
 
-# ------------------------------------------------------------
-# SECTION 6 — CANONICAL BASELINE DEFINITION
-# ------------------------------------------------------------
 
 [baseline]
 
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 
 meaning = [
   "first_validator_enforced_governance_baseline",
@@ -113,9 +91,6 @@ meaning = [
 not_a_software_release = true
 not_a_feature_completeness_signal = true
 
-# ------------------------------------------------------------
-# SECTION 7 — PRE-BASELINE DRAFTS
-# ------------------------------------------------------------
 
 [pre_baseline]
 
@@ -134,9 +109,6 @@ usage_rules = [
   "must_not_be_enforced"
 ]
 
-# ------------------------------------------------------------
-# SECTION 8 — AUTHORITY BOUNDARY
-# ------------------------------------------------------------
 
 [authority_boundary]
 
@@ -151,9 +123,6 @@ before_baseline = [
   "no_enforcement_guarantees"
 ]
 
-# ------------------------------------------------------------
-# SECTION 9 — FORWARD EVOLUTION RULE
-# ------------------------------------------------------------
 
 [evolution]
 
@@ -164,9 +133,6 @@ silent_changes_forbidden = true
 implicit_reinterpretation_forbidden = true
 retroactive_alteration_forbidden = true
 
-# ------------------------------------------------------------
-# SECTION 10 — END-OF-DOCUMENT SUMMARY (NORMATIVE)
-# ------------------------------------------------------------
 
 [summary]
 
@@ -182,6 +148,3 @@ Any document violating these rules is non-canonical and SHALL be rejected.
 
 summary_mandatory_in_future_docs = true
 
-# ------------------------------------------------------------
-# END OF REFERENCES
-# ------------------------------------------------------------

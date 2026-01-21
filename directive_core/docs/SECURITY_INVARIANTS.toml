@@ -1,8 +1,7 @@
-# === CANONIC LEDGER (TOML) ===
 [anchor]
 anchor_id = "security_invariants"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -15,9 +14,6 @@ owner = [
 init_purpose = "Define non-negotiable security invariants governing authority, ambiguity, and agent behavior."
 init_authors = ["Tommy Raven"]
 
-# --------------------------------------------------
-# SECURITY AXIOMS (DERIVED, NON-NEGOTIABLE)
-# --------------------------------------------------
 
 [invariant.ambiguity_is_vulnerability]
 statement = "Semantic ambiguity SHALL be treated as a security vulnerability, not a documentation defect."
@@ -59,9 +55,6 @@ statement = "Examples, illustrations, or demonstrations SHALL NEVER confer autho
 enforcement = "non_authoritative"
 rationale = "Authority derives only from canonical governance, not narrative context."
 
-# --------------------------------------------------
-# ENFORCEMENT REQUIREMENTS
-# --------------------------------------------------
 
 [enforcement]
 validators_must_enforce = true

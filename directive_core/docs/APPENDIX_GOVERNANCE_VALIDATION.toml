@@ -1,11 +1,7 @@
-# ============================================================
-# APPENDIX_GOVERNANCE_VALIDATION — DESCRIPTIVE GOVERNANCE MIRROR
-# ============================================================
-
 [anchor]
 anchor_id = "appendix_governance_validation"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "non_authoritative"
 output_mode = "non_operational_output"
@@ -18,9 +14,6 @@ owner = [
 init_purpose = "Provide a descriptive, non-authoritative appendix explaining governance validation behavior and semantic ambiguity extermination enforced elsewhere."
 init_authors = ["Tommy Raven"]
 
-# ------------------------------------------------------------
-# SECTION A.1 — PURPOSE (DESCRIPTIVE ONLY)
-# ------------------------------------------------------------
 
 [purpose]
 
@@ -36,9 +29,6 @@ All enforcement behavior described here is authoritatively defined
 in other TOML governance artifacts and enforced by validators.
 """
 
-# ------------------------------------------------------------
-# SECTION A.2 — CANONICAL GOVERNANCE VALIDATION SURFACE
-# ------------------------------------------------------------
 
 [validation_surface]
 
@@ -54,9 +44,6 @@ json_authoritative = false
 
 outside_surface_behavior = "ignored"
 
-# ------------------------------------------------------------
-# SECTION A.3 — CANONICAL LEDGER HEADER INVARIANT (DESCRIBED)
-# ------------------------------------------------------------
 
 [canonical_header_invariant]
 
@@ -73,9 +60,6 @@ constraints = [
 
 violation_effect = "invalid_canonical_header"
 
-# ------------------------------------------------------------
-# SECTION A.4 — GOVERNANCE INGESTION ORDER (DESCRIBED)
-# ------------------------------------------------------------
 
 [ingestion_order]
 
@@ -91,9 +75,6 @@ failure_conditions = [
   "out_of_order"
 ]
 
-# ------------------------------------------------------------
-# SECTION A.5 — LEDGER FORMAT INVARIANT (DESCRIBED)
-# ------------------------------------------------------------
 
 [ledger_format]
 
@@ -105,9 +86,6 @@ machine_authority_sources = [
   "toml_only"
 ]
 
-# ------------------------------------------------------------
-# SECTION A.6 — SEMANTIC AMBIGUITY EXTERMINATION DOCTRINE
-# ------------------------------------------------------------
 
 [semantic_ambiguity]
 
@@ -120,9 +98,6 @@ Any language that allows multiple interpretations, implied authority,
 contextual exceptions, inferred intent, or delegated responsibility.
 """
 
-# ------------------------------------------------------------
-# SECTION A.7 — SEMANTIC AMBIGUITY GATE (DESCRIBED)
-# ------------------------------------------------------------
 
 [semantic_ambiguity_gate]
 
@@ -145,9 +120,6 @@ must_not_expose = [
   "remediation_hints"
 ]
 
-# ------------------------------------------------------------
-# SECTION A.8 — AMBIGUITY EXTERMINATION SEMANTICS
-# ------------------------------------------------------------
 
 [ambiguity_response]
 
@@ -161,9 +133,6 @@ repair_allowed = false
 interpretation_allowed = false
 contextualization_allowed = false
 
-# ------------------------------------------------------------
-# SECTION A.9 — AMBIGUITY GATE GOVERNANCE STRUCTURE
-# ------------------------------------------------------------
 
 [ambiguity_gate_governance]
 
@@ -179,9 +148,6 @@ policy_authoritative = true
 
 absence_behavior = "governance_failure"
 
-# ------------------------------------------------------------
-# SECTION A.10 — FORBIDDEN LANGUAGE CLASSES (DESCRIBED)
-# ------------------------------------------------------------
 
 [forbidden_language_examples]
 
@@ -196,9 +162,6 @@ examples = [
 
 detection_effect = "semantic_ambiguity_failure"
 
-# ------------------------------------------------------------
-# SECTION A.11 — VALIDATOR BINDING (DESCRIBED)
-# ------------------------------------------------------------
 
 [validator_behavior]
 
@@ -208,6 +171,3 @@ deterministic = true
 interpretive_repair = false
 internal_details_exposed = false
 
-# ------------------------------------------------------------
-# END OF APPENDIX_GOVERNANCE_VALIDATION
-# ------------------------------------------------------------

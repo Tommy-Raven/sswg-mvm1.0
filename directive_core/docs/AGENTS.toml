@@ -1,11 +1,7 @@
-# ============================================================
-# AGENTS — CANONICAL AGENT GOVERNANCE (AUTHORITATIVE)
-# ============================================================
-
 [anchor]
 anchor_id = "sswg_agents"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -18,9 +14,6 @@ owner = [
 init_purpose = "Define canonical agent governance for directive_core."
 init_authors = ["Tommy Raven"]
 
-# ============================================================
-# SECTION 1 — CANONICAL HEADER CONSTRAINTS (INVARIANT)
-# ============================================================
 
 [canonical_header]
 
@@ -32,9 +25,6 @@ yaml_fences_forbidden = true
 
 description = "All governance documents MUST begin with a single TOML canonical ledger header. YAML, mixed formats, or duplicate anchors are forbidden."
 
-# ============================================================
-# SECTION 2 — ROOT-SCOPE AGENT APPLICABILITY
-# ============================================================
 
 [agents.scope]
 
@@ -48,9 +38,6 @@ applies_to = [
 
 waivable = false
 
-# ============================================================
-# SECTION 3 — NON-DESTRUCTIVE EDITING INVARIANT (AUTHORITATIVE)
-# ============================================================
 
 [agents.editing_invariant]
 
@@ -81,9 +68,6 @@ exceptions_permitted = false
 waivers_permitted = false
 manual_override_permitted = false
 
-# ============================================================
-# SECTION 4 — SEMANTIC AMBIGUITY PROHIBITION (INVARIANT)
-# ============================================================
 
 [agents.semantic_ambiguity]
 
@@ -101,9 +85,6 @@ agents_must_not = [
 
 public_error_label = "Semantic Ambiguity"
 
-# ============================================================
-# SECTION 5 — FORBIDDEN GOVERNANCE LANGUAGE
-# ============================================================
 
 [agents.forbidden_language]
 
@@ -123,9 +104,6 @@ context_ignored = true
 intent_ignored = true
 harmlessness_ignored = true
 
-# ============================================================
-# SECTION 6 — REQUIRED GOVERNANCE LANGUAGE
-# ============================================================
 
 [agents.required_language]
 
@@ -145,9 +123,6 @@ disallowed_modals = [
   "typically"
 ]
 
-# ============================================================
-# SECTION 7 — EXCEPTION HANDLING (STRICT)
-# ============================================================
 
 [agents.exceptions]
 
@@ -164,9 +139,6 @@ exceptions_must = [
   "be_scope_bounded"
 ]
 
-# ============================================================
-# SECTION 8 — MANDATORY AMBIGUITY GATE
-# ============================================================
 
 [agents.ambiguity_gate]
 
@@ -182,9 +154,6 @@ must_not_expose = [
   "remediation_hints"
 ]
 
-# ============================================================
-# SECTION 9 — FAILURE SEMANTICS
-# ============================================================
 
 [agents.failure_semantics]
 
@@ -196,9 +165,6 @@ on_violation = [
 
 guidance_forbidden = true
 
-# ============================================================
-# SECTION 10 — INTERPRETATION PROHIBITION
-# ============================================================
 
 [agents.interpretation]
 
@@ -208,6 +174,3 @@ resolution_allowed = false
 
 ambiguity_results_in = "rejection_only"
 
-# ============================================================
-# END OF AGENTS — ALL RULES ARE NON-WAIVABLE
-# ============================================================

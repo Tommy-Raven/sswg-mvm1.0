@@ -1,36 +1,34 @@
-# Canonic Ledger
-```toml
 [anchor]
 anchor_id = "iam_conditional_module"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
-owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
-status = ["Canonic", "Ledger", "Governance", "draft"'s
+status = "invariant"
 output_mode = "non_operational_output"
-init_purpose = "Initial IAM conditional module defining input control, access-delta control, and vector-controlled sharing."
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "Define IAM conditional controls for data input, access delta, and vector-controlled sharing."
 init_authors = ["Tommy Raven"]
 
 [module]
 module_id = "iam_conditional_delta_share"
 module_version = "1.0.0"
 module_kind = "iam_conditional"
-purpose = "Dictatepubloic system data-input rules, systems data access-delta rules, and vector-controlled data sharing via conditional bindings aligned to SSWG/MVM governance."
+purpose = "Dictate system data-input rules, systems data access-delta rules, and vector-controlled data sharing via conditional bindings aligned to SSWG/MVM governance."
 default_effect = "deny"
 status = "draft"
 
 [sswg]
-terminological_phase_gate = ["per_phase,""unified", "module", "Independent"]
+terminological_phase_gate = ["per_phase", "unified", "module", "independent"]
 governance_baseline = "sswg-mvm"
-governance_baseline_version = "1.0.0" 
-canonic_9_phases_ingestion_order = [boolean : "true"]
-ambiguity_phase_gate = boolean: "true"]
-three_epistemic_layers = true ["facts", "derived_structure", "educated_inference"]
+governance_baseline_version = "1.0.1"
+canonic_9_phases_ingestion_order = true
+ambiguity_phase_gate = true
+three_epistemic_layers = ["facts", "derived_structure", "educated_inference"]
 deliverable_constraint_first = true
-artifacts_adhehsive_constraints + true
-Evidence_backed_facts_before_conclusions = true
+artifacts_adhesive_constraints = true
+evidence_backed_facts_before_conclusions = true
 deny_by_default = true
-deterministic_emission = boolean
+deterministic_emission = true
 schema_first_validation = true
 auditability_and_traceability = true
 semantic_drift_guards = true
@@ -40,11 +38,11 @@ human_in_loop_phase_gating = true
 system_id = "SYSTEM_ID"
 tenant_id = "TENANT_ID"
 trust_zone = "TRUST_ZONE"
-canonical_state = "candidate"     # draft|candidate|canonical
-perspective_mode = "fresh"        # fresh|revision|maintenance
+canonical_state = "candidate"
+perspective_mode = "fresh"
 assumption_policy = "no_implicit_assumptions"
-ambiguous_policy_langage = Fail_Fast:"unsecured_resources",
-lineage_id = "LINEAGE_ID[Parent_Hash", "Child_Hash"]
+ambiguous_policy_language = "fail_fast:unsecured_resources"
+lineage_id = ["LINEAGE_ID_PARENT_HASH", "LINEAGE_ID_CHILD_HASH"]
 run_id = "RUN_ID"
 commit_ref = "COMMIT_REF"
 
@@ -53,12 +51,9 @@ deny_on_missing_condition = true
 deny_on_schema_validation_failure = true
 deny_on_unclassified_data = true
 deny_on_missing_evidence_pointer = true
-deny_on_unknown_vectorQ = true
+deny_on_unknown_vector = true
 deny_on_missing_lineage_id = true
 
-# -------------------------------
-# IAM Conditional Bindings (.ciam)
-# -------------------------------
 [[bindings]]
 binding_id = "BINDING_001"
 role = "ROLE"
@@ -69,28 +64,27 @@ title = "TITLE"
 description = "DESCRIPTION"
 expression = "EXPRESSION"
 
-# ----------------------
-# 1) System Data-Input
-# ----------------------
 [data_input]
 policy_id = "STDIN_001"
-data_type = ambiguous observations
+data_type = "ambiguous_observations"
 default_effect = "deny"
 
-[allowed_sources] = {
-"SYSTEM_AUTHOR: "Tommy Raven",
-"SOURCE_SYSTEM_Joint_Allowed = true",
-"SYSTEM_co_AUTHOR": Raven Recordings, pvy. prpty. ©1992-©2025
- }
-]
+[data_input.allowed_sources]
+system_author = "Tommy Raven"
+source_system_joint_allowed = true
+system_co_author = "Raven Recordings, pvy. prpty. ©1992-©2025"
+
+[data_input.allowed_channels]
 allowed_channels = ["api", "batch", "ui_upload"]
 allowed_content_types = ["json", "markdown"]
 allowed_data_classes = ["public", "internal"]
 
+[data_input.denied_sources]
 denied_sources = ["UNTRUSTED_SOURCE"]
 denied_channels = ["email_attachment"]
 denied_data_classes = ["restricted", "secret"]
 
+[data_input.limits]
 max_object_bytes = 10485760
 required_tags = ["owner", "purpose", "retention_class"]
 required_schema_ids = ["SCHEMA_ID_001"]
@@ -109,9 +103,6 @@ capture_hashes = true
 hash_algorithms = ["sha256"]
 require_lineage_id = true
 
-# -----------------------------
-# 2) Systems Data Access Delta
-# -----------------------------
 [data_access_delta]
 policy_id = "DAD_001"
 baseline = "least_privilege"
@@ -147,9 +138,6 @@ revoke_resources = ["resource:DATASET_ID/sensitive/*"]
 
 evidence_pointers = ["ARTIFACT_POINTER"]
 
-# -----------------------------------------
-# 3) Vector-Controlled Data Sharing (Egress)
-# -----------------------------------------
 [data_sharing]
 policy_id = "DSHARE_001"
 default_effect = "deny"
@@ -198,40 +186,3 @@ minimize_fields = true
 
 [data_sharing.transform_profiles.TPROFILE_STRICT]
 redact_fields = ["pii.*", "secrets.*", "internal_notes.*"]
-pseudonymize_fields = ["user_id", "email", "phone"]
-minimize_fields = true
-
-# -------------------
-# 4) Audit + Logging
-# -------------------
-[audit]
-audit_id = "AUDIT_001"
-log_all_decisions = true
-tamper_evident = true
-
-log_fields = [
-  "timestamp",
-  "actor",
-  "role",
-  "member",
-  "action",
-  "resource",
-  "decision",
-  "binding_id",
-  "delta_id",
-  "vector_id",
-  "lineage_id",
-  "run_id",
-  "commit_ref",
-  "evidence_pointers"
-]
-
-# ---------------------
-# 5) Drift Guard Policy
-# ---------------------
-[drift_guards]
-require_version_bump_on_change = true
-require_diff_log_pointer = true
-require_human_gate_for_canonical = true
-canonical_promotion_requires = ["review_signature", "evidence_ledger_entry", "diff_log_pointer"]
-```

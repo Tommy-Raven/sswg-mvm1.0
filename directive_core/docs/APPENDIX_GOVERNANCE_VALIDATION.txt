@@ -174,12 +174,12 @@ Ambiguity is never waived or contextualized.
 The Ambiguity Gate is governed by **distinct TOML artifacts**, including:
 
 1. **Specification (Descriptive)**
-   * Example: `ambiguity_gate_spec.toml`
+   * Example: `AMBIGUITY_GATE_SPEC.toml`
    * Describes intent and trigger categories
    * Not authoritative
 
 2. **Invariant (Authoritative)**
-   * Example: `ambiguity_gate_invariant.toml`
+   * Example: `AMBIGUITY_GATE_INVARIANT.toml`
    * Declares ambiguity intolerance as immutable
    * Enforced during governance ingestion
 

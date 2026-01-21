@@ -92,7 +92,7 @@ required = true
 [[ingestion_sequence.phase]]
 phase_id = "009"
 doc_id = "DEPRECATED_NOMENCLATURE"
-file = "deprecated_nomenclature.toml"
+file = "DEPRECATED_NOMENCLATURE.toml"
 required = true
 
 [[governance_registry.artifact]]
@@ -139,7 +139,7 @@ validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
 artifact_id = "DEPRECATED_NOMENCLATURE"
-path = "deprecated_nomenclature.toml"
+path = "DEPRECATED_NOMENCLATURE.toml"
 authority = "derived"
 validation = "toml_parse_required"
 

@@ -1,11 +1,7 @@
-# ============================================================
-# FORMAL_GUARANTEES — AUTHORITATIVE GOVERNANCE CONTRACT
-# ============================================================
-
 [anchor]
 anchor_id = "formal_guarantees"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -18,9 +14,6 @@ owner = [
 init_purpose = "Define the formal guarantees and explicit non-guarantees of the SSWG/MVM system."
 init_authors = ["Tommy Raven"]
 
-# ------------------------------------------------------------
-# SECTION 1 — SCOPE
-# ------------------------------------------------------------
 
 [scope]
 
@@ -34,9 +27,6 @@ applies_to = [
 governed_runtime = "sswg_mvm"
 authority_source = "directive_core"
 
-# ------------------------------------------------------------
-# SECTION 2 — TERMINATION AND CONVERGENCE STATUS
-# ------------------------------------------------------------
 
 [recursion.convergence]
 
@@ -49,9 +39,6 @@ proof of convergence for recursive refinement across all workflows, templates,
 or evaluation regimes.
 """
 
-# ------------------------------------------------------------
-# SECTION 3 — TERMINATION GUARANTEE MECHANISM
-# ------------------------------------------------------------
 
 [recursion.termination]
 
@@ -64,9 +51,6 @@ policy limits. These guardrails are treated as formal assumptions and are
 mandatory for all recursion entry points.
 """
 
-# ------------------------------------------------------------
-# SECTION 4 — REQUIRED GUARDRAILS (MANDATORY)
-# ------------------------------------------------------------
 
 [recursion.guardrails]
 
@@ -88,9 +72,6 @@ audit_trail_immutable = true
 
 implementation_reference = "ai_recursive/recursion_manager.py"
 
-# ------------------------------------------------------------
-# SECTION 5 — FORMAL ASSUMPTIONS
-# ------------------------------------------------------------
 
 [[formal_assumption]]
 id = "guardrails_enabled"
@@ -107,9 +88,6 @@ statement = "Termination conditions MUST be explicitly declared and recorded."
 assumptions_mandatory = true
 assumptions_waivable = false
 
-# ------------------------------------------------------------
-# SECTION 6 — VALIDATION REQUIREMENTS
-# ------------------------------------------------------------
 
 [validation]
 
@@ -119,9 +97,6 @@ assumptions_validated = true
 
 violation_behavior = "fail_closed"
 
-# ------------------------------------------------------------
-# SECTION 7 — NON-GUARANTEES (EXPLICIT)
-# ------------------------------------------------------------
 
 [non_guarantees]
 
@@ -135,9 +110,6 @@ No guarantees are made regarding global convergence, optimality, or completeness
 Any behavior outside enforced guardrails is explicitly non-canonical.
 """
 
-# ------------------------------------------------------------
-# SECTION 8 — AUTHORITY BOUNDARY
-# ------------------------------------------------------------
 
 [authority]
 
@@ -145,6 +117,3 @@ pre_baseline_documents_authoritative = false
 baseline_anchor_version = "1.0.0"
 documents_prior_to_baseline = "historical_only"
 
-# ------------------------------------------------------------
-# END OF FORMAL_GUARANTEES
-# ------------------------------------------------------------

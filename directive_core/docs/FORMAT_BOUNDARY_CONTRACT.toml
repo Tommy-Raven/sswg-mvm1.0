@@ -1,11 +1,7 @@
-# ============================================================
-# FORMAT_BOUNDARY_CONTRACT — AUTHORITATIVE GOVERNANCE CONTRACT
-# ============================================================
-
 [anchor]
 anchor_id = "sswg_format_boundary_contract"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -18,9 +14,6 @@ owner = [
 init_purpose = "Define canonical format boundary flows, authority surfaces, and enforcement requirements."
 init_authors = ["Tommy Raven"]
 
-# ------------------------------------------------------------
-# SECTION 1 — CONTRACT AUTHORITY AND PRECEDENCE
-# ------------------------------------------------------------
 
 [contract]
 
@@ -34,9 +27,6 @@ must_exist = true
 absence_is_fatal = true
 malformed_is_fatal = true
 
-# ------------------------------------------------------------
-# SECTION 2 — CANONICAL FORMAT ROLES AND AUTHORITY
-# ------------------------------------------------------------
 
 [formats]
 
@@ -50,18 +40,13 @@ markdown_authoritative = false
 toml_authoritative = true
 json_authoritative = true
 
-# JSON authority tightening
 json_derives_from_toml = true
 json_never_source_of_authority = true
 
-# Markdown authority tightening
 markdown_render_direction = "toml_to_markdown_only"
 markdown_roundtrip_forbidden = true
 markdown_never_ingested = true
 
-# ------------------------------------------------------------
-# SECTION 3 — ALLOWED FLOWS (EXHAUSTIVE)
-# ------------------------------------------------------------
 
 [[allowed_flow]]
 id = "human_to_machine_authoring"
@@ -93,9 +78,6 @@ sequence = [
 
 allowed_flows_exhaustive = true
 
-# ------------------------------------------------------------
-# SECTION 4 — FORBIDDEN FLOWS (ABSOLUTE)
-# ------------------------------------------------------------
 
 [[forbidden_flow]]
 reason = "Humans must not author authoritative TOML"
@@ -117,9 +99,6 @@ implicit_or_undocumented_flows_forbidden = true
 reverse_flows_forbidden = true
 roundtrip_flows_forbidden = true
 
-# ------------------------------------------------------------
-# SECTION 5 — GATE REQUIREMENTS
-# ------------------------------------------------------------
 
 [gates.semantic_ambiguity]
 
@@ -150,9 +129,6 @@ schema_validation_required = true
 additional_properties_forbidden = true
 unknown_tables_forbidden = true
 
-# ------------------------------------------------------------
-# SECTION 6 — FAILURE SEMANTICS
-# ------------------------------------------------------------
 
 [failure]
 
@@ -172,6 +148,3 @@ audit_logging_allowed = true
 audit_log_scope = "directive_core/artifacts/audit"
 audit_logs_append_only = true
 
-# ------------------------------------------------------------
-# END OF FORMAT_BOUNDARY_CONTRACT
-# ------------------------------------------------------------

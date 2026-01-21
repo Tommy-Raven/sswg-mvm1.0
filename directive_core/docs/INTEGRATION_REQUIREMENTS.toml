@@ -1,7 +1,7 @@
 [anchor]
 anchor_id = "integration_requirements"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 status = "candidate"
 output_mode = "non_operational_output"

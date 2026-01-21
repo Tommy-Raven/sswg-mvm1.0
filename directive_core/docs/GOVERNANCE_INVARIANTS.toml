@@ -1,9 +1,13 @@
 [anchor]
 anchor_id = "GOVERNANCE_INVARIANTS.toml"
 anchor_model = "sswg+mvm+version"
-anchor_version = "v1.0.1"
-anchor_scope = ["SSWG/MVM", "sswg-mvm"]
-anchor_status = "invariant"
+anchor_version = "1.0.1"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "Define governance invariants for authority boundaries, registries, naming, and conflict handling."
+init_authors = ["Tommy Raven"]
 anchor_kind = "constitutional"
 anchor_authority = "supreme"
 authoritative_format = "toml"

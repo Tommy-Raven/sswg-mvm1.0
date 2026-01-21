@@ -1,3 +1,14 @@
+[anchor]
+anchor_id = "ambiguity_gate_spec"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.1"
+scope = "directive_core/docs"
+status = "descriptive"
+output_mode = "non_operational_output"
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "Describe the ambiguity gate position and data flow boundaries."
+init_authors = ["Tommy Raven"]
+
 [spec]
 spec_id = "ambiguity_gate_diagram"
 spec_version = "1.0.0"

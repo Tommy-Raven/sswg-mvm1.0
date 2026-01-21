@@ -1,25 +1,10 @@
-# Canonic Ledger
-```toml
-anchor:
-  anchor_id: "sswg_governance_root"
-  anchor_model: "sswg+mvm"
-  anchor_version: "1.0.0"
-  scope: "directive_core/docs"
-  owner:
-    - "2025© Raven Recordings"
-    - "Tommy Raven (Thomas Byers)"
-  status: "invariant"
-  output_mode: "non_operational_output"
-  init_purpose: "Ratify `directive_index.json as authoritative and directive_core/docs/ as the centralized authoritative governance root. This is explicitly declared authoritative. This not `SSWG_CONSTITUTION.toml`. Validators MUST ignore the markdown-paired mirror for ingestion order."
-  init_authors:
-    - "Tommy Raven"
-```
-
 {
-<<<<<<< HEAD
   "$schema": "schemas/directive_index.schema.json",
   "schema_version": "1.0.0",
-  "canonical_path": "~/directive_core/directive_index.toml",
+  "directive_core_version": "1.0.0",
+  "canonical_path": "directive_core/directive_index.json",
+  "governance_root": "directive_core/docs",
+  "authoritative_format": "toml",
   "definitions": [
     {
       "directive_id": "sswg_governance_root",
@@ -55,12 +40,8 @@ anchor:
       "directive_id": "sswg_references",
       "definition_path": "directive_core/definitions/references.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
-=======
-  "directive_core_version": "1.0.0",
-  "canonical_path": "directive_core",
-  "governance_root": "directive_core/docs",
-  "authoritative_format": "toml",
-
+    }
+  ],
   "governance_ingestion_order": [
     "TERMINOLOGY.toml",
     "AGENTS.toml",
@@ -72,7 +53,6 @@ anchor:
     "REFERENCES.toml",
     "DEPRECATED_NOMENCLATURE.toml"
   ],
-
   "authoritative_governance": {
     "SSWG_CONSTITUTION": {
       "file": "SSWG_CONSTITUTION.toml",
@@ -83,10 +63,8 @@ anchor:
       "fail_on_missing": true,
       "fail_on_malformed": true,
       "fail_on_reorder": true
->>>>>>> b615e23db16a371564e680205f8c5ee4619fabb1
     }
   },
-
   "governance_documents": {
     "TERMINOLOGY": {
       "file": "TERMINOLOGY.toml",
@@ -122,9 +100,13 @@ anchor:
       "file": "REFERENCES.toml",
       "format": "toml",
       "required": true
+    },
+    "DEPRECATED_NOMENCLATURE": {
+      "file": "DEPRECATED_NOMENCLATURE.toml",
+      "format": "toml",
+      "required": true
     }
   },
-
   "validation_policy": {
     "fail_closed": true,
     "semantic_ambiguity_gate_required": true,

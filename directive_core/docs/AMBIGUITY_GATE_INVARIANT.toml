@@ -1,3 +1,14 @@
+[anchor]
+anchor_id = "ambiguity_gate_invariant"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.1"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "Define the invariant requiring the ambiguity gate in governance ingestion."
+init_authors = ["Tommy Raven"]
+
 [invariant]
 invariant_id = "ambiguity_gate_enforcement"
 version = "1.0.0"
@@ -24,4 +35,3 @@ halt_ingestion = true
 [audit]
 record_violation = true
 store_location = "directive_core/artifacts/audit"
-

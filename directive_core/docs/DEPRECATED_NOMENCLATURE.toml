@@ -1,7 +1,7 @@
 [anchor]
 anchor_id = "deprecated_nomenclature"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.0"
+anchor_version = "1.0.1"
 scope = "directive_core/docs"
 owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
 status = "invariant"

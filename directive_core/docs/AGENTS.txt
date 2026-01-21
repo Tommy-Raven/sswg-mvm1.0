@@ -79,7 +79,7 @@ sswg-mvm — software implementation
 
 All other variants are deprecated and forbidden in canonical governance.
 
-See: deprecated_nomenclature.toml
+See: DEPRECATED_NOMENCLATURE.toml
 
 
 ---

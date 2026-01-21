@@ -1,24 +1,31 @@
 {
-  "$schema": "https://github.com/Tommy-Raven/sswg-mvm/blob/main/context7.json",
-  "projectTitle": "SSWG_/_MVM_GOVERNING_INVARIANTS",
-  "description": "REPO_GOVERNANCE_INVARIANTS",
-  "folders": ["directive_core","docs"],
-  "excludeFolders": ["src"],
-  "excludeFiles": ["all"],
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "SSWG/MVM_GOVERNING_INVARIANTS",
+  "description": "SSWG/MVM governance invariants and enforcement artifacts (TOML-first, registry-scoped, fail-closed).",
+  "branch": "main",
+  "folders": [
+    "directive_core/docs"
+  ],
+  "excludeFolders": [
+    "src"
+  ],
+  "excludeFiles": [],
   "rules": [
-    "All repo interaction initiates with directive_core/docs and official governance documentation", 
-    "governance/contractual/factual documents formatted in toml only",
-    "toml is absolute, validated, verified, and truth-bound",
-    "data ingress is uni-directionally applied towards toml",
-    "SSWG_CONSTITUTION.toml is supreme repo authority", 
-    "TERMINOLOGY.toml is supreme lexical authority",
-    "GOVERNANCE_REGISTRY.toml is supreme governance register",
-    "AGENTS.toml is supreme constraints authority for human or machine-agentic repo interactions"
+    "Begin all repository interpretation at directive_core/docs.",
+    "Treat TOML governance as authoritative only when registered by directive_core/docs/SSWG_CONSTITUTION.toml.",
+    "Treat non-TOML files as reference-only; non-TOML content MUST NOT define, amend, or override governance.",
+    "Treat directive_core/docs/TERMINOLOGY.toml as the highest semantic authority; undefined terms are forbidden.",
+    "Enforce fail-closed and fail-start for any registered governance invalidity; abort at first failure.",
+    "Treat ambiguity as CLASS_1_SEVERE; response is fail_abort plus quarantine_artifact.",
+    "Return boundary failure notifications as opaque gate identifiers only; emit no descriptive text across boundaries.",
+    "Identifier delineation is strict: SSWG/MVM is the governance mindset and ethos identifier; sswg-mvm is the software minimum viable model identifier."
   ],
   "previousVersions": [
     {
-      "tag": "v1.0.0",
-      "tag": "v1 0.1"
+      "tag": "v1.0.0"
     },
+    {
+      "tag": "v1.0.1"
+    }
   ]
 }

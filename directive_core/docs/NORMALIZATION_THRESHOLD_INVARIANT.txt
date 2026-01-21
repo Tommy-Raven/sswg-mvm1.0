@@ -1,0 +1,49 @@
+[anchor]
+anchor_id = "normalization_threshold_invariant"
+anchor_model = "sswg+mvm+version"
+anchor_version = "1.0.1"
+scope = "directive_core/docs"
+status = "invariant"
+output_mode = "non_operational_output"
+
+owner = ["2025© Raven Recordings", "Tommy Raven (Thomas Byers)"]
+init_purpose = "The normalization_threshold_invariant module functions as a Directive Core truth gate that prevents corruption by disallowing perceptual manipulation of burden, enforcing a fixed invariant through deterministic normalization, and emitting truth only when reality—not narrative—remains within bounds."
+init_authors = ["Tommy Raven"]
+
+[module]
+module_id = "truth_normalization_gate"
+module_type = "invariant"
+authoritative = true
+deterministic = true
+mutable = false
+
+[invariants]
+threshold_constant = 5.816
+threshold_mutability = "forbidden"
+override_policy = "reject"
+
+[inputs]
+a = { type = "float", description = "Raw unbounded input surge" }
+
+[transforms.x_factorial]
+type = "gamma_factorial"
+domain = "real_positive"
+purpose = "Normalize surge magnitude into comparable scale"
+
+[logic]
+equation = "x! = a / threshold_constant"
+evaluation = "binary_gate"
+
+[outputs.y]
+type = "truth_state"
+description = "Stabilized truth output emitted only when invariant holds"
+
+[failure_modes]
+on_threshold_violation = "hard_reject"
+on_invalid_input = "schema_fail"
+
+[audit]
+log_inputs = true
+log_outputs = true
+log_decisions = true
+trace_id_required = true

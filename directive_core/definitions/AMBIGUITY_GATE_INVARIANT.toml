@@ -2,7 +2,6 @@
 anchor_id = "ambiguity_gate_invariant"
 anchor_model = "sswg+mvm+version"
 anchor_version = "1.0.0"
-scope = "directive_core/definitions"
 status = "invariant"
 authority = true
 scope = "governance_ingestion"

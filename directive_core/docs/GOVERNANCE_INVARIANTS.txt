@@ -1,4 +1,4 @@
-GOVERNANCE ROOT (NON-AUTHORITATIVE NOTICE)
+GOVERNANCE INVARIANTS (NON-AUTHORITATIVE NOTICE)
 
 This document is informational only and non-authoritative.
 All authoritative governance is defined in TOML artifacts under:

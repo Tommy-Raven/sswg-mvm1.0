@@ -1,0 +1,23 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "SSWG_/_MVM_GOVERNING_INVARIANTS",
+  "description": "REPO_GOVERNANCE_INVARIANTS",
+  "folders": ["directive_core","docs"],
+  "excludeFolders": ["src"],
+  "excludeFiles": ["all"],
+  "rules": [
+    "All repo interaction initiates with directive_core/docs and official governance documentation", 
+    "governance/contractual/factual documents formatted in toml only",
+    "toml is absolute, validated, verified, and truth-bound",
+    "data ingress is uni-directionally applied towards toml",
+    "SSWG_CONSTITUTION.toml is supreme repo authority", 
+    "TERMINOLOGY.toml is supreme lexical authority",
+    "GOVERNANCE_REGISTRY.toml is supreme governance register",
+    "AGENTS.toml is supreme constraints authority for human or machine-agentic repo interactions"
+  ],
+  "previousVersions": [
+    {
+      "tag": "v1.2.1"
+    }
+  ]
+}

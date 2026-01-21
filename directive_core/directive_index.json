@@ -8,7 +8,7 @@
   "definitions": [
     {
       "directive_id": "sswg_governance_root",
-      "definition_path": "directive_core/definitions/governance_root.json",
+      "definition_path": "directive_core/definitions/governance_invariants.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
     },
     {

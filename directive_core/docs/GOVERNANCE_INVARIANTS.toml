@@ -1,0 +1,49 @@
+[anchor]
+anchor_id = "GOVERNANCE_INVARIANTS.toml"
+anchor_model = "sswg+mvm+version"
+anchor_version = "v1.0.1"
+anchor_scope = ["SSWG/MVM", "sswg-mvm"]
+anchor_status = "invariant"
+anchor_kind = "constitutional"
+anchor_authority = "supreme"
+authoritative_format = "toml"
+
+[registries]
+governance_registry_path = "directive_core/directive_index.json"
+registry_required = true
+unregistered_authority = "rejected"
+
+[authority]
+authoritative_extensions = ["toml"]
+authoritative_domains = ["governance", "constitution", "contracts", "facts", "definitions", "invariants"]
+authority_flow = "toml_only_upstream"
+
+[epistemic]
+tiers = ["facts", "derived", "inferred", "ancillary"]
+tier_authority = { facts = 1.0, derived_min = 0.75, derived_max = 0.9, inferred_max = 0.7, ancillary = 0.0 }
+tier_extension_map = { facts = ["toml"], derived = ["md"], inferred = ["txt"], ancillary = ["txt"] }
+tier_overlap_forbidden = true
+cross_tier_embedding_forbidden = true
+
+[facts]
+facts_must_reside_in = "toml"
+fact_mutation_outside_toml = "forbidden"
+derived_must_pointer_to_source = true
+derived_may_not_override = true
+
+[naming]
+canonical_ethos_name = "SSWG/MVM"
+canonical_implementation_name = "sswg-mvm"
+naming_variants_policy = "forbid_new_usage"
+naming_variants_are_violations = true
+
+[conflict]
+ambiguity_policy = "reject"
+fail_closed_on_conflict = true
+silent_reinterpretation_forbidden = true
+
+[enforcement]
+validation_required = true
+format_violation_action = "invalidate_artifact"
+authority_violation_action = "invalidate_artifact"
+registry_violation_action = "invalidate_artifact"

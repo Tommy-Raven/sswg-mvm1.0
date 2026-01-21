@@ -25,22 +25,18 @@ override_policy = "reject"
 [inputs]
 a = { type = "float", description = "Raw unbounded input surge" }
 
-[transforms]
-x_factorial = { 
-  type = "gamma_factorial",
-  domain = "real_positive",
-  purpose = "Normalize surge magnitude into comparable scale"
-}
+[transforms.x_factorial]
+type = "gamma_factorial"
+domain = "real_positive"
+purpose = "Normalize surge magnitude into comparable scale"
 
 [logic]
 equation = "x! = a / threshold_constant"
 evaluation = "binary_gate"
 
-[outputs]
-y = { 
-  type = "truth_state",
-  description = "Stabilized truth output emitted only when invariant holds"
-}
+[outputs.y]
+type = "truth_state"
+description = "Stabilized truth output emitted only when invariant holds"
 
 [failure_modes]
 on_threshold_violation = "hard_reject"

@@ -34,7 +34,7 @@ ambiguity_is_security_vulnerability = true
 [terminology.format_invariants]
 governance_comments_forbidden = true
 governance_doc_format = "toml_only"
-paired_human_mirror_format = "markdown_formal_explicative"
+paired_human_mirror_format = "markdown_format_explicative_only"
 mirror_draft_format = "text_draft_only"
 mirror_docs_are_non_authoritative = true
 
@@ -82,7 +82,7 @@ internal_label_storage = "local_internal_artifacts_only"
 
 [terminology.quarantine]
 quarantine_required = true
-quarantine_dir = "~/data/quarantine/"
+quarantine_dir = "data/quarantine/"
 create_directory_if_missing = true
 quarantine_action = ["abort", "isolate_artifact"]
 
@@ -162,7 +162,18 @@ token = "telemetry"
 status = "forbidden"
 required_alternative = "system_introspection_record"
 
+[terminology.mirror_authority]
+mirrors_exist = true
+mirrors_are_non_authoritative = true
+mirror_override_forbidden = true
+mirror_registration_forbidden = true
+markdown_mirror_allowed = true
+markdown_mirror_scope = "explanatory_only"
+markdown_mirror_governance_forbidden = true
+
 [definitions]
+markdown_format_explicative_only = "Non-authoritative mirror format: markdown used only for explanatory overlays; never governance."
+text_draft_only = "Non-authoritative draft format: text used only for drafting; never governance."
 claimed_intent = "A purpose explicitly declared by a user without external verification; confers neither permission nor safety status. This establishes user intent without binding to system authorization workflows or attestation protocols."
 declared_role_unverified = "A role asserted by a user in the absence of validation; grants neither authority nor privilege. Such claims bypass standard role verification and operational access mechanisms."
 authorized_context = "A context confirmed as authorized through policy, token, or audit reference; authorization is objectively verifiable. This forms the governance baseline for all system operations within scoped execution environments."
@@ -199,6 +210,7 @@ duplicate_key = "A TOML key appearing more than once within a single table scope
 uppercase_letters_only = "Constant format constraint: letters are uppercase where letters exist; non-letter delimiters are permitted."
 "SSWG/MVM" = "Synthesist of Workflow Generation/Mandated Verity Mindset: Governance mindset and ethos identifier; uppercase constant."
 "sswg-mvm" = "Minimum viable model; Software identifier; lowercase constant."
+
 
 [phase_model]
 model_id = "CANONIC_9_PHASES"
@@ -256,3 +268,28 @@ token_stability = "permanent"
 deprecation_mechanism = "deprecated_nomenclature_toml_only"
 term_removal_policy = "forbidden"
 term_change_policy = "new_term_id_required"
+
+[terminology.canonic_ledger_header]
+enforced = true
+toml_only = true
+anchor_required = true
+anchor_must_be_first_table = true
+anchor_must_be_first_content = true
+
+[terminology.canonic_ledger_header.required_anchor_keys]
+required = ["anchor_id", "anchor_model", "anchor_version", "scope", "status", "output_mode", "owner", "init_purpose", "init_authors"]
+
+[terminology.canonic_ledger_header.required_anchor_values]
+anchor_model = "sswg+mvm+version"
+scope = "directive_core/docs"
+output_mode = "non_operational_output"
+
+[terminology.path_invariants]
+repo_root_relative_only = true
+tilde_forbidden = true
+absolute_paths_forbidden = true
+macro_expansion_forbidden = true
+env_expansion_forbidden = true
+
+[terminology.quarantine.path_policy]
+quarantine_dir_repo_relative_required = "data/quarantine/"

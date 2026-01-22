@@ -165,18 +165,22 @@ training_curriculum_template.json
 
 SETUP AND USAGE (REFERENCE)
 
-git clone https://github.com/Tommy-Raven/sswg-mvm.git  
-cd sswg-mvm  
-pip install -r requirements.txt  
-python generator/main.py --template creative --preview  
+`git clone https://github.com/Tommy-Raven/sswg-mvm.git`
 
-Artifacts are written to data/outputs/ and include workflow JSON, diagrams, metric summaries, and lineage snapshots.
+`cd sswg-mvm` 
+
+`pip install -r requirements.txt`  (if environment is externally managed, you must install Python packages system-wide, 
+try `sudo apt install python3-xyz`, where xyz is the desired packages name. you'll need to manually install from `requirements.txt`
+
+`python3 generator/main.py --template creative --preview`
+
+Artifacts are written to `data/outputs/` and include workflow JSON, diagrams, metric summaries, and lineage snapshots.
 
 ---
 
 TESTING
 
-pytest -v
+`pytest -v`
 
 Test coverage includes governance enforcement, schema validation, recursion bounds, determinism replay, and end-to-end generation.
 
@@ -208,16 +212,16 @@ Clarification: Not an actual helicopter. Still airborne intellectually.
 
 LICENSE SUMMARY
 
-sswg-mvm is proprietary software.
+`sswg-mvm` is proprietary software.
 Evaluation only. No redistribution, hosting, training, or derivative works.
 
 ---
 
 VERSIONING NOTES
 
-v1.x.y indicates canonical governance-aligned releases.
-MVM denotes Mandated Verity Mindset lineage.
-Deterministic and transitive tags apply per governance.
+`v1.x.y` indicates canonical governance-aligned releases.
+`MVM` denotes Mandated Verity Mindset lineage.
+Deterministic `dtr` and transitive `trs` tags apply per governance.
 
 ---
 

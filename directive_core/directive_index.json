@@ -1,34 +1,25 @@
 {
   "$schema": "schemas/directive_index.schema.json",
-  "schema_version": "1.0.0",
-  "directive_core_version": "1.0.0",
+  "schema_version": "1.0.1",
+  "directive_core_version": "1.0.1",
   "canonical_path": "directive_core/directive_index.json",
   "governance_root": "directive_core/docs",
   "authoritative_format": "toml",
+
   "definitions": [
-    {
-      "directive_id": "sswg_governance_root",
-      "definition_path": "directive_core/definitions/governance_invariants.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
-    {
-      "directive_id": "sswg_terminology",
-      "definition_path": "directive_core/definitions/terminology.json",
-      "schema_path": "directive_core/schemas/directive_definition.schema.json"
-    },
     {
       "directive_id": "sswg_constitution",
       "definition_path": "directive_core/definitions/sswg_constitution.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
     },
     {
-      "directive_id": "sswg_agents",
-      "definition_path": "directive_core/definitions/agents.json",
+      "directive_id": "sswg_governance_invariants",
+      "definition_path": "directive_core/definitions/governance_invariants.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
     },
     {
-      "directive_id": "sswg_architecture",
-      "definition_path": "directive_core/definitions/architecture.json",
+      "directive_id": "sswg_security_invariants",
+      "definition_path": "directive_core/definitions/security_invariants.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
     },
     {
@@ -37,22 +28,86 @@
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
     },
     {
+      "directive_id": "sswg_normalization_threshold_invariant",
+      "definition_path": "directive_core/definitions/normalization_threshold_invariant.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_architecture",
+      "definition_path": "directive_core/definitions/architecture.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_format_boundary_contract",
+      "definition_path": "directive_core/definitions/format_boundary_contract.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_ambiguity_gate_invariant",
+      "definition_path": "directive_core/definitions/ambiguity_gate_invariant.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_ambiguity_gate_spec",
+      "definition_path": "directive_core/definitions/ambiguity_gate_spec.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_iam_conditional_module",
+      "definition_path": "directive_core/definitions/iam_conditional_module.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_integration_requirements",
+      "definition_path": "directive_core/definitions/integration_requirements.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_agents",
+      "definition_path": "directive_core/definitions/agents.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_appendix_governance_validation",
+      "definition_path": "directive_core/definitions/appendix_governance_validation.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_deprecated_nomenclature",
+      "definition_path": "directive_core/definitions/deprecated_nomenclature.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
+      "directive_id": "sswg_terminology",
+      "definition_path": "directive_core/definitions/terminology.json",
+      "schema_path": "directive_core/schemas/directive_definition.schema.json"
+    },
+    {
       "directive_id": "sswg_references",
       "definition_path": "directive_core/definitions/references.json",
       "schema_path": "directive_core/schemas/directive_definition.schema.json"
     }
   ],
+
   "governance_ingestion_order": [
-    "TERMINOLOGY.toml",
-    "AGENTS.toml",
     "SSWG_CONSTITUTION.toml",
+    "GOVERNANCE_INVARIANTS.toml",
     "SECURITY_INVARIANTS.toml",
-    "FORMAT_BOUNDARY_CONTRACT.toml",
-    "ARCHITECTURE.toml",
     "FORMAL_GUARANTEES.toml",
-    "REFERENCES.toml",
-    "DEPRECATED_NOMENCLATURE.toml"
+    "NORMALIZATION_THRESHOLD_INVARIANT.toml",
+    "ARCHITECTURE.toml",
+    "FORMAT_BOUNDARY_CONTRACT.toml",
+    "AMBIGUITY_GATE_INVARIANT.toml",
+    "AMBIGUITY_GATE_SPEC.toml",
+    "IAM_CONDITIONAL_MODULE.toml",
+    "INTEGRATION_REQUIREMENTS.toml",
+    "AGENTS.toml",
+    "APPENDIX_GOVERNANCE_VALIDATION.toml",
+    "DEPRECATED_NOMENCLATURE.toml",
+    "TERMINOLOGY.toml",
+    "REFERENCES.toml"
   ],
+
   "authoritative_governance": {
     "SSWG_CONSTITUTION": {
       "file": "SSWG_CONSTITUTION.toml",
@@ -65,50 +120,28 @@
       "fail_on_reorder": true
     }
   },
+
   "governance_documents": {
-    "TERMINOLOGY": {
-      "file": "TERMINOLOGY.toml",
-      "format": "toml",
-      "required": true
-    },
-    "AGENTS": {
-      "file": "AGENTS.toml",
-      "format": "toml",
-      "required": true
-    },
-    "FORMAT_BOUNDARY_CONTRACT": {
-      "file": "FORMAT_BOUNDARY_CONTRACT.toml",
-      "format": "toml",
-      "required": true
-    },
-    "SECURITY_INVARIANTS": {
-      "file": "SECURITY_INVARIANTS.toml",
-      "format": "toml",
-      "required": true
-    },
-    "ARCHITECTURE": {
-      "file": "ARCHITECTURE.toml",
-      "format": "toml",
-      "required": true
-    },
-    "FORMAL_GUARANTEES": {
-      "file": "FORMAL_GUARANTEES.toml",
-      "format": "toml",
-      "required": true
-    },
-    "REFERENCES": {
-      "file": "REFERENCES.toml",
-      "format": "toml",
-      "required": true
-    },
-    "DEPRECATED_NOMENCLATURE": {
-      "file": "DEPRECATED_NOMENCLATURE.toml",
-      "format": "toml",
-      "required": true
-    }
+    "GOVERNANCE_INVARIANTS": { "file": "GOVERNANCE_INVARIANTS.toml", "format": "toml", "required": true },
+    "SECURITY_INVARIANTS": { "file": "SECURITY_INVARIANTS.toml", "format": "toml", "required": true },
+    "FORMAL_GUARANTEES": { "file": "FORMAL_GUARANTEES.toml", "format": "toml", "required": true },
+    "NORMALIZATION_THRESHOLD_INVARIANT": { "file": "NORMALIZATION_THRESHOLD_INVARIANT.toml", "format": "toml", "required": true },
+    "ARCHITECTURE": { "file": "ARCHITECTURE.toml", "format": "toml", "required": true },
+    "FORMAT_BOUNDARY_CONTRACT": { "file": "FORMAT_BOUNDARY_CONTRACT.toml", "format": "toml", "required": true },
+    "AMBIGUITY_GATE_INVARIANT": { "file": "AMBIGUITY_GATE_INVARIANT.toml", "format": "toml", "required": true },
+    "AMBIGUITY_GATE_SPEC": { "file": "AMBIGUITY_GATE_SPEC.toml", "format": "toml", "required": true },
+    "IAM_CONDITIONAL_MODULE": { "file": "IAM_CONDITIONAL_MODULE.toml", "format": "toml", "required": true },
+    "INTEGRATION_REQUIREMENTS": { "file": "INTEGRATION_REQUIREMENTS.toml", "format": "toml", "required": true },
+    "AGENTS": { "file": "AGENTS.toml", "format": "toml", "required": true },
+    "APPENDIX_GOVERNANCE_VALIDATION": { "file": "APPENDIX_GOVERNANCE_VALIDATION.toml", "format": "toml", "required": true },
+    "DEPRECATED_NOMENCLATURE": { "file": "DEPRECATED_NOMENCLATURE.toml", "format": "toml", "required": true },
+    "TERMINOLOGY": { "file": "TERMINOLOGY.toml", "format": "toml", "required": true },
+    "REFERENCES": { "file": "REFERENCES.toml", "format": "toml", "required": true }
   },
+
   "validation_policy": {
     "fail_closed": true,
+    "fail_start_validate_only_registered": true,
     "semantic_ambiguity_gate_required": true,
     "canonical_header_required": true,
     "authoritative_format_enforced": true

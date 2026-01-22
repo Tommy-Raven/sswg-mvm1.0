@@ -1,14 +1,29 @@
 # SSWG-MVM v1.0.2
 SSWG — SYNTHESIST OF WORKFLOW GENERATION (MANDATED VERITY MINDSET)
 
+<div align="center">
+  <img src="raven.svg" width="180" alt="Raven Recordings Logo">
+</div>
+
+<div align="center">
+
+![STATUS](https://img.shields.io/badge/STATUS-ACTIVE-7E3ACE?style=for-the-badge)
+![BUILD](https://img.shields.io/badge/BUILD-STABLE-4B9CD3?style=for-the-badge)
+![VERSION](https://img.shields.io/badge/VERSION-1.0.2-9E3CE7?style=for-the-badge)
+![PYTHON](https://img.shields.io/badge/PYTHON-3.10%2B-blue?style=for-the-badge&logo=python)
+![ARCHITECTURE](https://img.shields.io/badge/ARCHITECTURE-DETERMINISTIC_RECURSIVE-black?style=for-the-badge)
+![LICENSE](https://img.shields.io/badge/LICENSE-PROPRIETARY-black?style=for-the-badge)
+
+</div>
+
 sswg-mvm is the Minimum Viable Model implementation of SSWG — Synthesist of Workflow Generation operating under the Mandated Verity Mindset (MVM).
 
 It is a deterministic, governance-bound workflow synthesis engine designed to generate structured, auditable, multi-phase workflow systems. The system does not produce conversational output and does not execute operational logic. All outputs are non-operational artifacts intended for inspection, validation, and audit.
 
-Status: Active
-Version: v1.0.2
-Architecture: Deterministic, Bounded Recursive
-License: Proprietary
+Status: Active  
+Version: v1.0.2  
+Architecture: Deterministic, Bounded Recursive  
+License: Proprietary  
 
 ---
 
@@ -37,8 +52,8 @@ Primary outputs include:
 
 All generation is non-operational and governance-bounded.
 
-Author: Tommy Raven (Thomas Byers)
-Copyright © Raven Recordings 2025–2026
+Author: Tommy Raven (Thomas Byers)  
+Copyright © Raven Recordings 2025–2026  
 
 ---
 
@@ -141,19 +156,19 @@ Operational authority is defined by docs/RUNBOOK.md.
 
 INCLUDED TEMPLATES (EXAMPLES)
 
-creative_writing_template.json
-technical_procedure_template.json
-meta_reflection_template.json
-training_curriculum_template.json
+creative_writing_template.json  
+technical_procedure_template.json  
+meta_reflection_template.json  
+training_curriculum_template.json  
 
 ---
 
 SETUP AND USAGE (REFERENCE)
 
-git clone https://github.com/Tommy-Raven/sswg-mvm.git
-cd sswg-mvm
-pip install -r requirements.txt
-python generator/main.py --template creative --preview
+git clone https://github.com/Tommy-Raven/sswg-mvm.git  
+cd sswg-mvm  
+pip install -r requirements.txt  
+python generator/main.py --template creative --preview  
 
 Artifacts are written to data/outputs/ and include workflow JSON, diagrams, metric summaries, and lineage snapshots.
 
@@ -178,11 +193,16 @@ Implemented:
 
 AUTHOR
 
-Tommy Raven
-Systems Architect
-Raven Recordings, LLC
+Tommy Raven  
 
-GitHub: https://github.com/Tommy-Raven
+Systems Architect 
+
+Raven Recordings, LLC  
+
+GitHub: https://github.com/Tommy-Raven  
+
+Pronouns: Apache / Helicopter  
+Clarification: Not an actual helicopter. Still airborne intellectually.
 
 ---
 

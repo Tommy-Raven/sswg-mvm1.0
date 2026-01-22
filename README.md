@@ -16,6 +16,7 @@ SSWG — SYNTHESIST OF WORKFLOW GENERATION (MANDATED VERITY MINDSET)
 
 </div>
 
+Build stability = “system enforces declared invariants without ambiguity”
 sswg-mvm is the Minimum Viable Model implementation of SSWG — Synthesist of Workflow Generation operating under the Mandated Verity Mindset (MVM).
 
 It is a deterministic, governance-bound workflow synthesis engine designed to generate structured, auditable, multi-phase workflow systems. The system does not produce conversational output and does not execute operational logic. All outputs are non-operational artifacts intended for inspection, validation, and audit.

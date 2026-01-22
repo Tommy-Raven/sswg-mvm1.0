@@ -1,7 +1,7 @@
 [anchor]
 anchor_id = "sswg_constitution"
 anchor_model = "sswg+mvm+version"
-anchor_version = "1.0.1"
+anchor_version = "1.0.2"
 scope = "directive_core/docs"
 status = "invariant"
 output_mode = "non_operational_output"
@@ -16,7 +16,6 @@ init_authors = ["Tommy Raven"]
 operational_control_plane = "directive_core"
 authoritative_root = "directive_core/docs"
 authoritative_format = "toml"
-
 constitution_is_exclusive_root_authority = true
 
 [authority]
@@ -37,38 +36,37 @@ non_toml_artifacts_are_never_authoritative = true
 implicit_authority_forbidden = true
 
 [ingestion_sequence]
-
-sequence_id = "SSWG_CANONIC_9_PHASES"
-sequence_version = "1.0.0"
+sequence_id = "SSWG_CANONIC_16_PHASES"
+sequence_version = "1.0.2"
 
 [[ingestion_sequence.phase]]
 phase_id = "001"
-doc_id = "TERMINOLOGY"
-file = "TERMINOLOGY.toml"
-required = true
-
-[[ingestion_sequence.phase]]
-phase_id = "002"
-doc_id = "AGENTS"
-file = "AGENTS.toml"
-required = true
-
-[[ingestion_sequence.phase]]
-phase_id = "003"
 doc_id = "SSWG_CONSTITUTION"
 file = "SSWG_CONSTITUTION.toml"
 required = true
 
 [[ingestion_sequence.phase]]
-phase_id = "004"
+phase_id = "002"
+doc_id = "GOVERNANCE_INVARIANTS"
+file = "GOVERNANCE_INVARIANTS.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "003"
 doc_id = "SECURITY_INVARIANTS"
 file = "SECURITY_INVARIANTS.toml"
 required = true
 
 [[ingestion_sequence.phase]]
+phase_id = "004"
+doc_id = "FORMAL_GUARANTEES"
+file = "FORMAL_GUARANTEES.toml"
+required = true
+
+[[ingestion_sequence.phase]]
 phase_id = "005"
-doc_id = "FORMAT_BOUNDARY_CONTRACT"
-file = "FORMAT_BOUNDARY_CONTRACT.toml"
+doc_id = "NORMALIZATION_THRESHOLD_INVARIANT"
+file = "NORMALIZATION_THRESHOLD_INVARIANT.toml"
 required = true
 
 [[ingestion_sequence.phase]]
@@ -79,31 +77,73 @@ required = true
 
 [[ingestion_sequence.phase]]
 phase_id = "007"
-doc_id = "FORMAL_GUARANTEES"
-file = "FORMAL_GUARANTEES.toml"
+doc_id = "FORMAT_BOUNDARY_CONTRACT"
+file = "FORMAT_BOUNDARY_CONTRACT.toml"
 required = true
 
 [[ingestion_sequence.phase]]
 phase_id = "008"
-doc_id = "REFERENCES"
-file = "REFERENCES.toml"
+doc_id = "AMBIGUITY_GATE_INVARIANT"
+file = "AMBIGUITY_GATE_INVARIANT.toml"
 required = true
 
 [[ingestion_sequence.phase]]
 phase_id = "009"
+doc_id = "AMBIGUITY_GATE_SPEC"
+file = "AMBIGUITY_GATE_SPEC.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "010"
+doc_id = "IAM_CONDITIONAL_MODULE"
+file = "IAM_CONDITIONAL_MODULE.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "011"
+doc_id = "INTEGRATION_REQUIREMENTS"
+file = "INTEGRATION_REQUIREMENTS.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "012"
+doc_id = "AGENTS"
+file = "AGENTS.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "013"
+doc_id = "APPENDIX_GOVERNANCE_VALIDATION"
+file = "APPENDIX_GOVERNANCE_VALIDATION.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "014"
 doc_id = "DEPRECATED_NOMENCLATURE"
 file = "DEPRECATED_NOMENCLATURE.toml"
 required = true
 
+[[ingestion_sequence.phase]]
+phase_id = "015"
+doc_id = "TERMINOLOGY"
+file = "TERMINOLOGY.toml"
+required = true
+
+[[ingestion_sequence.phase]]
+phase_id = "016"
+doc_id = "REFERENCES"
+file = "REFERENCES.toml"
+required = true
+
 [[governance_registry.artifact]]
-artifact_id = "TERMINOLOGY"
-path = "TERMINOLOGY.toml"
-authority = "derived"
+artifact_id = "SSWG_CONSTITUTION"
+path = "SSWG_CONSTITUTION.toml"
+authority = "root"
 validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
-artifact_id = "AGENTS"
-path = "AGENTS.toml"
+artifact_id = "GOVERNANCE_INVARIANTS"
+path = "GOVERNANCE_INVARIANTS.toml"
 authority = "derived"
 validation = "toml_parse_required"
 
@@ -114,8 +154,14 @@ authority = "derived"
 validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
-artifact_id = "FORMAT_BOUNDARY_CONTRACT"
-path = "FORMAT_BOUNDARY_CONTRACT.toml"
+artifact_id = "FORMAL_GUARANTEES"
+path = "FORMAL_GUARANTEES.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "NORMALIZATION_THRESHOLD_INVARIANT"
+path = "NORMALIZATION_THRESHOLD_INVARIANT.toml"
 authority = "derived"
 validation = "toml_parse_required"
 
@@ -126,14 +172,44 @@ authority = "derived"
 validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
-artifact_id = "FORMAL_GUARANTEES"
-path = "FORMAL_GUARANTEES.toml"
+artifact_id = "FORMAT_BOUNDARY_CONTRACT"
+path = "FORMAT_BOUNDARY_CONTRACT.toml"
 authority = "derived"
 validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
-artifact_id = "REFERENCES"
-path = "REFERENCES.toml"
+artifact_id = "AMBIGUITY_GATE_INVARIANTS"
+path = "AMBIGUITY_GATE_INVARIANT.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "AMBIGUITY_GATE_SPEC"
+path = "AMBIGUITY_GATE_SPEC.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "IAM_CONDITIONAL_MODULE"
+path = "IAM_CONDITIONAL_MODULE.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "INTEGRATION_REQUIREMENTS"
+path = "INTEGRATION_REQUIREMENTS.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "AGENTS"
+path = "AGENTS.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "APPENDIX_GOVERNANCE_VALIDATION"
+path = "APPENDIX_GOVERNANCE_VALIDATION.toml"
 authority = "derived"
 validation = "toml_parse_required"
 
@@ -144,9 +220,15 @@ authority = "derived"
 validation = "toml_parse_required"
 
 [[governance_registry.artifact]]
-artifact_id = "SSWG_CONSTITUTION"
-path = "SSWG_CONSTITUTION.toml"
-authority = "root"
+artifact_id = "TERMINOLOGY"
+path = "TERMINOLOGY.toml"
+authority = "derived"
+validation = "toml_parse_required"
+
+[[governance_registry.artifact]]
+artifact_id = "REFERENCES"
+path = "REFERENCES.toml"
+authority = "derived"
 validation = "toml_parse_required"
 
 [validation]
@@ -165,6 +247,8 @@ markdown_mirrors_allowed = true
 markdown_mirrors_authoritative = false
 json_definitions_allowed = true
 json_definitions_authoritative = false
+txt_mirrors_allowed = true
+txt_mirrors_authoritative = false
 
 [evolution]
 versioned_changes_only = true
@@ -172,9 +256,14 @@ change_log_required = true
 
 [[evolution.change_log]]
 change_id = "2026-01-17.constitution.registry"
-summary = "Introduce explicit governance registry, numbered 001–009 ingestion sequence, and control_plane binding to directive_core."
+summary = "Introduce explicit governance registry, numbered ingestion sequence, and control_plane binding to directive_core."
 impact = "Shifts fail-start validation boundary to registered TOML artifacts; non-TOML are reference-only."
 
+[[evolution.change_log]]
+change_id = "2026-01-21.constitution.ingestion_reorder"
+summary = "Reorder ingestion priority to truth-first invariants and security, expand registry and sequence to 16 required governance artifacts."
+impact = "Eliminates implicit authority, resolves truth/language precedence conflicts, and establishes deterministic governance loading across engine_cores."
+
 [summary]
-statement = "This Constitution establishes supreme authority for SSWG governance. It declares directive_core as the operational control plane, enforces TOML-only authority, and gates all subordinate governance through an explicit registry and 001–009 ingestion sequence."
+statement = "This Constitution establishes supreme authority for SSWG governance. It declares directive_core as the operational control plane, enforces TOML-only authority, and gates all subordinate governance through an explicit registry and a 16-phase ingestion sequence."
 summary_required_in_future_constitutional_docs = true
